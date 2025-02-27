@@ -1,0 +1,157 @@
+import { useState } from 'react';
+import { MdOutlineAddCircleOutline } from 'react-icons/md';
+import { FaTemperatureThreeQuarters } from 'react-icons/fa6';
+import { GoArrowUpRight } from 'react-icons/go';
+import AreaChart from './AreaChart';
+import { bestPerforming, dashboardData } from '../../common/constants';
+import { useGetUser } from '../../../services/query/account';
+
+const FirstLayer = () => {
+  const { data, isLoading } = useGetUser();
+  const [filter, setFilter] = useState('week');
+
+  console.log(data);
+
+  const inflowFilters = [
+    { id: '1', name: 'This Week', value: 'week' },
+    { id: '2', name: 'This Month', value: 'month' },
+    { id: '3', name: 'This Year', value: 'year' },
+  ];
+  const dates = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const totals = [50, 100, 150, 200, 250, 300, 350];
+  const flow = { data: [] };
+
+  return (
+    <div>
+      {/* Header Section */}
+      <div className="flex justify-between gap-2 flex-wrap">
+        <div>
+          <h3 className="font-semibold text-lg md:text-xl">
+            Welcome {data?.data?.firstName || '--'}
+          </h3>
+          <p className="text-[#475367]">
+            Here is all the information you need on TREG today
+          </p>
+        </div>
+
+        <button className="primary-btn !px-[10px] flex items-center gap-1">
+          <MdOutlineAddCircleOutline className="text-2xl" />
+          <span>Add New Property</span>
+        </button>
+      </div>
+
+      {/* Dashboard Cards Section */}
+      <div className="flex overflow-x-scroll gap-4 mt-8 dashboard-cards">
+        {dashboardData.map((data, i) => (
+          <div
+            key={i}
+            className="w-full min-w-[257px] border border-[#E4E7EC] bg-white p-4 rounded-xl h-full"
+          >
+            <div className="text-sm h-full">
+              <p className="text-[#344054] font-semibold text-xl">2</p>
+              <div className="flex items-center gap-4">
+                <p>{data?.label}</p>
+                <div className="flex justify-center items-center border border-[#E4E7EC] rounded-full w-10 h-10">
+                  <FaTemperatureThreeQuarters />
+                </div>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <GoArrowUpRight className="text-green-500" />
+                <p className="text-[#7C8DB5]">+1.01% this week</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Activity Section */}
+      <div className="flex flex-col md:flex-row mt-4 gap-4">
+        <div className="w-full md:w-[60%] h-[368px] ">
+          {!flow?.data.length ? (
+            <div className="flex-1 h-full bg-white p-6 pb-2 rounded-[12px] shadow-[0px_1px_3px_rgba(16,24,40,0.1),_0px_1px_2px_rgba(16,24,40,0.06)]">
+              <div className="flex justify-between items-center">
+                <p className="font-semibold text-[#0F172A]">
+                  Property Overview
+                </p>
+                {/* Daisy UI Select Component */}
+                <select
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                  className="select select-bordered select-sm bg-transparent shadow-none w-auto py-[10px] px-1 cursor-pointer font-medium text-[12px] text-[#2563EB] rounded-[6px]"
+                >
+                  {inflowFilters.map((data) => (
+                    <option key={data.id} value={data.value}>
+                      {data.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {isLoading ? (
+                <div className="mt-4 flex justify-center">
+                  <div className="w-8 h-8 border-4 border-gray-200 border-t-[#FF3030] rounded-full animate-spin" />
+                </div>
+              ) : (
+                <AreaChart dates={dates} totals={totals} />
+              )}
+            </div>
+          ) : (
+            <div className="flex-1 bg-white p-6 pb-2 rounded-[12px] shadow-[0px_1px_3px_rgba(16,24,40,0.1),_0px_1px_2px_rgba(16,24,40,0.06)]">
+              <div className="flex flex-col items-center justify-center">
+                <img src="/assets/rocket.svg" alt="No data" className="mt-10" />
+                <p className="text-[#1E1E1E] mt-4 font-semibold text-[18px] mb-2">
+                  No Inflow data
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="w-full md:w-[40%]">
+          <div className="flex-1 h-full bg-white p-6 pb-2 rounded-[12px] shadow-[0px_1px_3px_rgba(16,24,40,0.1),_0px_1px_2px_rgba(16,24,40,0.06)]">
+            <div className=" border-b-2 border-[#E4E7EC] pb-2">
+              <p className="font-semibold text-[#0F172A]">
+                Best Performing Properties
+              </p>
+            </div>
+            <ul className="grid gap-2 pt-3">
+              {bestPerforming.map((dat) => (
+                <li
+                  className="flex justify-between border p-[8.5px] border-[#D4D0D0] rounded-[11px] cursor-pointer hover:shadow-md"
+                  key={dat.id}
+                >
+                  <div className="flex gap-4">
+                    <div className="h-[66px] rounded-md overflow-hidden">
+                      <img
+                        className="object-cover h-full w-full"
+                        src={dat.img}
+                        alt={dat.label}
+                      />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-[#616161] text-sm">
+                        {dat?.label}
+                      </h4>
+                      <p className="text-[#616161] text-xs  pt-[6px]">
+                        {dat.address}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid gap-1 ">
+                    <span className="block text-xs text-[#036B26] font-medium px-3 bg-[#E7F6EC] py-1 h-fit rounded-[10px]">
+                      For Rent
+                    </span>
+                    <p className="text-[#616161] font-semibold text-xs">
+                      2.5m/year
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FirstLayer;

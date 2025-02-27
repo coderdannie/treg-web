@@ -1,13 +1,324 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Sansation';
+  src: url('./fonts/Sansation_Bold.ttf') format('truetype');
+  font-weight: bold; /* Assuming 'Bold' indicates a bold weight */
+  font-style: normal;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@font-face {
+  font-family: 'Sansation';
+  src: url('./fonts/Sansation_Regular.ttf') format('truetype');
+  font-weight: 400; /* Assuming 'Bold' indicates a bold weight */
+  font-style: normal;
+}
+
+Chrome,
+Safari,
+and Opera ::-webkit-scrollbar {
+  width: 6px;
+  border-radius: 8px;
+  background-color: #1140e7;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #1140e7;
+}
+
+/* Firefox */
+/* For Firefox 64+ */
+* {
+  scrollbar-color: #1140e7 rgba(0, 0, 0, 0.05);
+  scrollbar-width: thin;
+}
+
+/* For Firefox 63 and below */
+* {
+  scrollbar-color: #1140e7 rgba(0, 0, 0, 0.05);
+}
+
+/* Microsoft Edge and IE */
+* {
+  -ms-overflow-style: none; /* Hide the scrollbar in IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  border-radius: 8px;
+  background-color: #1140e7;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #1140e7;
+}
+
+:root {
+  --primary: #1140e7;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 0 0% 96.1%;
+  --secondary-foreground: 0 0% 9%;
+  --muted: 0 0% 96.1%;
+}
+body {
+  font-family: 'Poppins';
+}
+@layer components {
+  .align-element {
+    @apply max-w-[78rem] w-full mx-auto px-5 lg:px-[50px];
+  }
+}
+
+.hide-nav-links {
+  display: flex;
+}
+
+.hide-toggle-bar {
+  display: none;
+}
+
+@media (max-width: 997px) {
+  .hide-nav-links {
+    display: none;
+  }
+  .hide-toggle-bar {
+    display: block;
+  }
+}
+.font-heading {
+  font-size: clamp(1.4rem, 3vw + 1rem, 2.8rem);
+  @apply font-semibold max-w-[700px] w-full mx-auto;
+  color: #383838;
+  line-height: 1.2;
+}
+.font-sub-heading {
+  font-size: clamp(1.3rem, 2.5vw + 0.8rem, 2.2rem);
+  @apply font-medium max-w-[700px] w-full mx-auto;
+  color: #383838;
+  line-height: 1.2;
+}
+.primary-btn {
+  @apply cursor-pointer rounded-md  bg-primary border-2  px-5 py-[10px] text-center text-sm font-semibold text-[#F0F0F0] transition duration-300 ease-in-out hover:bg-[#FFFF] hover:border-2 border-primary  hover:text-primary;
+}
+.secondary-btn {
+  @apply cursor-pointer rounded-md  bg-white  px-5 py-[10px] text-center text-sm font-semibold text-primary transition duration-300 ease-in-out hover:bg-white border-2 hover:border-2  hover:text-primary border-primary;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animated-word {
+  display: inline-block;
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+}
+
+.animated-word:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.animated-word:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.animated-word:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.animated-word:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.animated-word:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.animated-word:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+.animated-word:nth-child(7) {
+  animation-delay: 0.7s;
+}
+
+.animated-word:nth-child(8) {
+  animation-delay: 0.8s;
+}
+/* Container for the carousel */
+
+.splide__track {
+  border-radius: 8px !important;
+}
+.main-slider {
+  flex: 1; /* Take up remaining space */
+}
+
+.thumbnail-slider {
+  margin-top: 20px;
+  width: 100%; /* Full width for thumbnails on mobile */
+}
+.thumbnail-slider li {
+  width: 212px !important;
+  height: 120px !important;
+  border-radius: 8px !important;
+}
+.splide__arrow {
+  /* top: -300px !important; */
+}
+/* Responsive layout for mobile */
+
+@media (max-width: 880px) {
+  .carousel-container {
+    max-width: 700px;
+    margin: 0 auto;
+    flex-direction: column; /* Stack main slider and thumbnail slider vertically */
+    gap: 10px; /* Reduce gap for mobile */
+  }
+  .thumbnail-slider li {
+    width: 112px !important;
+    height: 80px !important;
+  }
+  .splide__track {
+    height: fit-content !important;
+  }
+}
+.rs-picker-menu {
+  z-index: 20000 !important;
+}
+.rs-picker-default .rs-picker-toggle {
+  border: 1px solid rgba(15, 23, 43, 0.3) !important;
+  border-radius: 10px;
+  height: 56px;
+  width: 100%;
+}
+
+.react-calendar {
+  max-width: 100%;
+  background-color: #fff;
+  color: #222;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  line-height: 1.5em;
+}
+.react-calendar__navigation__prev2-button {
+  display: none;
+}
+.react-calendar__navigation {
+  display: flex;
+}
+.react-calendar__navigation__prev-button {
+  font-weight: bold;
+}
+.react-calendar__navigation__next-button {
+  font-weight: bold;
+}
+.react-calendar__month-view {
+  padding-bottom: 20px;
+}
+.react-calendar__month-view__weekdays {
+  padding: 20px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #828282;
+}
+abbr[title] {
+  text-decoration: unset !important;
+}
+.react-calendar__navigation__next2-button {
+  display: none;
+}
+.react-calendar__navigation__label {
+  font-weight: bold;
+}
+.react-calendar__navigation button {
+  color: #333333;
+  min-width: 44px;
+  font-size: 16px;
+  margin-top: 8px;
+}
+.react-calendar__tile {
+  padding: 5px;
+  margin-bottom: 5px;
+  color: #000;
+}
+
+.react-calendar__tile--now {
+  background: #f5f5f5;
+  border-radius: 6px;
+  font-weight: bold;
+  color: gray;
+}
+.react-calendar__tile--now:enabled:hover,
+.react-calendar__tile--now:enabled:focus {
+  border-radius: 6px;
+  font-weight: bold;
+  color: #2463eb;
+}
+.react-calendar__tile--hasActive:enabled:hover,
+.react-calendar__tile--hasActive:enabled:focus {
+  background: #f8f8fa;
+}
+.react-calendar__tile--active {
+  background: #2463eb;
+  border-radius: 6px;
+  font-weight: bold;
+  color: white;
+}
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  background: #2463eb;
+  color: rgb(198, 176, 176);
+}
+.react-calendar--selectRange .react-calendar__tile--hover {
+  background-color: #f8f8fa;
+}
+.react-calendar__tile--rangeStart {
+  border-radius: 6px;
+  background: #2463eb;
+  color: white;
+}
+.react-calendar__tile--rangeEnd {
+  border-radius: 6px;
+  background: #2463eb;
+  color: white;
+}
+
+.react-calendar__tile.disabled-date {
+  color: #d3d3d3; /* Gray out the text */
+  pointer-events: none; /* Disable clicking */
+}
+
+.choose-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('./assets/hero-gradient.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform: rotate(180deg);
+  z-index: -1;
+}
+.dashboard-cards {
+  -ms-overflow-style: none; /* Hides scrollbar in IE & Edge */
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+
+.dashboard-cards::-webkit-scrollbar {
+  display: none; /* Hides scrollbar in Chrome & Safari */
 }
