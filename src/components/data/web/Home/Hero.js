@@ -185,12 +185,12 @@ export default function ProductFeatures() {
         <Balancer className="block relative text-sm md:text-lg text-neutral-600 max-w-[500px] w-full ">
           <div
             style={{
-              backgroundImage: `url(${heroBg2})`,
+              backgroundImage: `url(${heroBg})`,
               backgroundPosition: 'top',
               backgroundSize: 'cover',
-              filter: 'blur(1px)',
+              filter: 'blur(5px)',
             }}
-            className="absolute inset-0 "
+            className="absolute inset-0 sm:hidden "
           ></div>
           <p className="relative z-10">
             Simplify your rental experience with secure transactions,
