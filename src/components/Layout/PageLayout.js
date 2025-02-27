@@ -89,7 +89,7 @@ export const NonAuthLayout = ({ children }) => {
     <div>
       {!shouldHideNavbar && <Navbar />}
       {children}
-      {/* {!shouldHideNavbar && <Footer />} */}
+      {!shouldHideNavbar && <Footer />}
     </div>
   );
 };
