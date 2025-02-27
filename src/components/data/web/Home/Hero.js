@@ -182,9 +182,20 @@ export default function ProductFeatures() {
             </span>
           ))}
         </h1>
-        <Balancer className="block text-sm md:text-lg text-neutral-500 max-w-[500px] w-full ">
-          Simplify your rental experience with secure transactions, transparent
-          ratings and detailed property views.
+        <Balancer className="block relative text-sm md:text-lg text-neutral-600 max-w-[500px] w-full ">
+          <div
+            style={{
+              backgroundImage: `url(${heroBg2})`,
+              backgroundPosition: 'top',
+              backgroundSize: 'cover',
+              filter: 'blur(1px)',
+            }}
+            className="absolute inset-0 "
+          ></div>
+          <p className="relative z-10">
+            Simplify your rental experience with secure transactions,
+            transparent ratings and detailed property views.
+          </p>
         </Balancer>
       </motion.header>
 
