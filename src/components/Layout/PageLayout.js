@@ -42,6 +42,10 @@ export const AuthLayout = ({ children }) => {
   //     };
   //   }, []);
 
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
+
   return (
     <div
       style={{ fontFamily: '"Inter", serif' }}
@@ -62,10 +66,7 @@ export const AuthLayout = ({ children }) => {
         </div>
       </div>
       {isDrawerOpen && (
-        <SideDrawer
-          drawerOpen={isDrawerOpen}
-          setIsDrawerOpen={setIsDrawerOpen}
-        />
+        <SideDrawer isOpen={isDrawerOpen} onClose={toggleDrawer} />
       )}
     </div>
   );

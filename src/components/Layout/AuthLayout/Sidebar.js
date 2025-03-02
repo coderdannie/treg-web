@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LogoutIcon } from '../../common/Images';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { sidebarData } from '../../common/constants'; // Your provided array
 import Logo from '../../common/Logo';
+import { LuLogOut } from 'react-icons/lu';
+import { useLogOut } from '../../../utils/helper';
 
 const SideBar = () => {
   const [isUser] = useState(false);
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [openSubItems, setOpenSubItems] = useState({});
   const [showMenu, setShowMenu] = useState(false);
@@ -39,9 +40,19 @@ const SideBar = () => {
     handleToggleSubItem(null);
   }, [pathname]);
 
+  const logout = useLogOut();
+
+  const action = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      logout();
+      setIsLoading(false);
+    }, 1000);
+  };
+
   return (
     <div className="flex flex-col justify-between fixed z-50 bg-white w-[272px] text-[#101928]">
-      <div className="h-screen">
+      <div className="h-screen overflow-auto">
         <div className="bg-white sticky top-0 pl-5 pt-4">
           <Logo />
         </div>
@@ -126,23 +137,41 @@ const SideBar = () => {
             </div>
           )}
         </div>
-      </div>
-
-      <div
-        className="border-t border-[#314169] p-4 text-center text-sm cursor-pointer text-[#B4B4B4] hover:text-red-500"
-        // onClick={() => logout()}
-      >
-        {isLoading ? (
-          <div className="flex items-center justify-center gap-2">
-            <span className="loading loading-spinner loading-sm"></span>
-            Logging Out
+        <div
+          className="pb-10 hover:text-red-500  flex justify-between border-[#314169] p-4 text-center text-sm cursor-pointer  "
+          onClick={() => action()}
+        >
+          {' '}
+          <div className="flex gap-2 ">
+            <div className="avatar placeholder">
+              <div className="ring-primary bg-primary w-8 h-8 rounded-full ring ">
+                {/* {data?.data?.image ? (
+                <img src={data?.data?.image} alt="" />
+              ) : (
+                <span className="text-xl text-white">
+                  {data?.data?.firstName?.slice(0, 1)}
+                </span>
+              )} */}
+              </div>
+            </div>
+            <div className="text-left">
+              <h4 className="font-semibold text-sm">Ola Samuel</h4>
+              <p className="text-[#475367] hover:text-red-500 text-xs">
+                olasamuel@treg.com
+              </p>
+            </div>
           </div>
-        ) : (
-          <div className="flex items-center justify-center gap-2">
-            <LogoutIcon fill="#B4B4B4" />
-            Log Out
-          </div>
-        )}
+          {isLoading ? (
+            <div className="flex items-center justify-center gap-2 text-[12px]">
+              <span className="loading loading-spinner loading-sm "></span>
+              Logging Out
+            </div>
+          ) : (
+            <div className="flex items-center text-xl justify-center gap-2 ">
+              <LuLogOut />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

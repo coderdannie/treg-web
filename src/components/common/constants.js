@@ -15,6 +15,7 @@ import {
   ManagementIcon,
   MessageIcon,
   PaymentsIcon,
+  SettingsIcon,
 } from './Images';
 
 export const navItems = [
@@ -208,6 +209,13 @@ export const sidebarData = [
     sec: <CalendarIcon fill="#1140E7" />,
     hover: <CalendarIcon fill="#1140E7" />,
     path: '/calendar',
+  },
+  {
+    title: 'Settings',
+    icon: <SettingsIcon fill="#616161" />,
+    sec: <SettingsIcon fill="#1140E7" />,
+    hover: <SettingsIcon fill="#1140E7" />,
+    path: '/settings',
   },
 ];
 export const howItWorks = [
