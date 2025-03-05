@@ -46,6 +46,16 @@ export const initAddPropertyValues = {
   amenities: '',
   others: '',
 };
+export const initialKycValues = {
+  name: '',
+  phoneNo: '',
+  yearsOfExperience: '',
+  serviceArea: '',
+  address: '',
+  imageFile: '',
+  imageFileType: '',
+};
+
 export const validatePword = Yup.object().shape({
   password: Yup.string()
     .required('Password is required')
@@ -116,9 +126,9 @@ export const validateAddPropertySchema = Yup.object().shape({
   description: Yup.string().required('Description is required'),
 });
 
-export const validateAddProp = Yup.object().shape({
-  firstName: Yup.string().required('First Name is required'),
-  lastName: Yup.string().required('Last Name is required'),
-  email: Yup.string().email().required('Email is required'),
-  description: Yup.string().required('Description is required'),
+export const validateVerifyKycSchema = Yup.object().shape({
+  phoneNo: Yup.string().required('Phone number is required'),
+  yearsOfExperience: Yup.string().required('Years of experience is required'),
+  serviceArea: Yup.string().required('Service area is required'),
+  address: Yup.string().required('Office address is required'),
 });

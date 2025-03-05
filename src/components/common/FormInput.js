@@ -53,7 +53,9 @@ const FormInput = ({
           placeholder={placeholder}
           inputMode={inputMode}
           pattern={pattern}
-          className={`input border-[2px] w-full input-bordered focus:ring-0 focus:outline-none ${size} placeholder-custom  !text-[#333333]  font-light`}
+          className={`input border-[2px] w-full input-bordered focus:ring-0 focus:outline-none ${size} placeholder-custom  !text-[#333333]  font-light ${
+            type === 'number' ? 'no-spinner' : ''
+          }`}
           style={{
             borderColor: error ? 'red' : value ? '#1140E7' : '',
           }}

@@ -524,7 +524,7 @@ export const inquiriesData = [
 export const propertyTypes = [
   {
     name: 'Flat',
-    value: 'Apartment',
+    value: 'Flat',
   },
   { name: 'Apartment', value: 'Apartment' },
   { name: 'Duplex', value: 'Duplex' },

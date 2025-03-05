@@ -5,11 +5,13 @@ import { GoArrowUpRight } from 'react-icons/go';
 import AreaChart from './AreaChart';
 import { bestPerforming, dashboardData } from '../../common/constants';
 import { useGetUser } from '../../../services/query/account';
+import { useNavigate } from 'react-router-dom';
 
 const FirstLayer = () => {
   const { data, isLoading } = useGetUser();
   const [filter, setFilter] = useState('week');
 
+  const navigate = useNavigate();
   console.log(data);
 
   const inflowFilters = [
@@ -88,7 +90,7 @@ const FirstLayer = () => {
               </div>
               {isLoading ? (
                 <div className="mt-4 flex justify-center">
-                  <div className="w-8 h-8 border-4 border-gray-200 border-t-[#FF3030] rounded-full animate-spin" />
+                  <div className="w-8 h-8 border-4 border-gray-200 border-t-primary rounded-full animate-spin" />
                 </div>
               ) : (
                 <AreaChart dates={dates} totals={totals} />
@@ -114,10 +116,11 @@ const FirstLayer = () => {
               </p>
             </div>
             <ul className="grid gap-2 pt-3">
-              {bestPerforming.map((dat) => (
+              {bestPerforming.map((dat, i) => (
                 <li
                   className="flex justify-between border p-[8.5px] border-[#D4D0D0] rounded-[11px] cursor-pointer hover:shadow-md"
-                  key={dat.id}
+                  key={i}
+                  onClick={() => navigate(`/properties/property/${i}`)}
                 >
                   <div className="flex gap-4">
                     <div className="h-[66px] rounded-md overflow-hidden">

@@ -10,30 +10,30 @@ const FormStepOne = ({
   setCustomAmenities,
   setSelectedAmenities,
   selectedAmenities,
-  setStep,
+  setRentalPeriod,
+  setCheckedItems,
+  checkedItems,
+  rentalPeriod,
+  isLoading,
+  handleSubmit,
 }) => {
   const handleCustomChange = (e) => {
     setCustomAmenities(e.target.value);
   };
-  // Handle form submission to add a custom amenity
   const handleAddCustomAmenity = (e) => {
     e.preventDefault(); // Prevent page reload
-    if (customAmenities.trim() && !selectedAmenities[customAmenities]) {
-      setSelectedAmenities((prev) => ({
-        ...prev,
-        [customAmenities]: true,
-      }));
+    if (
+      customAmenities.trim() &&
+      !selectedAmenities.includes(customAmenities)
+    ) {
+      setSelectedAmenities((prev) => [...prev, customAmenities]);
       setCustomAmenities(''); // Clear input field
     }
   };
 
   // Remove an amenity from selection
   const handleRemoveAmenity = (amenity) => {
-    setSelectedAmenities((prev) => {
-      const updatedAmenities = { ...prev };
-      delete updatedAmenities[amenity];
-      return updatedAmenities;
-    });
+    setSelectedAmenities((prev) => prev.filter((item) => item !== amenity));
   };
 
   const handleInputChange = (event) => {
@@ -42,10 +42,15 @@ const FormStepOne = ({
   };
 
   const handleCheckboxChange = (amenity) => {
-    setSelectedAmenities((prev) => ({
-      ...prev,
-      [amenity]: !prev[amenity], // Toggle selection
-    }));
+    setSelectedAmenities(
+      (prev) =>
+        prev.includes(amenity)
+          ? prev.filter((item) => item !== amenity) // Remove if exists
+          : [...prev, amenity] // Add if not exists
+    );
+  };
+  const handleCheckChange = (name) => {
+    setCheckedItems((prev) => ({ ...prev, [name]: !prev[name] }));
   };
 
   const propertyOptions = propertyTypes?.map((id) => ({
@@ -108,6 +113,7 @@ const FormStepOne = ({
       backgroundColor: state.isFocused ? '#f4f6f8' : '',
     }),
   };
+
   return (
     <div className="grid gap-2 font-medium">
       <FormInput
@@ -178,7 +184,7 @@ const FormStepOne = ({
             <label key={amenity} className="flex items-center space-x-2">
               <input
                 type="checkbox"
-                checked={selectedAmenities[amenity] || false}
+                checked={selectedAmenities.includes(amenity)}
                 onChange={() => handleCheckboxChange(amenity)}
                 className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
@@ -198,9 +204,9 @@ const FormStepOne = ({
         </form>
         {/* Selected Amenities Display */}
         <div className="mt-4 flex flex-wrap gap-2">
-          {Object.keys(selectedAmenities).map((amenity) => (
+          {selectedAmenities.map((amenity, i) => (
             <div
-              key={amenity}
+              key={i}
               className="flex items-center bg-gray-100 text-gray-700 px-3 py-1 rounded-full"
             >
               <span>{amenity}</span>
@@ -233,14 +239,76 @@ const FormStepOne = ({
         onChange={updateTextViews}
         placeholder="Enter Amount"
       />
+
+      {/* Rental Period Toggle */}
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-gray-600 font-medium">
+          Rental Period (Monthly/Yearly)
+        </span>
+        <input
+          type="checkbox"
+          className="toggle toggle-primary "
+          checked={rentalPeriod}
+          onChange={() => setRentalPeriod(!rentalPeriod)}
+        />
+      </div>
+
+      {/* Property Checkboxes */}
+      <div className="space-y-3 pb-9">
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={checkedItems.insured}
+            onChange={() => handleCheckChange('insured')}
+            className="hidden"
+          />
+          <div
+            className={`w-5 h-5 flex items-center justify-center rounded-md ${
+              checkedItems.insured ? 'bg-blue-600' : 'bg-gray-300'
+            }`}
+          >
+            {checkedItems.insured && (
+              <span className="text-white text-xs">✔</span>
+            )}
+          </div>
+          <span className="text-gray-800">Is this property insured?</span>
+        </label>
+
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={checkedItems.newConstruction}
+            onChange={() => handleCheckChange('newConstruction')}
+            className="hidden"
+          />
+          <div
+            className={`w-5 h-5 flex items-center justify-center rounded-md ${
+              checkedItems.newConstruction ? 'bg-blue-600' : 'bg-gray-300'
+            }`}
+          >
+            {checkedItems.newConstruction && (
+              <span className="text-white text-xs">✔</span>
+            )}
+          </div>
+          <span className="text-gray-800">
+            Is this property a new construction?
+          </span>
+        </label>
+      </div>
       <button
         className={`primary-btn ${
-          !isFormFilled ? '!bg-gray-300 !border-0' : 'bg-primary'
+          !isFormFilled
+            ? '!bg-gray-300 !border-0 hover:text-white'
+            : 'bg-primary'
         }`}
-        onClick={() => setStep(2)}
         disabled={!isFormFilled}
+        onClick={handleSubmit}
       >
-        Next
+        {isLoading ? (
+          <span className="loading loading-dots loading-xs"></span>
+        ) : (
+          'Next'
+        )}
       </button>
     </div>
   );

@@ -17,14 +17,15 @@ const {
   VIEW_AGENT,
   ABOUT,
   CONTACT_US,
+  UPDATE_KYC,
 } = PUBLIC_PATHS;
 
 const {
   DASHBOARD,
   PROPERTIES,
   INQUIRES,
-  ADD_PROPERTIES,
   ADD_PROPERTY_INFO,
+  PROPERTY_UPLOADS,
   TRANSACTIONS,
   MESSAGES,
 } = PRIVATE_PATHS;
@@ -62,7 +63,8 @@ const About = WithSuspense(lazy(() => import('../pages/Web/AboutUs')));
 
 const ContactUs = WithSuspense(lazy(() => import('../pages/Web/ContactUs')));
 
-//private routes
+const UpdateKyc = WithSuspense(lazy(() => import('../pages/Web/UpdateKyc')));
+//strictly private routes
 const Dashboard = WithSuspense(
   lazy(() => import('../pages/Dashboard/Dashboard'))
 );
@@ -74,11 +76,12 @@ const Properties = WithSuspense(
   lazy(() => import('../pages/Properties/Properties'))
 );
 
-const AddProperties = WithSuspense(
-  lazy(() => import('../pages/Properties/AddProperties'))
-);
 const AddPropertyInfo = WithSuspense(
   lazy(() => import('../pages/Properties/AddPropertyInfo'))
+);
+
+const PropertyUploads = WithSuspense(
+  lazy(() => import('../pages/Properties/PropertyUploads'))
 );
 
 const Transactions = WithSuspense(
@@ -101,6 +104,7 @@ export const PUBLIC_ROUTES = [
   { path: VIEW_AGENT, element: <ViewAgent /> },
   { path: ABOUT, element: <About /> },
   { path: CONTACT_US, element: <ContactUs /> },
+  { path: UPDATE_KYC, element: <UpdateKyc /> },
 
   { path: '*', element: <Navigate to="/" replace /> },
 ];
@@ -108,10 +112,10 @@ export const PRIVATE_ROUTES = [
   { path: DASHBOARD, element: <Dashboard /> },
   { path: INQUIRES, element: <Inquiries /> },
   { path: PROPERTIES, element: <Properties /> },
-  { path: ADD_PROPERTIES, element: <AddProperties /> },
   { path: ADD_PROPERTY_INFO, element: <AddPropertyInfo /> },
+  { path: PROPERTY_UPLOADS, element: <PropertyUploads /> },
   { path: TRANSACTIONS, element: <Transactions /> },
   { path: MESSAGES, element: <Messages /> },
 
-  { path: '*', element: <Navigate to="/dashboard" replace /> },
+  { path: '*', element: <Navigate to="/" replace /> },
 ];

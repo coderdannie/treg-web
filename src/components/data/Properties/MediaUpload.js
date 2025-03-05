@@ -1,36 +1,63 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { FaFileAlt } from 'react-icons/fa';
+import { IoVideocamOutline, IoImagesOutline } from 'react-icons/io5';
 
-import { IoVideocamOutline } from 'react-icons/io5';
-import { IoImagesOutline } from 'react-icons/io5';
-
-const MediaUpload = ({ images, setImages, videos, setVideos }) => {
+const MediaUpload = ({
+  images,
+  setImages,
+  videos,
+  setVideos,
+  mutatePhotosUpload,
+  propertyId,
+  mutate,
+  isLoading,
+  isUploading,
+}) => {
   const [documents, setDocuments] = useState([]);
 
-  // Image Upload Handler
+  // Image Upload Handler with Auto Upload
   const onDropImages = useCallback(
     (acceptedFiles) => {
       if (images.length + acceptedFiles.length > 20) return;
+
       setImages((prev) => [...prev, ...acceptedFiles]);
+
+      // Prepare FormData
+      const formData = new FormData();
+      acceptedFiles.forEach((file) => formData.append('files', file));
+
+      // Replace with actual property ID
+      formData.append('propertyId', propertyId);
+
+      // Upload immediately
+      mutatePhotosUpload(formData);
     },
-    [images]
+    [images, mutatePhotosUpload]
   );
 
-  // Video Upload Handler
+  // Video Upload Handler with Auto Upload
   const onDropVideos = useCallback(
     (acceptedFiles) => {
       if (videos.length + acceptedFiles.length > 20) return;
+
       setVideos((prev) => [...prev, ...acceptedFiles]);
+
+      const formData = new FormData();
+      acceptedFiles.forEach((file) => formData.append('files', file));
+
+      formData.append('propertyId', propertyId);
+
+      mutate(formData);
     },
-    [videos]
+    [videos, mutate]
   );
 
-  // Document Upload Handler
+  // Document Upload (if needed)
   const onDropDocuments = useCallback((acceptedFiles) => {
     setDocuments((prev) => [...prev, ...acceptedFiles]);
   }, []);
 
+  // Dropzone configuration
   const { getRootProps: getImageProps, getInputProps: getImageInput } =
     useDropzone({
       onDrop: onDropImages,
@@ -45,16 +72,8 @@ const MediaUpload = ({ images, setImages, videos, setVideos }) => {
       multiple: true,
     });
 
-  const { getRootProps: getDocProps, getInputProps: getDocInput } = useDropzone(
-    {
-      onDrop: onDropDocuments,
-      accept: '.pdf,.doc,.docx',
-      multiple: false,
-    }
-  );
-
   return (
-    <div className=" mx-auto bg-white mt-2 ">
+    <div className="mx-auto bg-white mt-2">
       {/* Image Upload */}
       <div
         {...getImageProps()}
@@ -67,7 +86,14 @@ const MediaUpload = ({ images, setImages, videos, setVideos }) => {
         <p className="text-sm text-gray-500">Up to 20 images</p>
         <input {...getImageInput()} />
       </div>
-      <p className="text-sm mt-2">{images.length} image(s) uploaded</p>
+
+      <div className="text-sm mt-2">
+        {isLoading ? (
+          <span className="block w-4 h-4 border-2 border-gray-200 border-t-primary rounded-full animate-spin" />
+        ) : (
+          ` ${images.length} image(s) uploaded`
+        )}
+      </div>
 
       {/* Video Upload */}
       <div
@@ -81,21 +107,13 @@ const MediaUpload = ({ images, setImages, videos, setVideos }) => {
         <p className="text-sm text-gray-500">Up to 20 videos</p>
         <input {...getVideoInput()} />
       </div>
-      <p className="text-sm mt-2">{videos.length} video(s) uploaded</p>
-
-      {/* Document Upload
-      <div
-        {...getDocProps()}
-        className="border-2 border-dashed p-6 text-center rounded-lg cursor-pointer mt-4"
-      >
-        <FaFileAlt className="text-4xl text-blue-500 mx-auto" />
-        <p>Drag and drop a PDF or Word document</p>
-        <input {...getDocInput()} />
+      <div className="text-sm mt-2">
+        {isUploading ? (
+          <span className="w-4 h-4 block border-2 border-gray-200 border-t-primary rounded-full animate-spin" />
+        ) : (
+          ` ${videos.length} video(s) uploaded`
+        )}
       </div>
-      <p className="text-sm mt-2">{documents.length} document(s) uploaded</p> */}
-
-      {/* Next Button */}
-      <button className=" primary-btn w-full mt-6">Next</button>
     </div>
   );
 };

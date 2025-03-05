@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { BsDownload } from 'react-icons/bs';
 
 import { FiSearch } from 'react-icons/fi';
@@ -8,9 +8,24 @@ import TransactionsTable from '../../components/data/Properties/TransactionsTabl
 import { statuses } from '../../components/common/constants';
 import { FiFilter } from 'react-icons/fi';
 import { IoIosAddCircleOutline } from 'react-icons/io';
+import UpdateKycModal from '../../components/modals/UpdateKyc';
+import { useGetUser } from '../../services/query/account';
 
 const Properties = () => {
   const { type } = useParams();
+  const [showModal, setShowModal] = useState(false);
+
+  const navigate = useNavigate();
+  const { data } = useGetUser();
+
+  // Check if the user is a Landlord or Tenant
+  const isLandlordOrAgent =
+    data &&
+    (data?.data?.userType === 'Landlord' || data?.data?.userType === 'Agent');
+
+  const isKycCompleted =
+    data?.data?.supportingDocumentProvided &&
+    data?.data?.professionalDetailsCompleted;
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState('Status');
@@ -71,17 +86,18 @@ const Properties = () => {
               </ul>
             )}
           </div>
-          {/* <button className="primary-btn h-fit flex items-center gap-1">
-            <BsDownload />
-            <span>Export Data</span>
-          </button> */}
-          <Link
-            to="/add-properties/add-property-info"
+
+          <button
             className="primary-btn h-fit flex items-center gap-1"
+            onClick={() =>
+              isLandlordOrAgent && !isKycCompleted
+                ? setShowModal(true)
+                : navigate('/add-property-info')
+            }
           >
             <IoIosAddCircleOutline size={18} />
             <span>Add Property</span>
-          </Link>
+          </button>
         </div>
       </div>{' '}
       <div className="flex items-center justify-end gap-6 text-[#667185] mt-11 mb-2">
@@ -101,6 +117,7 @@ const Properties = () => {
           <span>Sort</span>
         </div>
       </div>
+      <UpdateKycModal showModal={showModal} setShowModal={setShowModal} />
       <TransactionsTable />
     </div>
   );

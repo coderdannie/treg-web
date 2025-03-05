@@ -1,17 +1,22 @@
 import { useEffect, useState } from 'react';
 import { navItems } from '../../common/constants';
 import Logo from '../../common/Logo';
-import { RiArrowDownSLine } from 'react-icons/ri';
+import {
+  RiArrowDownSLine,
+  RiUserLine,
+  RiDashboardLine,
+  RiLogoutCircleLine,
+} from 'react-icons/ri';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaBars, FaTimes } from 'react-icons/fa'; // Added FaTimes for close icon
-import { FaCheck } from 'react-icons/fa';
+import { FaBars, FaTimes, FaCheck } from 'react-icons/fa';
 
 const Navbar = () => {
   const [scroll, setScroll] = useState(false);
   const [selectedSubItem, setSelectedSubItem] = useState(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // State for drawer visibility
-  const [openDropdown, setOpenDropdown] = useState(null); // State for open dropdown
-
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false); // State for user dropdown
+  const isLoggedIn = !!sessionStorage.getItem('user'); // Check if user is logged in
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,7 +25,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Disable scroll when drawer is open
   useEffect(() => {
     if (isDrawerOpen) {
       document.body.style.overflow = 'hidden';
@@ -31,8 +35,8 @@ const Navbar = () => {
 
   const handleSubItemClick = (subItem) => {
     setSelectedSubItem(subItem);
-    navigate(`properties/${subItem.name}`); // Navigate to the selected sub-item
-    setIsDrawerOpen(false); // Close the drawer after navigation
+    navigate(`properties/${subItem.name}`);
+    setIsDrawerOpen(false);
   };
 
   const toggleDrawer = () => {
@@ -41,6 +45,16 @@ const Navbar = () => {
 
   const toggleDropdown = (id) => {
     setOpenDropdown((prev) => (prev === id ? null : id));
+  };
+
+  const toggleUserDropdown = () => {
+    setIsUserDropdownOpen((prev) => !prev);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('user');
+    navigate('/login');
+    setIsUserDropdownOpen(false);
   };
 
   return (
@@ -58,7 +72,6 @@ const Navbar = () => {
           <ul className="hide-nav-links space-x-8 justify-center text-[#818181] font-medium">
             {navItems.map((item) => (
               <li key={item.id} className="relative">
-                {/* Parent Menu Item */}
                 {item.sub ? (
                   <div className="dropdown dropdown-hover">
                     <label
@@ -70,7 +83,6 @@ const Navbar = () => {
                         <RiArrowDownSLine className="transition-transform duration-300" />
                       )}
                     </label>
-                    {/* Dropdown Menu */}
                     <ul
                       tabIndex={0}
                       className="dropdown-content z-50 menu p-2 shadow bg-white rounded-box w-52"
@@ -94,7 +106,7 @@ const Navbar = () => {
                   <button
                     onClick={() => {
                       navigate(item.url);
-                      setIsDrawerOpen(false); // Close drawer on navigation
+                      setIsDrawerOpen(false);
                     }}
                     className="hover:text-gray-900 transition flex items-center gap-1"
                   >
@@ -105,18 +117,59 @@ const Navbar = () => {
             ))}
           </ul>
 
-          {/* Desktop Auth Buttons */}
+          {/* Desktop Auth Buttons or User Dropdown */}
           <ul className="hide-nav-links items-center gap-3">
-            <li>
-              <Link className="secondary-btn" to="/login">
-                Log in
-              </Link>
-            </li>
-            <li>
-              <Link className="primary-btn" to="/create-account">
-                Sign up
-              </Link>
-            </li>
+            {isLoggedIn ? (
+              <li className="relative">
+                <button
+                  onClick={toggleUserDropdown}
+                  className="flex items-center gap-2 text-[#818181] hover:text-gray-900 transition"
+                >
+                  <RiUserLine className="text-xl" />
+                </button>
+                {/* User Dropdown */}
+                {isUserDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-[#EEF0F3] rounded-lg shadow-lg z-50">
+                    <ul className="py-2">
+                      <li>
+                        <button
+                          onClick={() => {
+                            navigate('/dashboard');
+                            setIsUserDropdownOpen(false);
+                          }}
+                          className="w-full flex items-center gap-2 px-4 py-2 text-[#818181] hover:bg-gray-100 hover:text-gray-900 transition"
+                        >
+                          <RiDashboardLine className="text-lg" />
+                          Dashboard
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-2 px-4 py-2 text-[#818181] hover:bg-gray-100 hover:text-gray-900 transition"
+                        >
+                          <RiLogoutCircleLine className="text-lg" />
+                          Logout
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </li>
+            ) : (
+              <>
+                <li>
+                  <Link className="secondary-btn" to="/login">
+                    Log in
+                  </Link>
+                </li>
+                <li>
+                  <Link className="primary-btn" to="/create-account">
+                    Sign up
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
 
           {/* Mobile Hamburger Menu */}
@@ -169,7 +222,6 @@ const Navbar = () => {
                         />
                       )}
                     </button>
-                    {/* Dropdown Menu */}
                     {openDropdown === item.id && (
                       <ul className="pl-4 mt-2 space-y-2">
                         {item.sub.map((subItem) => (
@@ -192,7 +244,7 @@ const Navbar = () => {
                   <button
                     onClick={() => {
                       navigate(item.url);
-                      setIsDrawerOpen(false); // Close drawer on navigation
+                      setIsDrawerOpen(false);
                     }}
                     className="hover:text-gray-900 transition flex items-center gap-1 w-full text-left"
                   >
@@ -205,20 +257,42 @@ const Navbar = () => {
 
           {/* Mobile Auth Buttons */}
           <div className="p-5 border-t border-[#EEF0F3]">
-            <Link
-              className="secondary-btn block w-full text-center mb-3"
-              to="/login"
-              onClick={() => setIsDrawerOpen(false)}
-            >
-              Log in
-            </Link>
-            <Link
-              className="primary-btn block w-full text-center"
-              to="/create-account"
-              onClick={() => setIsDrawerOpen(false)}
-            >
-              Sign up
-            </Link>
+            {isLoggedIn ? (
+              <>
+                <button
+                  onClick={() => {
+                    navigate('/dashboard');
+                    setIsDrawerOpen(false);
+                  }}
+                  className="primary-btn block w-full text-center mb-3"
+                >
+                  Dashboard
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="secondary-btn block w-full text-center"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  className="secondary-btn block w-full text-center mb-3"
+                  to="/login"
+                  onClick={() => setIsDrawerOpen(false)}
+                >
+                  Log in
+                </Link>
+                <Link
+                  className="primary-btn block w-full text-center"
+                  to="/create-account"
+                  onClick={() => setIsDrawerOpen(false)}
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -1,7 +1,11 @@
 import { RiMenu3Line } from 'react-icons/ri';
 import { IoNotificationsOutline } from 'react-icons/io5';
+import { IoHomeOutline } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({ setDrawerOpen }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col bg-white fixed w-full z-10 max-991:py-[30px] py-5">
       <div className="flex gap-4 justify-between items-center max-991:pl-[30px] pl-[320px]  max-991:pr-[20px] pr-[48px]">
@@ -13,6 +17,7 @@ const Header = ({ setDrawerOpen }) => {
         >
           <RiMenu3Line className="text-2xl" />
         </div>
+
         <label className="input h-10 hidden min-991:flex  bg-[#F7F7F7] flex-[1]  items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +37,15 @@ const Header = ({ setDrawerOpen }) => {
             placeholder="Search properties by ID, name or location...."
           />
         </label>
+
         <div className="flex  items-center justify-end flex-1 gap-4">
+          {/* Home Icon */}
+          <div
+            className="cursor-pointer"
+            onClick={() => navigate('/')} // Navigate to the root path
+          >
+            <IoHomeOutline className="text-2xl" /> {/* Home icon */}
+          </div>
           <div className="avatar placeholder">
             <div className="bg-[#F0F2F5] w-8 rounded-full text-4xl p-2">
               <IoNotificationsOutline />
@@ -55,4 +68,5 @@ const Header = ({ setDrawerOpen }) => {
     </div>
   );
 };
+
 export default Header;

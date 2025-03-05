@@ -81,16 +81,18 @@ export const NonAuthLayout = ({ children }) => {
     '/forgot-password',
     '/reset-password',
     '/verify-otp',
+    '/update-kyc',
   ];
 
   const shouldHideNavbar = routes.some((route) =>
     location.pathname.includes(route)
   );
+
   return (
     <div>
       {!shouldHideNavbar && <Navbar />}
       {children}
-      {!shouldHideNavbar && <Footer />}
+      {/* {!shouldHideNavbar && <Footer />} */}
     </div>
   );
 };
