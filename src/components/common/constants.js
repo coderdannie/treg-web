@@ -142,8 +142,8 @@ export const sidebarData = [
       },
       {
         id: 2,
-        name: 'Pending Approval',
-        path: '/my-properties/pending-approval',
+        name: 'Unlisted Listings',
+        path: '/my-properties/unlisted-listings',
         icon: <LuListChecks />,
       },
       {
@@ -455,7 +455,7 @@ export const headers = [
   'Status',
   'Actions',
 ];
-export const statuses = ['Active', 'Pending', 'Rented'];
+export const statuses = ['Active', 'Draft', 'Expired'];
 export const fetchedTransactions = [
   {
     id: 'TREG-TXN-56789-LND',

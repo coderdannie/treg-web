@@ -166,13 +166,15 @@ const FormStepOne = ({
       <FormInput
         label="Number of Rooms"
         name="noOfRooms"
-        type="text"
+        type="tel"
         value={values.noOfRooms}
         //   error={
         //     values.noOfRooms &&
         //     typeof values.noOfRooms !== 'number' &&
         //     'invalid type'
         //   }
+        inputMode="decimal"
+        pattern="[0-9.,]+"
         onChange={handleInputChange}
         placeholder="3"
       />

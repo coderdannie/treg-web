@@ -16,3 +16,7 @@ export const ADD_PROPERTY = 'properties/add';
 export const UPLOAD_PROPERTY_PHOTOS = 'media/upload-photos';
 export const UPLOAD_PROPERTY_VIDEOS = 'media/upload-videos';
 export const LISTING_PAYMENT = 'payments/pay-for-listing';
+export const GET_ALL_PROPERTIES = 'properties/all';
+export const VERIFY_PAYMENT = 'payments/verify-listing-payment';
+export const COMPLETE_LISTING = (id = '') =>
+  `properties/complete-listing/${id}`;

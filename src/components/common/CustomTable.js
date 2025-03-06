@@ -1,4 +1,5 @@
 import React from 'react';
+import TableSkeleton from '../Loaders/TableLoader';
 
 const CustomTable = ({
   headers,
@@ -12,7 +13,7 @@ const CustomTable = ({
   return (
     <div className="relative w-full overflow-x-auto">
       <div className="w-full overflow-scroll max-h-[400px] rounded-lg border">
-        <table className="w-full min-w-[600px] text-center capitalize font-semibold text-[#344054] text-sm border-collapse">
+        <table className="w-full min-w-[600px] capitalize font-semibold text-[#344054] text-sm border-collapse">
           {/* Table Header */}
           <thead className="bg-[#F9FAFB]">
             <tr>
@@ -29,22 +30,13 @@ const CustomTable = ({
 
           {/* Table Body */}
           <tbody className="bg-white">
-            {isLoading
-              ? // Show Skeleton Rows if Loading
-                Array.from({ length: skeletonRows }).map((_, rowIndex) => (
-                  <tr key={rowIndex}>
-                    {headers.map((_, cellIndex) => (
-                      <td
-                        key={cellIndex}
-                        className="px-6 py-4 border-b border-[#EAECF0]"
-                      >
-                        <div className="h-4 bg-white rounded animate-pulse"></div>
-                      </td>
-                    ))}
-                  </tr>
-                ))
-              : // Render Children as Table Body
-                children}
+            {isLoading ? (
+              // Show Skeleton Rows if Loading
+              <TableSkeleton headers={headers} />
+            ) : (
+              // Render Children as Table Body
+              children
+            )}
           </tbody>
         </table>
       </div>

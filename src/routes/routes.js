@@ -18,6 +18,7 @@ const {
   ABOUT,
   CONTACT_US,
   UPDATE_KYC,
+  VERIFY_PAYMENT,
 } = PUBLIC_PATHS;
 
 const {
@@ -63,7 +64,6 @@ const About = WithSuspense(lazy(() => import('../pages/Web/AboutUs')));
 
 const ContactUs = WithSuspense(lazy(() => import('../pages/Web/ContactUs')));
 
-const UpdateKyc = WithSuspense(lazy(() => import('../pages/Web/UpdateKyc')));
 //strictly private routes
 const Dashboard = WithSuspense(
   lazy(() => import('../pages/Dashboard/Dashboard'))
@@ -90,6 +90,12 @@ const Transactions = WithSuspense(
 
 const Messages = WithSuspense(lazy(() => import('../pages/Messages/Messages')));
 
+const UpdateKyc = WithSuspense(lazy(() => import('../pages/Web/UpdateKyc')));
+
+const VerifyPayment = WithSuspense(
+  lazy(() => import('../pages/Web/VerifyPayment'))
+);
+
 export const PUBLIC_ROUTES = [
   { path: LOGIN, element: <Login /> },
   { path: REGISTER, element: <Register /> },
@@ -105,6 +111,7 @@ export const PUBLIC_ROUTES = [
   { path: ABOUT, element: <About /> },
   { path: CONTACT_US, element: <ContactUs /> },
   { path: UPDATE_KYC, element: <UpdateKyc /> },
+  { path: VERIFY_PAYMENT, element: <VerifyPayment /> },
 
   { path: '*', element: <Navigate to="/" replace /> },
 ];

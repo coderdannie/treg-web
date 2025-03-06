@@ -2,6 +2,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import MediaUpload from '../../components/data/Properties/MediaUpload';
 import {
+  useCompleteListing,
   useUploadPropertyPhotos,
   useUploadPropertyVideos,
 } from '../../services/query/properties';
@@ -34,6 +35,22 @@ const PropertyUploads = () => {
     },
   });
 
+  const { mutate: mutateCompleteListing, isLoading: isListing } =
+    useCompleteListing({
+      onSuccess: (res) => {
+        successToast(res?.message);
+        mutatePayment({
+          amount: Number(propertyDetails?.data?.pricePerYear?.$numberDecimal),
+          propertyId: propertyDetails?.data?._id,
+        });
+      },
+      onError: (res) => {
+        errorToast(
+          res?.response?.data?.message || res?.message || 'An Error Occurred'
+        );
+      },
+    });
+
   const { mutate, isLoading: isUploading } = useUploadPropertyVideos({
     onSuccess: (res) => {
       successToast(res?.message);
@@ -65,8 +82,6 @@ const PropertyUploads = () => {
       },
     });
 
-  console.log(propertyDetails?.data?.pricePerYear.$numberDecimal);
-
   return (
     <div
       style={{
@@ -90,19 +105,18 @@ const PropertyUploads = () => {
       />
       <button
         className={`primary-btn mt-7 w-full ${
-          !images.length
-            ? '!bg-gray-300 !border-0 hover:text-white'
+          !images.length || !videos.length || isUploading || isLoading
+            ? '!bg-gray-300 !border-0 hover:text-white cursor-not-allowed'
             : 'bg-primary'
         }`}
-        disabled={!images.length && !videos.length}
+        disabled={!images.length || !videos.length || isUploading || isLoading}
         onClick={() =>
-          mutatePayment({
-            amount: Number(propertyDetails?.data?.pricePerYear?.$numberDecimal),
-            propertyId: propertyDetails?.data?._id,
+          mutateCompleteListing({
+            id: propertyDetails?.data?._id,
           })
         }
       >
-        {isInitializing ? (
+        {isListing || isInitializing ? (
           <span className="loading loading-dots loading-xs"></span>
         ) : (
           'Next'

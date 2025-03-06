@@ -15,6 +15,7 @@ export const PUBLIC_PATHS = {
   ABOUT: '/about-us',
   CONTACT_US: '/contact-us',
   UPDATE_KYC: '/update-kyc',
+  VERIFY_PAYMENT: '/verify-payment',
 };
 
 export const PRIVATE_PATHS = {

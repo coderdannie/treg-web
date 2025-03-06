@@ -1,8 +1,10 @@
 import { useMutation, useQuery } from 'react-query';
 import {
   addProperty,
+  getAllProperties,
   uploadPropertyPhotos,
   uploadPropertyVideos,
+  completeListing,
 } from '../api/properties';
 
 export const useAddProperty = (options = {}) => {
@@ -28,6 +30,37 @@ export const useUploadPropertyVideos = (options = {}) => {
     mutationKey: 'uploadVideos',
     ...options,
   });
+
+  return { mutate, isLoading };
+};
+
+export const useGetAllProperties = (
+  page = '1',
+  limit = '',
+  start = '',
+  end = '',
+  status = '',
+  options = {}
+) => {
+  const { data, isLoading, refetch } = useQuery(
+    ['getAllProperties', page, limit, start, end, status],
+    getAllProperties,
+    {
+      ...options,
+    }
+  );
+
+  return { data, isLoading, refetch };
+};
+
+export const useCompleteListing = (options = {}) => {
+  const { mutate, isLoading } = useMutation(
+    (payload) => completeListing(payload.id),
+    {
+      mutationKey: 'CompleteListing',
+      ...options,
+    }
+  );
 
   return { mutate, isLoading };
 };

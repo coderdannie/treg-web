@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { BsDownload } from 'react-icons/bs';
-
 import { FiSearch } from 'react-icons/fi';
 import { BiSortAlt2 } from 'react-icons/bi';
 import TransactionsTable from '../../components/data/Properties/TransactionsTable';
@@ -10,15 +9,118 @@ import { FiFilter } from 'react-icons/fi';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import UpdateKycModal from '../../components/modals/UpdateKyc';
 import { useGetUser } from '../../services/query/account';
+import { useGetAllProperties } from '../../services/query/properties';
+import { formatDates } from '../../utils/helper';
 
 const Properties = () => {
   const { type } = useParams();
   const [showModal, setShowModal] = useState(false);
-
   const navigate = useNavigate();
   const { data } = useGetUser();
 
-  // Check if the user is a Landlord or Tenant
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState('All');
+  const [startValue, startChange] = useState('');
+  const [showStartDate, setShowStartDate] = useState(false);
+  const [showEndDate, setShowEndDate] = useState(false);
+  const [endValue, endChange] = useState('');
+  const [duration, setDuration] = useState('');
+
+  const [page, setPage] = useState(1);
+  const [startRow, setStartRow] = useState(1);
+  const [endRow, setEndRow] = useState(0);
+  const [limit, setLimit] = useState(25);
+
+  const getQueryStatus = () => {
+    if (selectedStatus !== 'Status') {
+      if (selectedStatus === 'Active') {
+        return 'Available';
+      }
+      return selectedStatus;
+    }
+
+    if (type.includes('all')) {
+      return ''; // No status filter for "All Listings"
+    }
+    if (type.includes('unlisted')) {
+      return 'Unlisted';
+    }
+    if (type.includes('active')) {
+      return 'Available';
+    }
+    if (type.includes('rented')) {
+      return 'Rented';
+    }
+
+    return ''; // Default to no status filter
+  };
+
+  // Reset selectedStatus when type changes
+  useEffect(() => {
+    setSelectedStatus('Status'); // Reset to default
+  }, [type]);
+
+  const {
+    data: allProperties,
+    isLoading,
+    refetch,
+  } = useGetAllProperties(
+    page,
+    limit,
+    startValue ? formatDates(new Date(startValue)) : '',
+    endValue ? formatDates(new Date(endValue)) : '',
+    getQueryStatus() // Use the computed status
+  );
+
+  useEffect(() => {
+    refetch();
+  }, [type, selectedStatus, startValue, endValue, page, limit, refetch]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [limit, selectedStatus]); // Refetch when limit or selectedStatus changes
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    const currentPage = page;
+    const itemsPerPage = limit;
+    const totalItems = data?.meta?.itemCount;
+
+    const currentStartRow = (currentPage - 1) * itemsPerPage + 1;
+    const currentEndRow = Math.min(currentPage * itemsPerPage, totalItems);
+
+    setStartRow(currentStartRow);
+    setEndRow(currentEndRow);
+  }, [data, page, limit]);
+
+  useEffect(() => {
+    const calculateDates = () => {
+      const currentDate = new Date();
+      let startDate;
+
+      if (duration.includes('3 months')) {
+        startDate = new Date();
+        startDate.setMonth(currentDate.getMonth() - 3);
+      } else if (duration.includes('6 months')) {
+        startDate = new Date();
+        startDate.setMonth(currentDate.getMonth() - 6);
+      } else {
+        startChange('');
+        endChange('');
+      }
+
+      if (startDate) {
+        startChange(startDate.toISOString().split('T')[0]);
+        endChange(currentDate.toISOString().split('T')[0]);
+      }
+    };
+
+    calculateDates();
+  }, [duration]);
+
   const isLandlordOrAgent =
     data &&
     (data?.data?.userType === 'Landlord' || data?.data?.userType === 'Agent');
@@ -27,8 +129,6 @@ const Properties = () => {
     data?.data?.supportingDocumentProvided &&
     data?.data?.professionalDetailsCompleted;
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState('Status');
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (event.target.closest('.box') === null) {
@@ -49,8 +149,8 @@ const Properties = () => {
           <h3 className="font-semibold text-lg md:text-xl text-black">
             {type.includes('all')
               ? 'All Listings'
-              : type.includes('pending')
-              ? 'Pending Approval'
+              : type.includes('unlisted')
+              ? 'Unlisted Listings'
               : type.includes('active')
               ? 'Active Listings'
               : 'Rented Properties'}
@@ -62,13 +162,12 @@ const Properties = () => {
         <div className="flex items-center gap-2">
           <div className="relative">
             <button
-              className="secondary-btn h-fit flex box  items-center gap-1"
+              className="secondary-btn h-fit flex box items-center gap-1"
               onClick={() => setIsOpen(!isOpen)}
             >
               <FiFilter size={16} />
               {selectedStatus}
-            </button>{' '}
-            {/* Dropdown Menu */}
+            </button>
             {isOpen && (
               <ul className="absolute left-0 mt-2 w-36 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                 {statuses.map((status) => (
@@ -99,9 +198,8 @@ const Properties = () => {
             <span>Add Property</span>
           </button>
         </div>
-      </div>{' '}
+      </div>
       <div className="flex items-center justify-end gap-6 text-[#667185] mt-11 mb-2">
-        {/* Search Input */}
         <div className="flex items-center gap-2">
           <FiSearch size={18} />
           <input
@@ -110,16 +208,15 @@ const Properties = () => {
             className={`w-24 transition-all duration-300 bg-transparent outline-none border-b border-gray-300 focus:w-40 focus:border-gray-500`}
           />
         </div>
-
-        {/* Sort Option */}
         <div className="flex items-center gap-1 cursor-pointer hover:text-gray-700 transition">
           <BiSortAlt2 size={18} />
           <span>Sort</span>
         </div>
       </div>
       <UpdateKycModal showModal={showModal} setShowModal={setShowModal} />
-      <TransactionsTable />
+      <TransactionsTable isLoading={isLoading} data={allProperties} />
     </div>
   );
 };
+
 export default Properties;

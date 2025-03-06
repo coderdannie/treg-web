@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import vectorBg from '../../assets/vectorBg.png';
 import { IoCloseSharp } from 'react-icons/io5';
 import FormInput from '../../components/common/FormInput';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   initialKycValues,
   validateVerifyKycSchema,

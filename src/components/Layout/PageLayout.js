@@ -82,6 +82,7 @@ export const NonAuthLayout = ({ children }) => {
     '/reset-password',
     '/verify-otp',
     '/update-kyc',
+    '/verify-payment',
   ];
 
   const shouldHideNavbar = routes.some((route) =>
