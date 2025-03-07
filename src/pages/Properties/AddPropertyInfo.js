@@ -29,7 +29,7 @@ const AddPropertyInfo = () => {
 
   const { mutate, isLoading } = useAddProperty({
     onSuccess: (res) => {
-      successToast(res?.message);
+      // successToast(res?.message);
       sessionStorage.setItem('propertyDetails', JSON.stringify(res));
       navigate('/property-uploads');
     },

@@ -35,7 +35,7 @@ export const useUploadPropertyVideos = (options = {}) => {
 };
 
 export const useGetAllProperties = (
-  page = '1',
+  page = 1,
   limit = '',
   start = '',
   end = '',

@@ -3,7 +3,16 @@ import { FiMoreVertical } from 'react-icons/fi';
 import CustomTable from '../../common/CustomTable';
 import { formatDate } from '../../../utils/helper';
 
-const TransactionsTable = ({ data, isLoading }) => {
+const TransactionsTable = ({
+  data,
+  isLoading,
+  startRow,
+  endRow,
+  page,
+  setPage,
+  setLimit,
+  limit,
+}) => {
   return (
     <CustomTable
       isLoading={isLoading}
@@ -16,6 +25,21 @@ const TransactionsTable = ({ data, isLoading }) => {
         'Status',
         'Actions',
       ]}
+      paginationValues={{
+        startRow,
+        endRow,
+        total: data?.data?.length,
+        page: data?.meta?.page,
+        pageCount: data?.meta?.totalPages,
+        onNext: () =>
+          data?.meta?.page !== data?.meta?.totalPages
+            ? setPage(page + 1)
+            : null,
+        onPrevious: () => (data?.meta?.page !== 1 ? setPage(page - 1) : null),
+        setLimit,
+        limit,
+      }}
+      useDefaultPagination
       skeletonRows={3}
     >
       {data?.data?.length ? (
@@ -43,10 +67,11 @@ const TransactionsTable = ({ data, isLoading }) => {
                   paddingBlock: '5px',
                   paddingInline: '7px',
                   borderRadius: '55px',
+                  textAlign: 'center',
                 }}
                 className={`
                  ${
-                   row.status === 'active'
+                   row.status === 'Available'
                      ? 'text-[#036B26] bg-[#E7F6EC] cursor-pointer relative'
                      : row.status === 'Rented'
                      ? 'text-red-600 bg-[#FFE1E1] cursor-pointer relative'
@@ -54,7 +79,7 @@ const TransactionsTable = ({ data, isLoading }) => {
                  }
                  `}
               >
-                {row.status}
+                {row.status === 'Available' ? 'Active' : row.status}
               </p>
             </td>
             <td className="whitespace-nowrap px-6 py-4 ">

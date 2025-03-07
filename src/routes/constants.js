@@ -26,4 +26,5 @@ export const PRIVATE_PATHS = {
   PROPERTY_UPLOADS: '/property-uploads',
   TRANSACTIONS: '/transactions',
   MESSAGES: '/messages',
+  TENANT_DASHBOARD: '/tenant/dashboard',
 };

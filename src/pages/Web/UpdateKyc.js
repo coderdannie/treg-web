@@ -95,7 +95,7 @@ const UpdateKyc = () => {
   const handleAddSupportingDocs = () => {
     mutateDetails({
       avatar: file,
-      daysAvailable: selectedDays,
+      daysAvailable: JSON.stringify(selectedDays),
       workingHours: workingHours,
     });
   };

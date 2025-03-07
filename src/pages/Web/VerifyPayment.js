@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom'; // Import useNavigate
 import Banner from '../../components/common/Banner';
 import vectorBg from '../../assets/vectorBg.png';
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
 import { useVerifyPayment } from '../../services/query/payments';
 import toast from 'react-hot-toast';
 
@@ -9,13 +10,19 @@ const VerifyPayment = () => {
   const [status, setStatus] = useState('pending'); // 'pending', 'success', 'failure'
   const [progress, setProgress] = useState(0);
 
+  // Use useSearchParams to access query parameters
+  const [searchParams] = useSearchParams();
+  const reference = searchParams.get('reference'); // Extract the 'reference' query parameter
+
+  // Use useNavigate for navigation
+  const navigate = useNavigate();
+
   const errorToast = (message) => toast.error(message, { duration: 3000 });
   const successToast = (message) => toast.success(message, { duration: 3000 });
 
   const { mutate, isLoading } = useVerifyPayment({
     onSuccess: (res) => {
       successToast(res?.message);
-
       setStatus('success');
     },
     onError: (res) => {
@@ -33,11 +40,18 @@ const VerifyPayment = () => {
 
     setTimeout(() => {
       clearInterval(interval);
-      //   mutate();
+
+      // Send the reference to the backend
+      if (reference) {
+        mutate({ reference });
+      } else {
+        errorToast('Reference not found in URL');
+        setStatus('failure');
+      }
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [reference, mutate]); // Add reference and mutate to the dependency array
 
   return (
     <div
@@ -53,7 +67,7 @@ const VerifyPayment = () => {
           initial={{ y: -50 }} // Start 50px above
           animate={{ y: 0 }} // End at normal position
           transition={{ duration: 0.5 }} // Animation duration
-          className="flex flex-col items-center justify-center  bg-white rounded-2xl shadow-md max-w-[562px] w-full p-[20px] md:p-[40px] border border-[#C2C2C2]"
+          className="flex flex-col items-center justify-center bg-white rounded-2xl shadow-md max-w-[562px] w-full p-[20px] md:p-[40px] border border-[#C2C2C2]"
         >
           <div>
             <p className="text-gray-500 text-sm">TREG-2024-0012-RT-ALB-0003</p>
@@ -104,7 +118,7 @@ const VerifyPayment = () => {
               </div>
             </div>
 
-            <p className="text-gray-500 text-sm  md:text-lg text-center mt-6">
+            <p className="text-gray-500 text-sm md:text-lg text-center mt-6">
               Please wait for some minutes while we confirm your transaction
             </p>
             <div className="flex items-center justify-center mt-4 text-gray-500 text-sm">
@@ -113,10 +127,21 @@ const VerifyPayment = () => {
                 Secured by <strong className="text-gray-900">paystack</strong>
               </span>
             </div>
+
+            {/* Back Button */}
+            {(status === 'success' || status === 'failure') && (
+              <button
+                className="mt-6 w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition-colors"
+                onClick={() => navigate('/my-properties/all')} // Go back to the previous page
+              >
+                Go Back
+              </button>
+            )}
           </div>
         </motion.div>
       </div>
     </div>
   );
 };
+
 export default VerifyPayment;

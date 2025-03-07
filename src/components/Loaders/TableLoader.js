@@ -5,7 +5,7 @@ const TableSkeleton = ({ headers }) => {
         <tr key={rowIndex}>
           {headers.map((_, cellIndex) => (
             <td key={cellIndex} className="whitespace-nowrap px-6 py-4">
-              <div className="skeleton h-8 w-full rounded-md bg-base-200"></div>
+              <div className="h-8 bg-gray-200 rounded-lg animate-pulse"></div>
             </td>
           ))}
         </tr>

@@ -76,7 +76,6 @@ const VerifyOtp = () => {
   } = useResendPasswordOtp({
     onSuccess: () => {
       successToast('An OTP has been sent to your email');
-      sessionStorage.removeItem('passwordOtp');
     },
     onError: (res) => {
       errorToast(
@@ -89,13 +88,13 @@ const VerifyOtp = () => {
   );
 
   const handleSubmit = () => {
-    if (passwordOtp) {
-      mutatePasswordOtp({
+    if (passwordOtp.includes('accountCreationOtp')) {
+      mutate({
         email: email,
         otp: values?.otp,
       });
     } else {
-      mutate({
+      mutatePasswordOtp({
         email: email,
         otp: values?.otp,
       });
@@ -120,12 +119,12 @@ const VerifyOtp = () => {
   const seconds = timeLeft % 60;
 
   const handleSend = () => {
-    if (passwordOtp) {
-      resendMutate({
+    if (passwordOtp.includes('accountCreationOtp')) {
+      sendMutate({
         email: email,
       });
     } else {
-      sendMutate({
+      resendMutate({
         email: email,
       });
     }
@@ -174,7 +173,11 @@ const VerifyOtp = () => {
             <div>
               {isSending || isReSending ? (
                 <span
-                  className={email ? 'mt-1' : 'loading loading-spinner mt-2'}
+                  className={
+                    email
+                      ? 'mt-1'
+                      : 'border-t-transparent border-4 border-[#df1a1a] w-4 aspect-square rounded-full animate-spin mt-2'
+                  }
                 ></span>
               ) : (
                 <div className={email ? 'mt-1' : 'mt-2 text-center'}>

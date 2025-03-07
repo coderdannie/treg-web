@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-import { sidebarData } from '../../common/constants'; // Your provided array
+import { tenantSidebarData } from '../../common/constants'; // Your provided array
 import Logo from '../../common/Logo';
 import { LuLogOut } from 'react-icons/lu';
 import { useLogOut } from '../../../utils/helper';
 import { useGetUser } from '../../../services/query/account';
 
-const SideBar = () => {
+const TenantSidebar = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { data, isLoading: isUserLoading } = useGetUser();
@@ -26,7 +26,7 @@ const SideBar = () => {
         newOpenSubItems[item] = false;
       });
 
-      const activeParentItem = sidebarData.find((item) =>
+      const activeParentItem = tenantSidebarData.find((item) =>
         pathname.includes(item.path)
       )?.title;
 
@@ -71,7 +71,7 @@ const SideBar = () => {
             </div>
           ) : (
             <div className="flex-1">
-              {sidebarData.map((item, i) => (
+              {tenantSidebarData.map((item, i) => (
                 <div key={i} className="mb-2">
                   <div
                     className={`flex items-center px-4 py-3 cursor-pointer rounded-lg transition-colors duration-300 ${
@@ -81,21 +81,7 @@ const SideBar = () => {
                         : 'bg-transparent text-[#616161] hover:bg-[#E7F2FF] hover:text-primary'
                     }`}
                     onClick={() => {
-                      if (item.sub) {
-                        setShowMenu((prev) =>
-                          prev && currentIndex === item.title ? false : true
-                        );
-                        setCurrentIndex(item.title);
-
-                        // Automatically navigate to the first sub-item
-                        if (!pathname.includes(item.sub[0].path)) {
-                          navigate(item.sub[0].path);
-                        }
-                      } else {
-                        navigate(item.path);
-                        setShowMenu(false);
-                        setCurrentIndex('');
-                      }
+                      navigate(item.path);
                     }}
                   >
                     <span className="mr-4">
@@ -115,25 +101,6 @@ const SideBar = () => {
                       </span>
                     )}
                   </div>
-
-                  {item.sub && showMenu && currentIndex === item.title && (
-                    <div className="mt-2 pl-8">
-                      {item.sub.map((subItem) => (
-                        <Link
-                          key={subItem.id}
-                          to={subItem.path}
-                          className={`py-2 px-3 rounded-lg text-sm flex items-center gap-2 ${
-                            pathname.includes(subItem.path)
-                              ? 'text-primary'
-                              : 'text-[#757575] hover:text-primary'
-                          }`}
-                        >
-                          {subItem.icon}
-                          {subItem.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
@@ -170,4 +137,4 @@ const SideBar = () => {
   );
 };
 
-export default SideBar;
+export default TenantSidebar;

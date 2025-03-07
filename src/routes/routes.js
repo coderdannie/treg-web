@@ -29,6 +29,7 @@ const {
   PROPERTY_UPLOADS,
   TRANSACTIONS,
   MESSAGES,
+  TENANT_DASHBOARD,
 } = PRIVATE_PATHS;
 
 const Login = WithSuspense(lazy(() => import('../pages/Auth/Login')));
@@ -67,6 +68,10 @@ const ContactUs = WithSuspense(lazy(() => import('../pages/Web/ContactUs')));
 //strictly private routes
 const Dashboard = WithSuspense(
   lazy(() => import('../pages/Dashboard/Dashboard'))
+);
+
+const TenantDashboard = WithSuspense(
+  lazy(() => import('../pages/TenantDashboard/Dashboard'))
 );
 const Inquiries = WithSuspense(
   lazy(() => import('../pages/Inquiries/Inquiries'))
@@ -117,6 +122,7 @@ export const PUBLIC_ROUTES = [
 ];
 export const PRIVATE_ROUTES = [
   { path: DASHBOARD, element: <Dashboard /> },
+  { path: TENANT_DASHBOARD, element: <TenantDashboard /> },
   { path: INQUIRES, element: <Inquiries /> },
   { path: PROPERTIES, element: <Properties /> },
   { path: ADD_PROPERTY_INFO, element: <AddPropertyInfo /> },

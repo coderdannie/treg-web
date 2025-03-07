@@ -16,7 +16,9 @@ const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false); // State for user dropdown
-  const isLoggedIn = !!sessionStorage.getItem('user'); // Check if user is logged in
+  const isLoggedIn = !!sessionStorage.getItem('user');
+  const userType = JSON.parse(sessionStorage.getItem('user'));
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -134,7 +136,12 @@ const Navbar = () => {
                       <li>
                         <button
                           onClick={() => {
-                            navigate('/dashboard');
+                            if (userType?.data?.userType === 'Tenant') {
+                              navigate('/tenant/dashboard');
+                            } else {
+                              navigate('/dashboard');
+                            }
+
                             setIsUserDropdownOpen(false);
                           }}
                           className="w-full flex items-center gap-2 px-4 py-2 text-[#818181] hover:bg-gray-100 hover:text-gray-900 transition"
@@ -261,7 +268,12 @@ const Navbar = () => {
               <>
                 <button
                   onClick={() => {
-                    navigate('/dashboard');
+                    if (userType?.data?.userType === 'Tenant') {
+                      navigate('/tenant/dashboard');
+                    } else {
+                      navigate('/dashboard');
+                    }
+
                     setIsDrawerOpen(false);
                   }}
                   className="primary-btn block w-full text-center mb-3"

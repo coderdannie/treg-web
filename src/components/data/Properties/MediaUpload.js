@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { IoVideocamOutline, IoImagesOutline } from 'react-icons/io5';
+import toast from 'react-hot-toast';
 
 const MediaUpload = ({
   images,
@@ -15,41 +16,80 @@ const MediaUpload = ({
 }) => {
   const [documents, setDocuments] = useState([]);
 
+  const errorToast = (message) => toast.error(message, { duration: 3000 });
+
+  // Allowed image formats
+  const allowedImageTypes = ['image/jpg', 'image/jpeg', 'image/png'];
+
   // Image Upload Handler with Auto Upload
   const onDropImages = useCallback(
-    (acceptedFiles) => {
-      if (images.length + acceptedFiles.length > 20) return;
+    async (acceptedFiles) => {
+      // Filter out invalid file types
+      const validFiles = acceptedFiles.filter((file) =>
+        allowedImageTypes.includes(file.type)
+      );
 
-      setImages((prev) => [...prev, ...acceptedFiles]);
+      // Show error if invalid files are found
+      if (validFiles.length !== acceptedFiles.length) {
+        errorToast('Invalid file type. Only JPG, JPEG, and PNG are allowed');
 
-      // Prepare FormData
+        return; // Stop further execution
+      }
+
+      // Check if adding valid files will exceed the limit
+      if (images.length + validFiles.length > 20) {
+        errorToast('Cannot upload more than 20 images.');
+        return; // Stop further execution
+      }
+
+      // Add only valid files to the state
+      setImages((prev) => [...prev, ...validFiles]);
+
+      // Prepare FormData for valid files
       const formData = new FormData();
-      acceptedFiles.forEach((file) => formData.append('files', file));
-
-      // Replace with actual property ID
+      validFiles.forEach((file) => formData.append('files', file));
       formData.append('propertyId', propertyId);
 
-      // Upload immediately
-      mutatePhotosUpload(formData);
+      try {
+        // Upload valid files
+        await mutatePhotosUpload(formData);
+      } catch (error) {
+        toast.error('Image upload failed. Please try again.');
+        // Rollback the state if the upload fails
+        setImages((prev) => prev.filter((file) => !validFiles.includes(file)));
+      }
     },
-    [images, mutatePhotosUpload]
+    [images, mutatePhotosUpload, propertyId, setImages]
   );
 
   // Video Upload Handler with Auto Upload
   const onDropVideos = useCallback(
-    (acceptedFiles) => {
-      if (videos.length + acceptedFiles.length > 20) return;
-
-      setVideos((prev) => [...prev, ...acceptedFiles]);
+    async (acceptedFiles) => {
+      // Check if adding files will exceed the limit
+      if (videos.length + acceptedFiles.length > 20) {
+        toast.error('Cannot upload more than 20 videos.');
+        return; // Stop further execution
+      }
 
       const formData = new FormData();
       acceptedFiles.forEach((file) => formData.append('files', file));
-
       formData.append('propertyId', propertyId);
 
-      mutate(formData);
+      try {
+        // Upload immediately
+        await mutate(formData);
+
+        // Only update videos state if upload is successful
+        setVideos((prev) => [...prev, ...acceptedFiles]);
+      } catch (error) {
+        toast.error('Video upload failed. Please try again.');
+        // Rollback the state if the upload fails
+        setVideos((prev) =>
+          prev.filter((file) => !acceptedFiles.includes(file))
+        );
+      }
     },
-    [videos, mutate]
+    [videos, mutate, propertyId, setVideos]
   );
 
   // Document Upload (if needed)
@@ -61,7 +101,7 @@ const MediaUpload = ({
   const { getRootProps: getImageProps, getInputProps: getImageInput } =
     useDropzone({
       onDrop: onDropImages,
-      accept: 'image/*',
+      accept: 'image/jpg, image/jpeg, image/png', // Explicitly specify allowed types
       multiple: true,
     });
 
@@ -83,7 +123,9 @@ const MediaUpload = ({
         <p>
           Drag and drop images or <span className="text-primary">browse</span>
         </p>
-        <p className="text-sm text-gray-500">Up to 20 images</p>
+        <p className="text-sm text-gray-500">
+          Up to 20 images (JPG, JPEG, PNG only)
+        </p>
         <input {...getImageInput()} />
       </div>
 

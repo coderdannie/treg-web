@@ -81,20 +81,20 @@ const Properties = () => {
   }, [limit, selectedStatus]); // Refetch when limit or selectedStatus changes
 
   useEffect(() => {
-    if (!data) {
+    if (!allProperties) {
       return;
     }
 
     const currentPage = page;
     const itemsPerPage = limit;
-    const totalItems = data?.meta?.itemCount;
+    const totalItems = allProperties?.meta?.totalItems || 0;
 
     const currentStartRow = (currentPage - 1) * itemsPerPage + 1;
     const currentEndRow = Math.min(currentPage * itemsPerPage, totalItems);
 
     setStartRow(currentStartRow);
     setEndRow(currentEndRow);
-  }, [data, page, limit]);
+  }, [allProperties, page, limit]);
 
   useEffect(() => {
     const calculateDates = () => {
@@ -214,7 +214,16 @@ const Properties = () => {
         </div>
       </div>
       <UpdateKycModal showModal={showModal} setShowModal={setShowModal} />
-      <TransactionsTable isLoading={isLoading} data={allProperties} />
+      <TransactionsTable
+        isLoading={isLoading}
+        data={allProperties}
+        page={page}
+        setPage={setPage}
+        limit={limit}
+        setLimit={setLimit}
+        startRow={startRow}
+        endRow={endRow}
+      />
     </div>
   );
 };

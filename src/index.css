@@ -203,6 +203,12 @@ body {
   .splide__track {
     height: fit-content !important;
   }
+  .tenant-dashboard {
+    grid-template-columns: 1fr;
+  }
+}
+.tenant-dashboard {
+  grid-template-columns: 2fr 1fr;
 }
 .rs-picker-menu {
   z-index: 20000 !important;

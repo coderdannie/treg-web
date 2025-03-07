@@ -218,6 +218,54 @@ export const sidebarData = [
     path: '/settings',
   },
 ];
+
+export const tenantSidebarData = [
+  {
+    title: 'Dashboard',
+    path: '/tenant/dashboard',
+    icon: <DashboardIcon fill="#616161" />,
+    sec: <DashboardIcon fill="#1140E7" />,
+    hover: <DashboardIcon fill="#1140E7" />,
+  },
+  {
+    title: 'My Properties',
+    icon: <HomeIcon fill="#616161" />,
+    sec: <HomeIcon fill="#1140E7" />,
+    hover: <HomeIcon fill="#1140E7" />,
+    path: '/my-properties/all',
+  },
+
+  {
+    title: 'Messages',
+    icon: <MessageIcon fill="#616161" />,
+    sec: <MessageIcon fill="#1140E7" />,
+    hover: <MessageIcon fill="#1140E7" />,
+    path: '/messages',
+  },
+  {
+    title: 'Tenancy Agreements',
+    icon: <InvoiceIcon fill="#616161" />,
+    sec: <InvoiceIcon fill="#1140E7" />,
+    hover: <InvoiceIcon fill="#1140E7" />,
+    path: '/tenancy-agreements',
+  },
+
+  {
+    title: 'Calendar',
+    icon: <CalendarIcon fill="#616161" />,
+    sec: <CalendarIcon fill="#1140E7" />,
+    hover: <CalendarIcon fill="#1140E7" />,
+    path: '/calendar',
+  },
+  {
+    title: 'Settings',
+    icon: <SettingsIcon fill="#616161" />,
+    sec: <SettingsIcon fill="#1140E7" />,
+    hover: <SettingsIcon fill="#1140E7" />,
+    path: 'tenant/settings',
+  },
+];
+
 export const howItWorks = [
   {
     id: 1,

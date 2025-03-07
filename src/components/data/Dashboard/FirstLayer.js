@@ -6,13 +6,22 @@ import AreaChart from './AreaChart';
 import { bestPerforming, dashboardData } from '../../common/constants';
 import { useGetUser } from '../../../services/query/account';
 import { useNavigate } from 'react-router-dom';
+import UpdateKycModal from '../../modals/UpdateKyc';
 
 const FirstLayer = () => {
   const { data, isLoading } = useGetUser();
   const [filter, setFilter] = useState('week');
+  const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
-  console.log(data);
+
+  const isLandlordOrAgent =
+    data &&
+    (data?.data?.userType === 'Landlord' || data?.data?.userType === 'Agent');
+
+  const isKycCompleted =
+    data?.data?.supportingDocumentProvided &&
+    data?.data?.professionalDetailsCompleted;
 
   const inflowFilters = [
     { id: '1', name: 'This Week', value: 'week' },
@@ -26,6 +35,35 @@ const FirstLayer = () => {
   return (
     <div>
       {/* Header Section */}
+      {isLandlordOrAgent && !isKycCompleted && (
+        <div className="flex mb-2 justify-between max-w-[700px] flex-wrap gap-3 items-center border-2 border-[#EBEBEB] bg-white py-3 px-3 rounded-lg">
+          <div className="flex ">
+            {' '}
+            <img
+              src="/assets/markImg.png"
+              className="w-[36px]"
+              alt="mark icon"
+            />
+            <div>
+              <h2 className="text-sm text-black">
+                Update Your KYC to Continue!
+              </h2>
+              <p className="text-xs text-[#475367] max-w-[450px]">
+                For your security and seamless access, we need you to update
+                your KYC details. It only takes a few minutes!
+              </p>
+            </div>
+          </div>
+
+          <button
+            className="primary-btn !text-xs ml-auto  !px-[6px] h-fit "
+            onClick={() => navigate('/update-kyc')}
+          >
+            Update Kyc
+          </button>
+        </div>
+      )}
+
       <div className="flex justify-between gap-2 flex-wrap">
         <div>
           <h3 className="font-semibold text-lg md:text-xl">
@@ -36,7 +74,14 @@ const FirstLayer = () => {
           </p>
         </div>
 
-        <button className="primary-btn !px-[10px] flex items-center gap-1">
+        <button
+          className="primary-btn !px-[10px] flex items-center gap-1"
+          onClick={() =>
+            isLandlordOrAgent && !isKycCompleted
+              ? setShowModal(true)
+              : navigate('/add-property-info')
+          }
+        >
           <MdOutlineAddCircleOutline className="text-2xl" />
           <span>Add New Property</span>
         </button>
@@ -153,6 +198,7 @@ const FirstLayer = () => {
           </div>
         </div>
       </div>
+      <UpdateKycModal showModal={showModal} setShowModal={setShowModal} />
     </div>
   );
 };
