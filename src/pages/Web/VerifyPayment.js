@@ -70,10 +70,10 @@ const VerifyPayment = () => {
           className="flex flex-col items-center justify-center bg-white rounded-2xl shadow-md max-w-[562px] w-full p-[20px] md:p-[40px] border border-[#C2C2C2]"
         >
           <div>
-            <p className="text-gray-500 text-sm">TREG-2024-0012-RT-ALB-0003</p>
-            <p className="text-lg font-semibold">
+            {/* <p className="text-gray-500 text-sm">TREG-2024-0012-RT-ALB-0003</p> */}
+            {/* <p className="text-lg font-semibold">
               Pay <span className="text-green-600">NGN 576,900</span>
-            </p>
+            </p> */}
             <h2 className="text-center text-lg md:text-2xl font-medium mt-4 text-[#363636]">
               We’re waiting to confirm your transfer. This can take a few
               minutes
