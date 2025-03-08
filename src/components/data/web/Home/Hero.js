@@ -135,6 +135,7 @@ function FeatureCard({
 }
 
 export default function ProductFeatures() {
+  const user = !!sessionStorage.getItem('user');
   const cardWidth = 48 * 4; // w-48 x 4
   const angle = 6;
   const yOffset = 30;
@@ -269,21 +270,23 @@ export default function ProductFeatures() {
           </ul>
           <button className="primary-btn">Search</button>
         </div>
-        <ul className="flex sm:hidden mt-4 items-center gap-3">
-          <li>
-            <Link
-              className=" cursor-pointer rounded-md  bg-white  px-5 py-[10px] text-center text-sm font-semibold text-primary transition duration-300 ease-in-out hover:bg-white border-2 hover:border-2  hover:text-primary border-primary"
-              to="/login"
-            >
-              Log in
-            </Link>
-          </li>
-          <li>
-            <Link className=" primary-btn" to="/create-account">
-              Sign up
-            </Link>
-          </li>
-        </ul>
+        {!user && (
+          <ul className="flex sm:hidden mt-4 items-center gap-3">
+            <li>
+              <Link
+                className=" cursor-pointer rounded-md  bg-white  px-5 py-[10px] text-center text-sm font-semibold text-primary transition duration-300 ease-in-out hover:bg-white border-2 hover:border-2  hover:text-primary border-primary"
+                to="/login"
+              >
+                Log in
+              </Link>
+            </li>
+            <li>
+              <Link className=" primary-btn" to="/create-account">
+                Sign up
+              </Link>
+            </li>
+          </ul>
+        )}
       </motion.div>
 
       <div className="relative flex w-full flex-wrap justify-center gap-12 px-4 py-12 max-768:hidden  sm:gap-4">
