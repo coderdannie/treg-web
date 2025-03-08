@@ -19,6 +19,7 @@ const {
   CONTACT_US,
   UPDATE_KYC,
   VERIFY_PAYMENT,
+  BLOG,
 } = PUBLIC_PATHS;
 
 const {
@@ -64,6 +65,8 @@ const ViewAgent = WithSuspense(lazy(() => import('../pages/Web/ViewAgent')));
 const About = WithSuspense(lazy(() => import('../pages/Web/AboutUs')));
 
 const ContactUs = WithSuspense(lazy(() => import('../pages/Web/ContactUs')));
+
+const Blog = WithSuspense(lazy(() => import('../pages/Web/Blog')));
 
 //strictly private routes
 const Dashboard = WithSuspense(
@@ -117,6 +120,7 @@ export const PUBLIC_ROUTES = [
   { path: CONTACT_US, element: <ContactUs /> },
   { path: UPDATE_KYC, element: <UpdateKyc /> },
   { path: VERIFY_PAYMENT, element: <VerifyPayment /> },
+  { path: BLOG, element: <Blog /> },
 
   { path: '*', element: <Navigate to="/" replace /> },
 ];

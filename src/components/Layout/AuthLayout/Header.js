@@ -2,9 +2,11 @@ import { RiMenu3Line } from 'react-icons/ri';
 import { IoNotificationsOutline } from 'react-icons/io5';
 import { IoHomeOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
+import { useGetUser } from '../../../services/query/account';
 
 const Header = ({ setDrawerOpen }) => {
   const navigate = useNavigate();
+  const { data } = useGetUser();
 
   return (
     <div className="flex flex-col bg-white fixed w-full z-10 max-991:py-[30px] py-5">
@@ -51,18 +53,17 @@ const Header = ({ setDrawerOpen }) => {
               <IoNotificationsOutline />
             </div>
           </div>
-
-          <div className="avatar placeholder">
-            <div className="ring-primary bg-primary w-8 rounded-full ring ">
-              {/* {data?.data?.image ? (
-                <img src={data?.data?.image} alt="" />
+          {data?.data && (
+            <div className="avatar placeholder">
+              {data?.data ? (
+                <div className=" w-10 rounded-full ring ">
+                  <img src={data?.data?.avatar} alt={data?.data?.firstName} />
+                </div>
               ) : (
-                <span className="text-xl text-white">
-                  {data?.data?.firstName?.slice(0, 1)}
-                </span>
-              )} */}
+                data?.data?.firstName[0]
+              )}
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

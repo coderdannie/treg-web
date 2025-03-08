@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdOutlineAddCircleOutline } from 'react-icons/md';
 import { FaTemperatureThreeQuarters } from 'react-icons/fa6';
 import { GoArrowUpRight } from 'react-icons/go';
@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import UpdateKycModal from '../../modals/UpdateKyc';
 
 const FirstLayer = () => {
-  const { data, isLoading } = useGetUser();
+  const { data, isLoading, refetch } = useGetUser();
   const [filter, setFilter] = useState('week');
   const [showModal, setShowModal] = useState(false);
 
@@ -31,6 +31,10 @@ const FirstLayer = () => {
   const dates = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const totals = [50, 100, 150, 200, 250, 300, 350];
   const flow = { data: [] };
+
+  useEffect(() => {
+    refetch();
+  }, [isKycCompleted]);
 
   return (
     <div>
@@ -75,7 +79,7 @@ const FirstLayer = () => {
         </div>
 
         <button
-          className="primary-btn !px-[10px] flex items-center gap-1"
+          className="primary-btn !px-[10px] flex items-center h-fit gap-1"
           onClick={() =>
             isLandlordOrAgent && !isKycCompleted
               ? setShowModal(true)
@@ -95,7 +99,7 @@ const FirstLayer = () => {
             className="w-full min-w-[257px] border border-[#E4E7EC] bg-white p-4 rounded-xl h-full"
           >
             <div className="text-sm h-full">
-              <p className="text-[#344054] font-semibold text-xl">2</p>
+              <p className="text-[#344054] font-semibold text-xl">0</p>
               <div className="flex items-center gap-4">
                 <p>{data?.label}</p>
                 <div className="flex justify-center items-center border border-[#E4E7EC] rounded-full w-10 h-10">

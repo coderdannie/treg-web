@@ -19,7 +19,7 @@ const TransactionTable = () => {
           </button>
         </div>
         <CustomTable headers={headers} skeletonRows={3}>
-          {fetchedTransactions?.length ? (
+          {!fetchedTransactions?.length ? (
             fetchedTransactions.map((row, rowIndex) => (
               <tr key={rowIndex}>
                 <td className="whitespace-nowrap px-6 py-4">{row.id}</td>
