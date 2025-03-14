@@ -4,7 +4,7 @@ import RICIBs from 'react-individual-character-input-boxes';
 import { useCreateTransactionPin } from '../../services/query/account';
 import { useNavigate } from 'react-router-dom';
 
-const TransactionPinModal = ({ active, setActive }) => {
+const TransactionPinModal = ({ active, setActive, userData }) => {
   const [createPin, setCreatePin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
   const [step, setStep] = useState(1);
@@ -95,7 +95,7 @@ const TransactionPinModal = ({ active, setActive }) => {
         <div className="modal-box relative">
           <button
             className="btn btn-sm btn-circle absolute right-2 top-2"
-            onClick={() => setActive(false)}
+            onClick={() => (!userData?.isPinSet ? '' : setActive(false))}
           >
             ✕
           </button>

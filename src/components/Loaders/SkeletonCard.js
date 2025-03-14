@@ -17,3 +17,21 @@ export const SkeletonCard = () => (
     </div>
   </div>
 );
+
+export const PropertyItemSkeleton = () => {
+  return (
+    <li className="flex justify-between border p-[8.5px] border-[#D4D0D0] rounded-[11px] animate-pulse">
+      <div className="flex gap-4">
+        <div className="h-[66px] w-[80px] bg-gray-300 rounded-md overflow-hidden"></div>
+        <div>
+          <div className="h-4 w-32 bg-gray-300 rounded mb-1"></div>
+          <div className="h-3 w-24 bg-gray-300 rounded"></div>
+        </div>
+      </div>
+      <div className="grid gap-1">
+        <div className="h-6 w-16 bg-gray-300 rounded"></div>
+        <div className="h-3 w-20 bg-gray-300 rounded mt-1"></div>
+      </div>
+    </li>
+  );
+};

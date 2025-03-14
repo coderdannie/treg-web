@@ -175,13 +175,13 @@ export const sidebarData = [
   //   hover: <ManagementIcon fill="#1140E7" />,
   //   path: '/tenant-management',
   // },
-  // {
-  //   title: 'Transactions',
-  //   icon: <PaymentsIcon fill="#616161" />,
-  //   sec: <PaymentsIcon fill="#1140E7" />,
-  //   hover: <PaymentsIcon fill="#1140E7" />,
-  //   path: '/transactions',
-  // },
+  {
+    title: 'Transactions',
+    icon: <PaymentsIcon fill="#616161" />,
+    sec: <PaymentsIcon fill="#1140E7" />,
+    hover: <PaymentsIcon fill="#1140E7" />,
+    path: '/transactions',
+  },
   // {
   //   title: 'Messages',
   //   icon: <MessageIcon fill="#616161" />,

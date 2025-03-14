@@ -8,6 +8,7 @@ import {
   getAllPublicProperties,
   getPublicPropertyDetails,
   getPropertiesCountByStatus,
+  getAllCounts,
 } from '../api/properties';
 
 export const useAddProperty = (options = {}) => {
@@ -99,4 +100,16 @@ export const useGetPropertiesByStatus = (options = {}) => {
   });
 
   return { mutate, isLoading, data };
+};
+
+export const useGetAllCounts = (options = {}) => {
+  const { data, isLoading, refetch, isError } = useQuery(
+    'GET_ALL_COUNTS',
+    getAllCounts,
+    {
+      ...options,
+    }
+  );
+
+  return { data, isLoading, refetch, isError };
 };

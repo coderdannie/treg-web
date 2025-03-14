@@ -62,10 +62,12 @@ const SecondLayer = ({ data }) => {
     <div className="my-[44px]">
       <div className="flex flex-col min-991:flex-row gap-8">
         <div className="text-[#616161] min-991:w-[60%] ">
-          <h4 className="text-lg  sm:text-xl md:text-2xl font-medium  text-[#363636] ">
+          <h4 className="text-lg capitalize  sm:text-xl md:text-2xl font-medium  text-[#363636] ">
             {data?.title}
           </h4>
-          <p className=" md:text-lg text-[#616161]">{data?.location}</p>
+          <p className=" md:text-lg capitalize text-[#616161]">
+            {data?.location}
+          </p>
           <p className="text-[#6A6A6A] pt-4 text-sm md:text-base">
             {/* Welcome to your potential new home. This lovely, single-story home
             showcases an open floor plan with luxury vinyl plank flooring and a

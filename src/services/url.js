@@ -27,3 +27,8 @@ export const GET_PROPERTIES_COUNTS = (id) =>
   `properties/count-by-status?status=${id}`;
 export const CREATE_TRANSACTION_PIN = 'users/create-pin';
 export const GET_AGENT_TRANSACTIONS = 'transactions/agent';
+export const GET_ALL_COUNTS = 'properties/count-by-status';
+export const GET_BANKS = 'payments/banks/get';
+export const ACC_NAME = (accountNumber = '', bankCode = '') =>
+  `payments/banks/resolve-account-name?accountNumber=${accountNumber}&bankCode=${bankCode}`;
+export const ADD_ACCOUNT_DETAILS = 'payments/bank-account/add';

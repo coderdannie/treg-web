@@ -9,7 +9,6 @@ import {
   validateVerifyKycSchema,
 } from '../../utils/Validation';
 import { Form, Formik } from 'formik';
-
 import { toast } from 'react-hot-toast';
 import Banner from '../../components/common/Banner';
 import { useDropzone } from 'react-dropzone';
@@ -20,45 +19,91 @@ import {
 } from '../../services/query/account';
 import Loader from '../../components/Loaders/Loader';
 import TransactionPinModal from '../../components/modals/TransactionPin';
+import {
+  useAddAccountDetails,
+  useGetBanks,
+  useResolveName,
+} from '../../services/query/payments';
+import Select from 'react-select';
+import { IoIosArrowDown } from 'react-icons/io';
 
 const UpdateKyc = () => {
   const errorToast = (message) => toast.error(message, { duration: 3000 });
   const successToast = (message) => toast.success(message, { duration: 3000 });
   const [isOpen, setIsOpen] = useState(false);
-
+  const [accValues, setAccValues] = useState({
+    beneficiaryAccountName: '',
+    bankCode: '',
+    beneficiaryBankName: '',
+    beneficiaryAccountNumber: '',
+  });
   const [step, setStep] = useState(1);
   const { data, isLoading: isLoadingUser } = useGetUser();
+  const { data: banks, isLoading: isGetting } = useGetBanks();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (data?.data?.professionalDetailsCompleted) {
-      setStep(2);
-    }
-  }, [data, isLoadingUser]);
+    if (isLoadingUser || !data?.data) return; //Early return if loading or no data
 
-  const navigate = useNavigate();
+    const userData = data?.data;
+
+    if (!userData.professionalDetailsCompleted) {
+      setStep(1);
+    } else if (!userData.hasBankAccount) {
+      setStep(2);
+    } else if (!userData.supportingDocumentProvided) {
+      setStep(3);
+    } else if (!userData.isPinSet) {
+      setIsOpen(true);
+    } else {
+      navigate('/dashboard');
+    }
+  }, [data, isLoadingUser, navigate]);
 
   const [selectedDays, setSelectedDays] = useState(['Monday']);
   const [workingHours, setWorkingHours] = useState('8am - 4pm daily');
   const [file, setFile] = useState(null);
-
-  console.log(selectedDays);
-  console.log(file);
-
+  const [err, setErr] = useState('');
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      width: '100%',
+      minHeight: '50px',
+      color: state.hasValue ? '#444' : '#B4B4B4',
+      fontSize: '14px',
+      cursor: 'pointer',
+      borderRadius: '10px',
+      border: state.hasValue ? '1px solid #DCE7FF' : '1px solid #D2D2D2',
+      paddingRight: '16px',
+      background: state.hasValue ? '#F3F7FF' : 'unset',
+    }),
+    menu: (provided) => ({
+      ...provided,
+      fontSize: '13px',
+      backgroundColor: '#fff',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      color: state.isFocused ? '' : '',
+      backgroundColor: state.isFocused ? '#f4f6f8' : '',
+    }),
+  };
+  const bankOptions = banks?.data?.map((data) => ({
+    value: data.code,
+    label: data.name,
+  }));
   const onDrop = (acceptedFiles) => {
     setFile(acceptedFiles[0]);
   };
-
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: 'image/*',
   });
-
   const toggleDay = (day) => {
     setSelectedDays((prev) =>
       prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
     );
   };
-
   const { mutate, isLoading } = useAddProfessionalDetails({
     onSuccess: (res) => {
       successToast(res?.message);
@@ -71,11 +116,21 @@ const UpdateKyc = () => {
     },
   });
 
+  const { mutate: mutateAddAcc, isLoading: isAdding } = useAddAccountDetails({
+    onSuccess: (res) => {
+      successToast(res?.message);
+      setStep(3);
+    },
+    onError: (res) => {
+      errorToast(
+        res?.response?.data?.message || res?.message || 'An Error Occurred'
+      );
+    },
+  });
   const { mutate: mutateDetails, isLoading: isSubmitting } =
     useAddSupportingDocuments({
       onSuccess: (res) => {
         successToast(res?.message);
-        // navigate('/dashboard');
         setIsOpen(true);
       },
       onError: (res) => {
@@ -84,7 +139,37 @@ const UpdateKyc = () => {
         );
       },
     });
-
+  const {
+    mutate: mutateResolveName,
+    data: accName,
+    isLoading: isName,
+  } = useResolveName({
+    onSuccess: (res) => {
+      setErr('');
+      setAccValues({
+        ...accValues,
+        beneficiaryAccountName: res?.data?.account_name,
+      });
+    },
+    onError: (err) => {
+      setErr(err?.response?.data?.error || 'Network Error');
+    },
+  });
+  useEffect(() => {
+    if (
+      accValues?.bankCode &&
+      accValues?.beneficiaryAccountNumber?.length === 10
+    ) {
+      mutateResolveName({
+        accountNumber: accValues?.beneficiaryAccountNumber,
+        bankCode: accValues?.bankCode,
+      });
+    }
+  }, [
+    accValues.beneficiaryAccountNumber,
+    accValues?.bankCode,
+    mutateResolveName,
+  ]);
   const handleSubmit = (values) => {
     const phoneNumber = `+234${Number(values?.phoneNo)}`;
     mutate({
@@ -102,7 +187,6 @@ const UpdateKyc = () => {
       workingHours: workingHours,
     });
   };
-
   return (
     <div
       style={{
@@ -124,8 +208,10 @@ const UpdateKyc = () => {
           <div className="flex justify-end">
             <IoCloseSharp
               onClick={() => {
-                if (step === 2 && !data?.data?.professionalDetailsCompleted) {
+                if (step === 2) {
                   setStep(1);
+                } else if (step === 3) {
+                  setStep(2);
                 } else {
                   navigate(-1);
                 }
@@ -134,7 +220,11 @@ const UpdateKyc = () => {
             />
           </div>
           <h4 className="text-xl font-bold">
-            {step === 1 ? 'Professional Details' : 'Supporting Documents (KYC)'}
+            {step === 1
+              ? 'Professional Details'
+              : step === 2
+              ? 'Account Details'
+              : 'Supporting Documents (KYC)'}
           </h4>
           {isLoadingUser ? (
             <Loader />
@@ -142,7 +232,8 @@ const UpdateKyc = () => {
             <div className="grid mt-5 gap-2">
               <Formik
                 initialValues={initialKycValues}
-                validationSchema={validateVerifyKycSchema}
+                validation
+                Schema={validateVerifyKycSchema}
                 onSubmit={handleSubmit}
               >
                 {({
@@ -180,6 +271,7 @@ const UpdateKyc = () => {
                           error={touched.phoneNo && errors.phoneNo}
                           placeholder="Enter your Phone number"
                         />
+
                         <FormInput
                           label="Years of Experience (required)"
                           name="yearsOfExperience"
@@ -215,7 +307,6 @@ const UpdateKyc = () => {
                                 : '',
                             }}
                           />
-
                           {errors.serviceArea && (
                             <div className="text-red-500 text-xs mt-1">
                               {errors.serviceArea}
@@ -232,7 +323,6 @@ const UpdateKyc = () => {
                           error={touched.address && errors.address}
                           placeholder="Enter your office address"
                         />
-
                         <button
                           type="submit"
                           className={`primary-btn w-full mt-8 h-[56px] ${
@@ -257,6 +347,107 @@ const UpdateKyc = () => {
                           )}
                         </button>
                       </div>
+                    ) : step === 2 ? (
+                      <div>
+                        <div className="w-full relative">
+                          <p className="text-[#444] text-base md:text-md font-medium mb-2">
+                            Select Bank
+                          </p>
+                          <Select
+                            styles={customStyles}
+                            isDisabled={isGetting}
+                            components={{
+                              IndicatorSeparator: () => (
+                                <div style={{ display: 'none' }}></div>
+                              ),
+                              DropdownIndicator: () =>
+                                isGetting ? (
+                                  <div className="h-4  loading loading-dots loading-xs" /> // Adjust spinner size
+                                ) : (
+                                  <div>
+                                    <IoIosArrowDown className="h-3.5 w-3.5 text-[#646668]" />
+                                  </div>
+                                ),
+                            }}
+                            onChange={(selectedOption) => {
+                              setAccValues((prevValues) => ({
+                                ...prevValues,
+                                bankCode: selectedOption.value,
+                                beneficiaryBankName: selectedOption.label,
+                              }));
+                            }}
+                            placeholder="Select Account"
+                            value={bankOptions?.find(
+                              (option) =>
+                                option?.label === accValues?.beneficiaryBankName
+                            )}
+                            options={bankOptions}
+                          />
+                        </div>
+                        <div className="w-full pt-5">
+                          <FormInput
+                            value={accValues?.beneficiaryAccountNumber}
+                            name="beneficiaryAccountNumber"
+                            label="Account Number"
+                            type="tel"
+                            inputMode="decimal"
+                            pattern="[0-9.,]+"
+                            placeholder="Enter Account Number"
+                            onChange={(e) => {
+                              const inputPhone = e.target.value
+                                .replace(/\D/g, '')
+                                .slice(0, 10);
+                              setAccValues({
+                                ...accValues,
+                                beneficiaryAccountNumber: inputPhone,
+                              });
+                            }}
+                          />
+                          <div
+                            className={`mt-2 ${
+                              isName || err || accName ? '' : 'hidden'
+                            }`}
+                          >
+                            {isName ? (
+                              <div className="loading loading-dots loading-xs border-[#E7F2FF] " /> // Adjust spinner size
+                            ) : (
+                              <p
+                                className={`text-sm font-medium ${
+                                  err ? 'text-red-500' : 'text-[#444]'
+                                }`}
+                              >
+                                {err || accValues?.beneficiaryAccountName || ''}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          className={`py-3 w-full rounded-xl text-white mt-4 ${
+                            isName || accValues.beneficiaryAccountName
+                              ? 'bg-primary'
+                              : 'bg-gray-300'
+                          }`}
+                          isDisabled={
+                            isName || accValues.beneficiaryAccountName || err
+                          }
+                          onClick={() =>
+                            mutateAddAcc({
+                              accountNumber:
+                                accValues?.beneficiaryAccountNumber,
+                              accountName: accValues?.beneficiaryAccountName,
+                              bankName: accValues?.beneficiaryBankName,
+                              bankCode: accValues?.bankCode,
+                            })
+                          }
+                        >
+                          {isAdding ? (
+                            <span className="loading loading-dots loading-xs"></span>
+                          ) : (
+                            'Continue'
+                          )}
+                        </button>
+                      </div>
                     ) : (
                       <div className="p-2 md:p-4 max-w-lg mx-auto">
                         <label className="block text-gray-700 font-semibold mb-2">
@@ -276,7 +467,6 @@ const UpdateKyc = () => {
                             </p>
                           )}
                         </div>
-
                         <h3 className="mt-6 text-lg font-semibold">
                           Availability Details
                         </h3>
@@ -307,7 +497,6 @@ const UpdateKyc = () => {
                             </button>
                           ))}
                         </div>
-
                         <p className="text-gray-500 text-sm mb-2">
                           Working hours (required)
                         </p>
@@ -354,8 +543,13 @@ const UpdateKyc = () => {
           )}
         </motion.div>
       </div>
-      <TransactionPinModal active={isOpen} setActive={setIsOpen} />
+      <TransactionPinModal
+        active={isOpen}
+        setActive={setIsOpen}
+        userData={data?.data}
+      />
     </div>
   );
 };
+
 export default UpdateKyc;

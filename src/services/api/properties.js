@@ -64,3 +64,9 @@ export const getPropertiesCountByStatus = async (query) => {
   const res = await axiosInstance.get(API.GET_PROPERTIES_COUNTS(query.id));
   return res.data;
 };
+
+export const getAllCounts = async ({ queryKey }) => {
+  const [,] = queryKey;
+  const res = await axiosInstance.get(API.GET_ALL_COUNTS);
+  return res.data;
+};

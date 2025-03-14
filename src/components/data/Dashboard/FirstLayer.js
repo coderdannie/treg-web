@@ -3,12 +3,16 @@ import { MdOutlineAddCircleOutline } from 'react-icons/md';
 import { FaTemperatureThreeQuarters } from 'react-icons/fa6';
 import { GoArrowUpRight } from 'react-icons/go';
 import AreaChart from './AreaChart';
-import { bestPerforming, dashboardData } from '../../common/constants';
+import { dashboardData } from '../../common/constants';
 import { useGetUser } from '../../../services/query/account';
 import { useNavigate } from 'react-router-dom';
 import UpdateKycModal from '../../modals/UpdateKyc';
-import { useGetPropertiesByStatus } from '../../../services/query/properties';
-import { SkeletonCard } from '../../Loaders/SkeletonCard';
+import {
+  useGetAllCounts,
+  useGetAllPublicProperties,
+  useGetPropertiesByStatus,
+} from '../../../services/query/properties';
+import { PropertyItemSkeleton, SkeletonCard } from '../../Loaders/SkeletonCard';
 
 const FirstLayer = () => {
   const { data, isLoading: isLoadingUser, refetch } = useGetUser();
@@ -16,6 +20,9 @@ const FirstLayer = () => {
   const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
+
+  const { data: allProperties, isLoading: isLoadingProperties } =
+    useGetAllPublicProperties();
 
   const {
     mutate,
@@ -25,12 +32,8 @@ const FirstLayer = () => {
 
   const { mutate: mutateUnlisted, data: unlistedCount } =
     useGetPropertiesByStatus();
-
-  const {
-    mutate: mutateAllCounts,
-    data: allCounts,
-    isLoading: isLoadingAllCounts,
-  } = useGetPropertiesByStatus();
+  const { data: allCount, isLoading: isLoadingAllCounts } = useGetAllCounts();
+  console.log(allCount);
 
   const {
     mutate: mutateActiveCounts,
@@ -45,9 +48,7 @@ const FirstLayer = () => {
     mutateActiveCounts({
       id: 'Available',
     });
-    mutateAllCounts({
-      id: 'All',
-    });
+
     mutate({
       id: 'Rented',
     });
@@ -146,7 +147,7 @@ const FirstLayer = () => {
                 <div className="text-sm h-full">
                   <p className="text-[#344054] font-semibold text-xl">
                     {data.id === 1
-                      ? allCounts?.count
+                      ? allCount?.count
                       : data?.id === 2
                       ? activeCounts?.count
                       : data?.id === 3
@@ -223,39 +224,62 @@ const FirstLayer = () => {
               </p>
             </div>
             <ul className="grid gap-2 pt-3">
-              {bestPerforming.map((dat, i) => (
-                <li
-                  className="flex justify-between border p-[8.5px] border-[#D4D0D0] rounded-[11px] cursor-pointer hover:shadow-md"
-                  key={i}
-                  onClick={() => navigate(`/properties/property/${i}`)}
-                >
-                  <div className="flex gap-4">
-                    <div className="h-[66px] rounded-md overflow-hidden">
-                      <img
-                        className="object-cover h-full w-full"
-                        src={dat.img}
-                        alt={dat.label}
-                      />
+              {isLoadingProperties ? (
+                // Skeleton Loading State
+                Array.from({ length: 3 }).map((_, index) => (
+                  <PropertyItemSkeleton key={index} />
+                ))
+              ) : allProperties?.data?.length ? (
+                // Data Loaded - Display Properties
+                allProperties?.data?.slice(0, 3)?.map((dat, i) => (
+                  <li
+                    className="flex flex-col md:flex-row justify-between border p-[8.5px] border-[#D4D0D0] rounded-[11px] cursor-pointer hover:shadow-md"
+                    key={i}
+                    onClick={() => navigate(`/properties/property/${dat?._id}`)}
+                  >
+                    <div className="flex gap-4 mb-2 md:mb-0">
+                      <div className="h-[66px] w-[80px] flex-shrink-0 rounded-md overflow-hidden">
+                        <img
+                          className="object-cover h-full w-full"
+                          src={dat?.photos[0]?.photoLink}
+                          alt={dat?.title}
+                        />
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium capitalize text-[#616161] text-sm md:text-base">
+                          {dat?.title}
+                        </h4>
+
+                        <p className="text-[#616161] capitalize text-xs pt-[6px]">
+                          {dat?.location}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-medium text-[#616161] text-sm">
-                        {dat?.label}
-                      </h4>
-                      <p className="text-[#616161] text-xs  pt-[6px]">
-                        {dat.address}
+
+                    <div className="grid gap-1 md:text-right">
+                      <span className="block text-xs text-[#036B26] font-medium px-3 bg-[#E7F6EC] py-1 h-fit rounded-[10px] w-fit">
+                        For Rent
+                      </span>
+
+                      <p className="text-[#616161] font-semibold text-xs md:text-sm">
+                        ₦
+                        {Number(
+                          dat?.pricePerYear?.$numberDecimal
+                        )?.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                        }) || '0.00'}
+                        /{dat?.rentalPeriod}
                       </p>
                     </div>
-                  </div>
-                  <div className="grid gap-1 ">
-                    <span className="block text-xs text-[#036B26] font-medium px-3 bg-[#E7F6EC] py-1 h-fit rounded-[10px]">
-                      For Rent
-                    </span>
-                    <p className="text-[#616161] font-semibold text-xs">
-                      2.5m/year
-                    </p>
-                  </div>
+                  </li>
+                ))
+              ) : (
+                // Empty State
+                <li className="flex justify-center items-center p-4 text-gray-500">
+                  <p>No properties found.</p>
                 </li>
-              ))}
+              )}
             </ul>
           </div>
         </div>
