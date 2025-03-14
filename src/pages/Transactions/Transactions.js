@@ -7,14 +7,22 @@ import {
 import CustomTable from '../../components/common/CustomTable';
 import { useGetAgentTransactions } from '../../services/query/transaction';
 import { formatDateTime } from '../../utils/helper';
-import { FiMoreVertical } from 'react-icons/fi';
+import { FiEye } from 'react-icons/fi';
 import { FiFilter } from 'react-icons/fi';
+import TransactionDetails from '../../components/modals/TransactionDetails';
 
 const Transactions = () => {
   const { data, isLoading } = useGetAgentTransactions();
   const [selectedStatus, setSelectedStatus] = useState('All');
 
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [isShow, setIsShow] = useState(false);
+
+  const handleViewDetails = (row) => {
+    setSelectedRow(row);
+    setIsShow(true);
+  };
 
   return (
     <div>
@@ -103,9 +111,12 @@ const Transactions = () => {
                   {row.status}
                 </p>
               </td>
-              <td className="whitespace-nowrap px-6 py-4 ">
-                <button className="border-2 border-[#E4E7EC] p-2 rounded">
-                  <FiMoreVertical />
+              <td className="whitespace-nowrap px-6 py-4 relative">
+                <button
+                  className="flex items-center w-full px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700 text-sm"
+                  onClick={() => handleViewDetails(row)}
+                >
+                  <FiEye className="mr-2" /> View Details
                 </button>
               </td>
             </tr>
@@ -127,6 +138,12 @@ const Transactions = () => {
           </tr>
         )}
       </CustomTable>
+      <TransactionDetails
+        isOpen={isShow}
+        onClose={() => setIsShow(false)}
+        row={selectedRow}
+        details={selectedRow}
+      />
     </div>
   );
 };

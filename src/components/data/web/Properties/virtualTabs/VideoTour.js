@@ -110,7 +110,7 @@ export default function VideoTour({ data }) {
               onClick={() => handleThumbnailClick(video)}
             >
               <video
-                src={video.thumbnailUrl}
+                src={video?.thumbnailUrl}
                 alt="property video"
                 className="w-full h-full object-cover rounded-md"
               />

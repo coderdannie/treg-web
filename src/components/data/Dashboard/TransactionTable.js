@@ -4,12 +4,20 @@ import { formatDateTime } from '../../../utils/helper';
 import { headers, transHeaders } from '../../common/constants';
 import CustomTable from '../../common/CustomTable';
 import SearchInput from '../../common/SearchBar';
-import { FiMoreVertical } from 'react-icons/fi';
+import { FiEye } from 'react-icons/fi';
+import TransactionDetails from '../../modals/TransactionDetails';
+import { useState } from 'react';
 
 const TransactionTable = () => {
   const { data, isLoading } = useGetAgentTransactions();
   const navigate = useNavigate();
-  console.log(data);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+
+  const handleViewDetails = (row) => {
+    setSelectedRow(row);
+    setIsOpen(true);
+  };
 
   return (
     <div className="mt-3">
@@ -42,7 +50,6 @@ const TransactionTable = () => {
                 <td className="whitespace-nowrap px-6 py-4">
                   {formatDateTime(row?.createdAt)}
                 </td>
-
                 <td className="whitespace-nowrap px-6 py-4">{row?.category}</td>
                 <td className="whitespace-nowrap px-6 py-4">
                   ₦
@@ -53,7 +60,6 @@ const TransactionTable = () => {
                     }
                   ) || '0.00'}
                 </td>
-
                 <td className="whitespace-nowrap px-6 py-4">{row?.type}</td>
                 <td className="whitespace-nowrap px-6 py-4">
                   <p
@@ -63,21 +69,24 @@ const TransactionTable = () => {
                       borderRadius: '55px',
                     }}
                     className={`
-                 ${
-                   row?.status === 'Success'
-                     ? 'text-[#036B26] bg-[#E7F6EC] cursor-pointer relative'
-                     : row?.status === 'Failed'
-                     ? 'text-red-600 bg-[#FFE1E1] cursor-pointer relative'
-                     : 'text-yellow-600 bg-yellow-300 cursor-pointer relative'
-                 }
-                 `}
+                      ${
+                        row?.status === 'Success'
+                          ? 'text-[#036B26] bg-[#E7F6EC] cursor-pointer relative'
+                          : row?.status === 'Failed'
+                          ? 'text-red-600 bg-[#FFE1E1] cursor-pointer relative'
+                          : 'text-yellow-600 bg-yellow-300 cursor-pointer relative'
+                      }
+                    `}
                   >
                     {row.status}
                   </p>
                 </td>
-                <td className="whitespace-nowrap px-6 py-4 ">
-                  <button className="border-2 border-[#E4E7EC] p-2 rounded">
-                    <FiMoreVertical />
+                <td className="whitespace-nowrap px-6 py-4 relative">
+                  <button
+                    className="flex items-center w-full px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700 text-sm"
+                    onClick={() => handleViewDetails(row)}
+                  >
+                    <FiEye className="mr-2" /> View Details
                   </button>
                 </td>
               </tr>
@@ -100,6 +109,12 @@ const TransactionTable = () => {
           )}
         </CustomTable>
       </div>
+      <TransactionDetails
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        row={selectedRow}
+        details={selectedRow}
+      />
     </div>
   );
 };
