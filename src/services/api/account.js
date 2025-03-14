@@ -15,3 +15,8 @@ export const addSupportingDocuments = async (body) => {
   const res = await uploadInstance.post(API.ADD_SUPPORTING_DOCUMENTS, body);
   return res.data;
 };
+
+export const createTransactionPin = async (body) => {
+  const res = await axiosInstance.post(API.CREATE_TRANSACTION_PIN, body);
+  return res.data;
+};

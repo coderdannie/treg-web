@@ -18,6 +18,7 @@ const {
   ABOUT,
   CONTACT_US,
   UPDATE_KYC,
+  PUBLIC_PROPERTY_VIRTUAL_TOUR,
   VERIFY_PAYMENT,
   BLOG,
 } = PUBLIC_PATHS;
@@ -104,6 +105,10 @@ const VerifyPayment = WithSuspense(
   lazy(() => import('../pages/Web/VerifyPayment'))
 );
 
+const PublicPropertiesVirtualTour = WithSuspense(
+  lazy(() => import('../pages/Web/VirtualTour'))
+);
+
 export const PUBLIC_ROUTES = [
   { path: LOGIN, element: <Login /> },
   { path: REGISTER, element: <Register /> },
@@ -119,6 +124,10 @@ export const PUBLIC_ROUTES = [
   { path: ABOUT, element: <About /> },
   { path: CONTACT_US, element: <ContactUs /> },
   { path: UPDATE_KYC, element: <UpdateKyc /> },
+  {
+    path: PUBLIC_PROPERTY_VIRTUAL_TOUR,
+    element: <PublicPropertiesVirtualTour />,
+  },
   { path: VERIFY_PAYMENT, element: <VerifyPayment /> },
   { path: BLOG, element: <Blog /> },
 

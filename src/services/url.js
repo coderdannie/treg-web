@@ -20,3 +20,10 @@ export const GET_ALL_PROPERTIES = 'properties/all';
 export const VERIFY_PAYMENT = 'payments/verify-listing-payment';
 export const COMPLETE_LISTING = (id = '') =>
   `properties/complete-listing/${id}`;
+export const GET_ALL_PUBLIC_PROPERTIES = 'properties/all/unauthenticated';
+export const GET_PUBLIC_PROPERTY_DETAILS = 'properties';
+
+export const GET_PROPERTIES_COUNTS = (id) =>
+  `properties/count-by-status?status=${id}`;
+export const CREATE_TRANSACTION_PIN = 'users/create-pin';
+export const GET_AGENT_TRANSACTIONS = 'transactions/agent';

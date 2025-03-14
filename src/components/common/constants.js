@@ -457,17 +457,17 @@ export const dashboardData = [
   },
   {
     id: 2,
+    label: 'Active Rentals',
+    value: '1.01',
+  },
+  {
+    id: 2,
     label: 'Rented Properties',
     value: '1.01',
   },
   {
-    id: 3,
-    label: 'Pending Approvals',
-    value: '1.01',
-  },
-  {
     id: 4,
-    label: 'Active Rentals',
+    label: 'Unlisted Properties',
     value: '1.01',
   },
 ];
@@ -498,8 +498,18 @@ export const headers = [
   'Tenant Name',
   'Property',
   'Amount Paid',
-  'Date',
+
   'Payment Type',
+  'Status',
+  'Actions',
+];
+
+export const transHeaders = [
+  'id',
+  'Date',
+  'Category',
+  'Amount Paid',
+  'Type',
   'Status',
   'Actions',
 ];
@@ -590,4 +600,25 @@ export const amenitiesList = [
   'Swimming Pool',
   'Air Conditioning',
   'Fully Furnished',
+];
+export const videos = [
+  {
+    propertyId: '67cc5bf1e07bdd2a117091c0',
+    videoLink:
+      'https://res.cloudinary.com/dmdvssgw7/video/upload/v1741446182/videos/file_yjjuzu.mp4',
+  },
+  {
+    propertyId: '67cc5',
+    videoLink: 'https://youtu.be/SRSg_6bdnFI?si=4YO3QiAEYxwiZu1j',
+  },
+  {
+    propertyId: '67cc5bf1e07bdd2a117091c0',
+    videoLink:
+      'https://res.cloudinary.com/dmdvssgw7/video/upload/v1741446182/videos/file_yjjuzu.mp4',
+  },
+  {
+    propertyId: '67cc5bf1e07bdd2a117091c0',
+    videoLink:
+      'https://res.cloudinary.com/dmdvssgw7/video/upload/v1741446182/videos/file_yjjuzu.mp4',
+  },
 ];

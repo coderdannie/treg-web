@@ -9,6 +9,41 @@ const AddPropertyInfo = () => {
   const errorToast = (message) => toast.error(message, { duration: 3000 });
   const successToast = (message) => toast.success(message, { duration: 3000 });
 
+  const generateDescription = async (inputs) => {
+    try {
+      const prompt = `Generate a professional and engaging property description for a ${
+        inputs.type
+      } located in ${inputs.location}. It has ${
+        inputs.noOfRooms
+      } rooms and includes the following amenities: ${inputs.amenities.join(
+        ', '
+      )}.`;
+      const response = await fetch('https://api.openai.com/v1/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'text-davinci-003',
+          prompt: prompt,
+          max_tokens: 150,
+          temperature: 0.7,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.choices && data.choices[0].text) {
+        return data.choices[0].text.trim();
+      } else {
+        throw new Error('Failed to generate description');
+      }
+    } catch (error) {
+      console.error('Error generating description:', error);
+      return '';
+    }
+  };
+
   const [values, setValues] = useState({
     title: '',
     type: '',

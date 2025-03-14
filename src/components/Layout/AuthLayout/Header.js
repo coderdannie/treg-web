@@ -55,12 +55,14 @@ const Header = ({ setDrawerOpen }) => {
           </div>
           {data?.data && (
             <div className="avatar placeholder">
-              {data?.data ? (
+              {data?.data?.avatar ? (
                 <div className=" w-10 rounded-full ring ">
                   <img src={data?.data?.avatar} alt={data?.data?.firstName} />
                 </div>
               ) : (
-                data?.data?.firstName[0]
+                <div className=" w-10 rounded-full ring font-medium ">
+                  {data?.data?.firstName[0]}
+                </div>
               )}
             </div>
           )}

@@ -19,10 +19,12 @@ import {
   useGetUser,
 } from '../../services/query/account';
 import Loader from '../../components/Loaders/Loader';
+import TransactionPinModal from '../../components/modals/TransactionPin';
 
 const UpdateKyc = () => {
   const errorToast = (message) => toast.error(message, { duration: 3000 });
   const successToast = (message) => toast.success(message, { duration: 3000 });
+  const [isOpen, setIsOpen] = useState(false);
 
   const [step, setStep] = useState(1);
   const { data, isLoading: isLoadingUser } = useGetUser();
@@ -73,7 +75,8 @@ const UpdateKyc = () => {
     useAddSupportingDocuments({
       onSuccess: (res) => {
         successToast(res?.message);
-        navigate('/dashboard');
+        // navigate('/dashboard');
+        setIsOpen(true);
       },
       onError: (res) => {
         errorToast(
@@ -351,6 +354,7 @@ const UpdateKyc = () => {
           )}
         </motion.div>
       </div>
+      <TransactionPinModal active={isOpen} setActive={setIsOpen} />
     </div>
   );
 };

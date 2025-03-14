@@ -5,6 +5,9 @@ import {
   uploadPropertyPhotos,
   uploadPropertyVideos,
   completeListing,
+  getAllPublicProperties,
+  getPublicPropertyDetails,
+  getPropertiesCountByStatus,
 } from '../api/properties';
 
 export const useAddProperty = (options = {}) => {
@@ -63,4 +66,37 @@ export const useCompleteListing = (options = {}) => {
   );
 
   return { mutate, isLoading };
+};
+
+export const useGetAllPublicProperties = (options = {}) => {
+  const { data, isLoading, refetch, isError } = useQuery(
+    'GET_PUBLIC_PROPERTIES',
+    getAllPublicProperties,
+    {
+      ...options,
+    }
+  );
+
+  return { data, isLoading, refetch, isError };
+};
+
+export const useGetPublicProperties = (id = '', options = {}) => {
+  const { data, isLoading, refetch } = useQuery(
+    ['getOneUser', id],
+    getPublicPropertyDetails,
+    {
+      ...options,
+    }
+  );
+
+  return { data, isLoading, refetch };
+};
+
+export const useGetPropertiesByStatus = (options = {}) => {
+  const { mutate, isLoading, data } = useMutation(getPropertiesCountByStatus, {
+    mutationKey: 'getPropertiesByStatus',
+    ...options,
+  });
+
+  return { mutate, isLoading, data };
 };

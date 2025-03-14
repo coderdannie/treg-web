@@ -4,6 +4,7 @@ import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
 import PropertyCard from '../../../common/PropertyCard';
+import { useGetAllPublicProperties } from '../../../../services/query/properties';
 
 const ThirdLayer = () => {
   const controls = useAnimation();
@@ -11,6 +12,9 @@ const ThirdLayer = () => {
     triggerOnce: true,
     threshold: 0.2,
   });
+
+  const { data } = useGetAllPublicProperties();
+  console.log(data);
 
   useEffect(() => {
     if (inView) {
@@ -47,18 +51,21 @@ const ThirdLayer = () => {
           value. Our featured properties offer exceptional amenities and
           standout appeal, making it easier to find a home you’ll love
         </p>
-        <Link className="secondary-btn ">View all</Link>
+        <Link className="secondary-btn " to="/properties/New%20Listings">
+          View all
+        </Link>
       </div>
       <div className="mx-auto py-4 mt-8">
         <div
           ref={ref}
           className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
         >
-          {properties.map((property) => (
+          {data?.data?.slice(0, 8)?.map((property, index) => (
             <PropertyCard
               property={property}
               controls={controls}
               cardVariants={cardVariants}
+              custom={index}
             />
           ))}
         </div>

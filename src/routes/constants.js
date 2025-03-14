@@ -9,6 +9,7 @@ export const PUBLIC_PATHS = {
   CREATE_ACCOUNT: '/create-account',
   PUBLIC_PROPERTIES: '/properties/:filter',
   PUBLIC_PROPERTY_DETAILS: '/properties/property/:id',
+  PUBLIC_PROPERTY_VIRTUAL_TOUR: '/properties/property/virtual-tour/:id',
   HOME: '/',
   AGENTS: '/agents',
   VIEW_AGENT: '/agents/:id',

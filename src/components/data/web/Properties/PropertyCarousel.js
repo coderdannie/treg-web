@@ -1,18 +1,11 @@
 import React, { useRef, useEffect } from 'react';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
+import { Link } from 'react-router-dom';
 
-const PropertyCarousel = () => {
+const PropertyCarousel = ({ data }) => {
   const mainRef = useRef(null);
   const thumbnailRef = useRef(null);
-
-  const images = [
-    { id: 1, src: '/assets/herobg1.jpg', alt: 'Property Image 1' },
-    { id: 2, src: '/assets/herobg2.jpg', alt: 'Property Image 2' },
-    { id: 3, src: '/assets/herobg3.jpg', alt: 'Property Image 3' },
-    { id: 4, src: '/assets/herobg3.jpg', alt: 'Property Image 3' },
-    { id: 5, src: '/assets/herobg3.jpg', alt: 'Property Image 3' },
-  ];
 
   const mainOptions = {
     type: 'fade',
@@ -58,15 +51,23 @@ const PropertyCarousel = () => {
   return (
     <div className="carousel-container">
       {/* Main Slider */}
-      <div className="main-slider">
+      <div className="main-slider relative">
+        <Link
+          className="flex items-center bg-[#181818A6] text-sm gap-3 text-white rounded-md p-2 w-fit absolute z-40 top-4 left-4
+        "
+          to={`/properties/property/virtual-tour/${1}`}
+        >
+          <img src="/assets/3-d-view.png" alt="3d view" />{' '}
+          <span>Virtual Tour</span>
+        </Link>
         <Splide
           options={mainOptions}
           ref={mainRef}
           aria-label="Property Images"
         >
-          {images.map((image) => (
-            <SplideSlide key={image.id}>
-              <img src={image.src} alt={image.alt} />
+          {data?.data?.photos?.map((image, i) => (
+            <SplideSlide key={i}>
+              <img src={image?.photoLink} alt={i} />
             </SplideSlide>
           ))}
         </Splide>
@@ -79,9 +80,9 @@ const PropertyCarousel = () => {
           ref={thumbnailRef}
           aria-label="Property Thumbnails"
         >
-          {images.map((image) => (
-            <SplideSlide key={image.id}>
-              <img src={image.src} alt={image.alt} />
+          {data?.data?.photos?.map((image, i) => (
+            <SplideSlide key={i}>
+              <img src={image?.photoLink} alt={i} />
             </SplideSlide>
           ))}
         </Splide>

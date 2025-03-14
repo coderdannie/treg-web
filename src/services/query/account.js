@@ -2,6 +2,7 @@ import { useMutation, useQuery } from 'react-query';
 import {
   addProfessionalDetails,
   addSupportingDocuments,
+  createTransactionPin,
   getUser,
 } from '../api/account';
 
@@ -25,6 +26,15 @@ export const useAddProfessionalDetails = (options = {}) => {
 export const useAddSupportingDocuments = (options = {}) => {
   const { mutate, isLoading } = useMutation(addSupportingDocuments, {
     mutationKey: 'addSupportingDocuments',
+    ...options,
+  });
+
+  return { mutate, isLoading };
+};
+
+export const useCreateTransactionPin = (options = {}) => {
+  const { mutate, isLoading } = useMutation(createTransactionPin, {
+    mutationKey: 'addProfessionalDetails',
     ...options,
   });
 

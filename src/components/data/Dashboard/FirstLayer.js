@@ -7,13 +7,51 @@ import { bestPerforming, dashboardData } from '../../common/constants';
 import { useGetUser } from '../../../services/query/account';
 import { useNavigate } from 'react-router-dom';
 import UpdateKycModal from '../../modals/UpdateKyc';
+import { useGetPropertiesByStatus } from '../../../services/query/properties';
+import { SkeletonCard } from '../../Loaders/SkeletonCard';
 
 const FirstLayer = () => {
-  const { data, isLoading, refetch } = useGetUser();
+  const { data, isLoading: isLoadingUser, refetch } = useGetUser();
   const [filter, setFilter] = useState('week');
   const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
+
+  const {
+    mutate,
+    data: rentedCount,
+    isLoading: isLoadingCounts,
+  } = useGetPropertiesByStatus();
+
+  const { mutate: mutateUnlisted, data: unlistedCount } =
+    useGetPropertiesByStatus();
+
+  const {
+    mutate: mutateAllCounts,
+    data: allCounts,
+    isLoading: isLoadingAllCounts,
+  } = useGetPropertiesByStatus();
+
+  const {
+    mutate: mutateActiveCounts,
+    data: activeCounts,
+    isLoading: isLoadingActiveCounts,
+  } = useGetPropertiesByStatus();
+
+  useEffect(() => {
+    mutateUnlisted({
+      id: 'Unlisted',
+    });
+    mutateActiveCounts({
+      id: 'Available',
+    });
+    mutateAllCounts({
+      id: 'All',
+    });
+    mutate({
+      id: 'Rented',
+    });
+  }, [mutate]);
 
   const isLandlordOrAgent =
     data &&
@@ -93,26 +131,43 @@ const FirstLayer = () => {
 
       {/* Dashboard Cards Section */}
       <div className="flex overflow-x-scroll gap-4 mt-8 dashboard-cards">
-        {dashboardData.map((data, i) => (
-          <div
-            key={i}
-            className="w-full min-w-[257px] border border-[#E4E7EC] bg-white p-4 rounded-xl h-full"
-          >
-            <div className="text-sm h-full">
-              <p className="text-[#344054] font-semibold text-xl">0</p>
-              <div className="flex items-center gap-4">
-                <p>{data?.label}</p>
-                <div className="flex justify-center items-center border border-[#E4E7EC] rounded-full w-10 h-10">
-                  <FaTemperatureThreeQuarters />
+        {isLoadingUser ||
+        isLoadingCounts ||
+        isLoadingAllCounts ||
+        isLoadingActiveCounts
+          ? Array.from({ length: 4 }).map((_, index) => (
+              <SkeletonCard key={index} />
+            ))
+          : dashboardData.map((data, i) => (
+              <div
+                key={i}
+                className="w-full min-w-[257px] border border-[#E4E7EC] bg-white p-4 rounded-xl h-full"
+              >
+                <div className="text-sm h-full">
+                  <p className="text-[#344054] font-semibold text-xl">
+                    {data.id === 1
+                      ? allCounts?.count
+                      : data?.id === 2
+                      ? activeCounts?.count
+                      : data?.id === 3
+                      ? rentedCount?.count
+                      : data?.id === 4
+                      ? unlistedCount?.count
+                      : '0'}
+                  </p>
+                  <div className="flex items-center gap-4">
+                    <p>{data?.label}</p>
+                    <div className="flex justify-center items-center border border-[#E4E7EC] rounded-full w-10 h-10">
+                      <FaTemperatureThreeQuarters />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <GoArrowUpRight className="text-green-500" />
+                    <p className="text-[#7C8DB5]">+1.01% this week</p>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2.5">
-                <GoArrowUpRight className="text-green-500" />
-                <p className="text-[#7C8DB5]">+1.01% this week</p>
-              </div>
-            </div>
-          </div>
-        ))}
+            ))}
       </div>
 
       {/* Activity Section */}
@@ -137,7 +192,10 @@ const FirstLayer = () => {
                   ))}
                 </select>
               </div>
-              {isLoading ? (
+              {isLoadingUser ||
+              isLoadingCounts ||
+              isLoadingAllCounts ||
+              isLoadingActiveCounts ? (
                 <div className="mt-4 flex justify-center">
                   <div className="w-8 h-8 border-4 border-gray-200 border-t-primary rounded-full animate-spin" />
                 </div>
