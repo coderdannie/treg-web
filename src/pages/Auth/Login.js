@@ -45,6 +45,7 @@ const Login = () => {
       }
 
       setShouldNavigate(true);
+      navigate('/dashboard');
     },
     onError: (res) => {
       errorToast(
