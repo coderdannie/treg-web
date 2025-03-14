@@ -98,7 +98,7 @@ export const NonAuthLayout = ({ children }) => {
     <div>
       {shouldHideNavbar || isLocationVirtualTour ? '' : <Navbar />}
       {children}
-      {/* {!shouldHideNavbar && <Footer />} */}
+      {!shouldHideNavbar && <Footer />}
     </div>
   );
 };
