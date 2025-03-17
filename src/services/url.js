@@ -32,3 +32,4 @@ export const GET_BANKS = 'payments/banks/get';
 export const ACC_NAME = (accountNumber = '', bankCode = '') =>
   `payments/banks/resolve-account-name?accountNumber=${accountNumber}&bankCode=${bankCode}`;
 export const ADD_ACCOUNT_DETAILS = 'payments/bank-account/add';
+export const GET_WALLET_INFO = 'users/wallet/get';

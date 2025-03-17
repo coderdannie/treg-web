@@ -4,6 +4,7 @@ import {
   addSupportingDocuments,
   createTransactionPin,
   getUser,
+  getWalletInfo,
 } from '../api/account';
 
 export const useGetUser = (options = {}) => {
@@ -39,4 +40,16 @@ export const useCreateTransactionPin = (options = {}) => {
   });
 
   return { mutate, isLoading };
+};
+
+export const useGetWalletInfo = (options = {}) => {
+  const { data, isLoading, refetch, isError } = useQuery(
+    'GET_WALLET_INFO',
+    getWalletInfo,
+    {
+      ...options,
+    }
+  );
+
+  return { data, isLoading, refetch, isError };
 };

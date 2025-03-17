@@ -20,3 +20,8 @@ export const createTransactionPin = async (body) => {
   const res = await axiosInstance.post(API.CREATE_TRANSACTION_PIN, body);
   return res.data;
 };
+
+export const getWalletInfo = async () => {
+  const res = await axiosInstance.get(API.GET_WALLET_INFO);
+  return res.data;
+};

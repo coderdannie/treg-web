@@ -13,6 +13,7 @@ import {
   useGetPropertiesByStatus,
 } from '../../../services/query/properties';
 import { PropertyItemSkeleton, SkeletonCard } from '../../Loaders/SkeletonCard';
+import Wallet from '../Dashboard/Wallet';
 
 const FirstLayer = () => {
   const { data, isLoading: isLoadingUser, refetch } = useGetUser();
@@ -129,6 +130,7 @@ const FirstLayer = () => {
           <span>Add New Property</span>
         </button>
       </div>
+      {isLandlordOrAgent && isKycCompleted && <Wallet />}
 
       {/* Dashboard Cards Section */}
       <div className="flex overflow-x-scroll gap-4 mt-8 dashboard-cards">
