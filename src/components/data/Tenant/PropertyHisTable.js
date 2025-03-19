@@ -89,12 +89,9 @@ const PropertyHisTable = ({
             <td className="whitespace-nowrap px-6 py-4">Flat</td>
             <td className="whitespace-nowrap px-6 py-4">
               ₦
-              {Number(row.pricePerYear?.$numberDecimal)?.toLocaleString(
-                undefined,
-                {
-                  minimumFractionDigits: 2,
-                }
-              ) || '0.00'}
+              {Number(row.amount?.$numberDecimal)?.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              }) || '0.00'}
             </td>
             <td className="whitespace-nowrap px-6 py-4">
               {formatDate(row?.createdAt)}

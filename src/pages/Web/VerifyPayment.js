@@ -152,7 +152,13 @@ const VerifyPayment = () => {
             {(status === 'success' || status === 'failure') && (
               <button
                 className="mt-6 w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition-colors"
-                onClick={() => navigate('/my-properties/all')} // Go back to the previous page
+                onClick={() => {
+                  if (type.includes('house-rent')) {
+                    navigate('/my-properties/all');
+                  } else {
+                    navigate('/tenant/property');
+                  }
+                }}
               >
                 Go Back
               </button>
