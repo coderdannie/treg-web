@@ -22,7 +22,6 @@ export const COMPLETE_LISTING = (id = '') =>
   `properties/complete-listing/${id}`;
 export const GET_ALL_PUBLIC_PROPERTIES = 'properties/all/unauthenticated';
 export const GET_PUBLIC_PROPERTY_DETAILS = 'properties';
-
 export const GET_PROPERTIES_COUNTS = (id) =>
   `properties/count-by-status?status=${id}`;
 export const CREATE_TRANSACTION_PIN = 'users/create-pin';
@@ -33,3 +32,6 @@ export const ACC_NAME = (accountNumber = '', bankCode = '') =>
   `payments/banks/resolve-account-name?accountNumber=${accountNumber}&bankCode=${bankCode}`;
 export const ADD_ACCOUNT_DETAILS = 'payments/bank-account/add';
 export const GET_WALLET_INFO = 'users/wallet/get';
+export const UPDATE_PROPERTY = (id = '') => `/properties/${id}/update`;
+export const GET_TENANT_PROPERTY_HISTORIES = 'properties/tenant/rent-histories';
+export const CREATE_PROPERTY_PAYMENT = 'payments/pay-for-property';

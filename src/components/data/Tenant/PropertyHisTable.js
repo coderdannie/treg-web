@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FiMoreVertical } from 'react-icons/fi';
-import CustomTable from '../../common/CustomTable';
-import { formatDate } from '../../../utils/helper';
+
 import { useNavigate } from 'react-router-dom';
 import { CiEdit, CiViewList } from 'react-icons/ci'; // Import CiViewList
+import { formatDate } from '../../../utils/helper';
+import CustomTable from '../../common/CustomTable';
 
-const TransactionsTable = ({
+const PropertyHisTable = ({
   data,
   isLoading,
   startRow,
@@ -55,10 +56,10 @@ const TransactionsTable = ({
     <CustomTable
       isLoading={isLoading}
       headers={[
-        'Listing ID',
+        'ID',
         'Property Title',
         'Type',
-        'Amount',
+        'Rent',
         'Submission date',
         'Status',
         'Actions',
@@ -175,4 +176,4 @@ const TransactionsTable = ({
   );
 };
 
-export default TransactionsTable;
+export default PropertyHisTable;

@@ -9,6 +9,9 @@ import {
   getPublicPropertyDetails,
   getPropertiesCountByStatus,
   getAllCounts,
+  getPropertyDetails,
+  updateProperty,
+  getAllTenantPropertyHistories,
 } from '../api/properties';
 
 export const useAddProperty = (options = {}) => {
@@ -57,6 +60,24 @@ export const useGetAllProperties = (
   return { data, isLoading, refetch };
 };
 
+export const useGetAllTenantPropertyHistories = (
+  page = 1,
+  limit = '',
+  start = '',
+  end = '',
+  status = '',
+  options = {}
+) => {
+  const { data, isLoading, refetch } = useQuery(
+    ['getAllTenantProperties', page, limit, start, end, status],
+    getAllTenantPropertyHistories,
+    {
+      ...options,
+    }
+  );
+
+  return { data, isLoading, refetch };
+};
 export const useCompleteListing = (options = {}) => {
   const { mutate, isLoading } = useMutation(
     (payload) => completeListing(payload.id),
@@ -93,6 +114,17 @@ export const useGetPublicProperties = (id = '', options = {}) => {
   return { data, isLoading, refetch };
 };
 
+export const useGetProperty = (id = '', options = {}) => {
+  const { data, isLoading, refetch } = useQuery(
+    ['getProperty', id],
+    getPropertyDetails,
+    {
+      ...options,
+    }
+  );
+
+  return { data, isLoading, refetch };
+};
 export const useGetPropertiesByStatus = (options = {}) => {
   const { mutate, isLoading, data } = useMutation(getPropertiesCountByStatus, {
     mutationKey: 'getPropertiesByStatus',
@@ -112,4 +144,16 @@ export const useGetAllCounts = (options = {}) => {
   );
 
   return { data, isLoading, refetch, isError };
+};
+
+export const useUpdateProperty = (options = {}) => {
+  const { mutate, isLoading } = useMutation(
+    (payload) => updateProperty(payload.id, payload.data),
+    {
+      mutationKey: 'UPDATE_PRODUCT',
+      ...options,
+    }
+  );
+
+  return { mutate, isLoading };
 };

@@ -32,6 +32,11 @@ const {
   TRANSACTIONS,
   MESSAGES,
   TENANT_DASHBOARD,
+  SETTINGS,
+  INSURANCE_DETAILS,
+  TENANT_MGT,
+  TENANT_PROPERTY,
+  VIEW_PROPERTY_DETAILS,
 } = PRIVATE_PATHS;
 
 const Login = WithSuspense(lazy(() => import('../pages/Auth/Login')));
@@ -75,7 +80,7 @@ const Dashboard = WithSuspense(
 );
 
 const TenantDashboard = WithSuspense(
-  lazy(() => import('../pages/TenantDashboard/Dashboard'))
+  lazy(() => import('../pages/Tenant/TenantDashboard/Dashboard'))
 );
 const Inquiries = WithSuspense(
   lazy(() => import('../pages/Inquiries/Inquiries'))
@@ -93,6 +98,10 @@ const PropertyUploads = WithSuspense(
   lazy(() => import('../pages/Properties/PropertyUploads'))
 );
 
+const ViewPropertyDetails = WithSuspense(
+  lazy(() => import('../pages/Properties/ViewPropertyDetails'))
+);
+
 const Transactions = WithSuspense(
   lazy(() => import('../pages/Transactions/Transactions'))
 );
@@ -107,6 +116,20 @@ const VerifyPayment = WithSuspense(
 
 const PublicPropertiesVirtualTour = WithSuspense(
   lazy(() => import('../pages/Web/VirtualTour'))
+);
+
+const Settings = WithSuspense(lazy(() => import('../pages/Settings/Settings')));
+
+const InsuranceDetails = WithSuspense(
+  lazy(() => import('../pages/Properties/InsuranceDetails'))
+);
+
+const TenantMgt = WithSuspense(
+  lazy(() => import('../pages/TenantMgt/TenantMgt'))
+);
+
+const TenantProperty = WithSuspense(
+  lazy(() => import('../pages/Tenant/Property/Property'))
 );
 
 export const PUBLIC_ROUTES = [
@@ -140,8 +163,13 @@ export const PRIVATE_ROUTES = [
   { path: PROPERTIES, element: <Properties /> },
   { path: ADD_PROPERTY_INFO, element: <AddPropertyInfo /> },
   { path: PROPERTY_UPLOADS, element: <PropertyUploads /> },
+  { path: VIEW_PROPERTY_DETAILS, element: <ViewPropertyDetails /> },
   { path: TRANSACTIONS, element: <Transactions /> },
   { path: MESSAGES, element: <Messages /> },
+  { path: INSURANCE_DETAILS, element: <InsuranceDetails /> },
+  { path: SETTINGS, element: <Settings /> },
+  { path: TENANT_MGT, element: <TenantMgt /> },
+  { path: TENANT_PROPERTY, element: <TenantProperty /> },
 
-  { path: '*', element: <Navigate to="/" replace /> },
+  { path: '*', element: <Navigate to="/dashboard" replace /> },
 ];

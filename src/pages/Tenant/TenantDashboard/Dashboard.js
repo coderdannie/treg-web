@@ -1,6 +1,6 @@
-import PaymentHistory from '../../components/data/TenantDashboard/PaymentHistory';
-import Profile from '../../components/data/TenantDashboard/Profile';
-import { useGetUser } from '../../services/query/account';
+import PaymentHistory from '../../../components/data/TenantDashboard/PaymentHistory';
+import Profile from '../../../components/data/TenantDashboard/Profile';
+import { useGetUser } from '../../../services/query/account';
 
 const Dashboard = () => {
   const { data, isLoading } = useGetUser();

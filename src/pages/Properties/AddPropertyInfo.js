@@ -4,10 +4,10 @@ import FormStepOne from '../../components/data/Properties/FormStepOne';
 import toast from 'react-hot-toast';
 import { useAddProperty } from '../../services/query/properties';
 import { useNavigate } from 'react-router-dom';
+import { IoChevronBackOutline } from 'react-icons/io5';
 
 const AddPropertyInfo = () => {
   const errorToast = (message) => toast.error(message, { duration: 3000 });
-  const successToast = (message) => toast.success(message, { duration: 3000 });
 
   const generateDescription = async (inputs) => {
     try {
@@ -76,46 +76,64 @@ const AddPropertyInfo = () => {
   });
 
   const handleSubmit = () => {
-    mutate({
-      title: values.title,
-      type: values.type.value,
-      description: values.description,
-      numberOfRooms: Number(values.noOfRooms),
-      location: values?.location,
-      pricePerYear: Number(values?.amount.replace(/\D/g, '')),
-      amenities: selectedAmenities,
-      rentalPeriod: rentalPeriod ? 'Yearly' : 'Monthly',
-      insured: checkedItems.insured,
-      newConstruction: checkedItems.newConstruction,
-    });
+    if (checkedItems.insured) {
+      navigate('/insurance-details', {
+        state: {
+          ...values,
+          selectedAmenities,
+          customAmenities,
+          rentalPeriod,
+          checkedItems,
+        },
+      });
+    } else {
+      mutate({
+        title: values.title,
+        type: values.type.value,
+        description: values.description,
+        numberOfRooms: Number(values.noOfRooms),
+        location: values?.location,
+        pricePerYear: Number(values?.amount.replace(/\D/g, '')),
+        amenities: selectedAmenities,
+        rentalPeriod: rentalPeriod ? 'Yearly' : 'Monthly',
+        insured: checkedItems.insured,
+        newConstruction: checkedItems.newConstruction,
+      });
+    }
   };
 
   return (
-    <div
-      style={{
-        fontFamily: 'sansation',
-      }}
-      className=" max-w-[666px] bg-white rounded-lg mt-[30px] mx-auto py-10 px-8 md:px-14 border border-[#F5F5F5]"
-    >
-      <h2 className="text-center text-lg md:text-xl text-black">
-        Property Information Form
-      </h2>
+    <>
+      <button
+        className="flex items-center gap-1"
+        onClick={() => {
+          navigate(-1);
+          sessionStorage.removeItem('action');
+        }}
+      >
+        <IoChevronBackOutline /> <span>Back</span>
+      </button>
+      <div className=" max-w-[666px] bg-white rounded-lg mt-[30px] mx-auto py-10 px-8 md:px-14 border border-[#F5F5F5]">
+        <h2 className="text-center text-lg md:text-xl  font-semibold">
+          Property Information Form
+        </h2>
 
-      <FormStepOne
-        values={values}
-        setValues={setValues}
-        customAmenities={customAmenities}
-        setCustomAmenities={setCustomAmenities}
-        setSelectedAmenities={setSelectedAmenities}
-        selectedAmenities={selectedAmenities}
-        rentalPeriod={rentalPeriod}
-        setRentalPeriod={setRentalPeriod}
-        checkedItems={checkedItems}
-        setCheckedItems={setCheckedItems}
-        isLoading={isLoading}
-        handleSubmit={handleSubmit}
-      />
-    </div>
+        <FormStepOne
+          values={values}
+          setValues={setValues}
+          customAmenities={customAmenities}
+          setCustomAmenities={setCustomAmenities}
+          setSelectedAmenities={setSelectedAmenities}
+          selectedAmenities={selectedAmenities}
+          rentalPeriod={rentalPeriod}
+          setRentalPeriod={setRentalPeriod}
+          checkedItems={checkedItems}
+          setCheckedItems={setCheckedItems}
+          isLoading={isLoading}
+          handleSubmit={handleSubmit}
+        />
+      </div>
+    </>
   );
 };
 export default AddPropertyInfo;

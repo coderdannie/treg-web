@@ -6,7 +6,6 @@ import {
   useUploadPropertyPhotos,
   useUploadPropertyVideos,
 } from '../../services/query/properties';
-import { useNavigate } from 'react-router-dom';
 import { useListingPayment } from '../../services/query/payments';
 
 const PropertyUploads = () => {
@@ -14,10 +13,6 @@ const PropertyUploads = () => {
   const successToast = (message) => toast.success(message, { duration: 3000 });
 
   const propertyDetails = JSON.parse(sessionStorage.getItem('propertyDetails'));
-
-  console.log(propertyDetails);
-
-  const navigate = useNavigate();
 
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);

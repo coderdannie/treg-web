@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { BsDownload } from 'react-icons/bs';
 import { FiSearch } from 'react-icons/fi';
@@ -27,11 +27,10 @@ const Properties = () => {
   const [duration, setDuration] = useState('');
 
   const [page, setPage] = useState(1);
-  const [startRow, setStartRow] = useState(1);
-  const [endRow, setEndRow] = useState(0);
   const [limit, setLimit] = useState(25);
 
-  const getQueryStatus = () => {
+  // Memoized query status
+  const queryStatus = useMemo(() => {
     if (selectedStatus !== 'Status') {
       if (selectedStatus === 'Active') {
         return 'Available';
@@ -53,11 +52,34 @@ const Properties = () => {
     }
 
     return ''; // Default to no status filter
-  };
+  }, [selectedStatus, type]);
 
-  // Reset selectedStatus when type changes
-  useEffect(() => {
-    setSelectedStatus('Status'); // Reset to default
+  // Memoized isLandlordOrAgent and isKycCompleted
+  const isLandlordOrAgent = useMemo(() => {
+    return (
+      data &&
+      (data?.data?.userType === 'Landlord' || data?.data?.userType === 'Agent')
+    );
+  }, [data]);
+
+  const isKycCompleted = useMemo(() => {
+    return (
+      data?.data?.supportingDocumentProvided &&
+      data?.data?.professionalDetailsCompleted
+    );
+  }, [data]);
+
+  const pageTitle = useMemo(() => {
+    if (type.includes('all')) {
+      return 'All Listings';
+    }
+    if (type.includes('unlisted')) {
+      return 'Unlisted Listings';
+    }
+    if (type.includes('active')) {
+      return 'Active Listings';
+    }
+    return 'Rented Properties';
   }, [type]);
 
   const {
@@ -69,20 +91,12 @@ const Properties = () => {
     limit,
     startValue ? formatDates(new Date(startValue)) : '',
     endValue ? formatDates(new Date(endValue)) : '',
-    getQueryStatus() // Use the computed status
+    queryStatus
   );
 
-  useEffect(() => {
-    refetch();
-  }, [type, selectedStatus, startValue, endValue, page, limit, refetch]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [limit, selectedStatus]); // Refetch when limit or selectedStatus changes
-
-  useEffect(() => {
+  const { startRow, endRow } = useMemo(() => {
     if (!allProperties) {
-      return;
+      return { startRow: 1, endRow: 0 };
     }
 
     const currentPage = page;
@@ -92,9 +106,20 @@ const Properties = () => {
     const currentStartRow = (currentPage - 1) * itemsPerPage + 1;
     const currentEndRow = Math.min(currentPage * itemsPerPage, totalItems);
 
-    setStartRow(currentStartRow);
-    setEndRow(currentEndRow);
+    return { startRow: currentStartRow, endRow: currentEndRow };
   }, [allProperties, page, limit]);
+
+  useEffect(() => {
+    setSelectedStatus('Status'); // Reset to default
+  }, [type]);
+
+  useEffect(() => {
+    refetch();
+  }, [type, selectedStatus, startValue, endValue, page, limit, refetch]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [limit, selectedStatus]);
 
   useEffect(() => {
     const calculateDates = () => {
@@ -121,14 +146,6 @@ const Properties = () => {
     calculateDates();
   }, [duration]);
 
-  const isLandlordOrAgent =
-    data &&
-    (data?.data?.userType === 'Landlord' || data?.data?.userType === 'Agent');
-
-  const isKycCompleted =
-    data?.data?.supportingDocumentProvided &&
-    data?.data?.professionalDetailsCompleted;
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (event.target.closest('.box') === null) {
@@ -143,17 +160,11 @@ const Properties = () => {
   }, []);
 
   return (
-    <div>
+    <>
       <div className="flex justify-between gap-2 flex-wrap">
         <div>
           <h3 className="font-semibold text-lg md:text-xl text-black">
-            {type.includes('all')
-              ? 'All Listings'
-              : type.includes('unlisted')
-              ? 'Unlisted Listings'
-              : type.includes('active')
-              ? 'Active Listings'
-              : 'Rented Properties'}
+            {pageTitle}
           </h3>
           <p className="text-[#475367]">
             Here is all the information you need on all your listings
@@ -224,7 +235,7 @@ const Properties = () => {
         startRow={startRow}
         endRow={endRow}
       />
-    </div>
+    </>
   );
 };
 

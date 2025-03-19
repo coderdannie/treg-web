@@ -168,13 +168,13 @@ export const sidebarData = [
   //   path: '/inquires',
   // },
 
-  // {
-  //   title: 'Tenant Management',
-  //   icon: <ManagementIcon fill="#616161" />,
-  //   sec: <ManagementIcon fill="#1140E7" />,
-  //   hover: <ManagementIcon fill="#1140E7" />,
-  //   path: '/tenant-management',
-  // },
+  {
+    title: 'Tenant Management',
+    icon: <ManagementIcon fill="#616161" />,
+    sec: <ManagementIcon fill="#1140E7" />,
+    hover: <ManagementIcon fill="#1140E7" />,
+    path: '/tenant-mgt',
+  },
   {
     title: 'Transactions',
     icon: <PaymentsIcon fill="#616161" />,
@@ -182,41 +182,41 @@ export const sidebarData = [
     hover: <PaymentsIcon fill="#1140E7" />,
     path: '/transactions',
   },
-  // {
-  //   title: 'Messages',
-  //   icon: <MessageIcon fill="#616161" />,
-  //   sec: <MessageIcon fill="#1140E7" />,
-  //   hover: <MessageIcon fill="#1140E7" />,
-  //   path: '/messages',
-  // },
-  // {
-  //   title: 'Tenancy Agreements',
-  //   icon: <InvoiceIcon fill="#616161" />,
-  //   sec: <InvoiceIcon fill="#1140E7" />,
-  //   hover: <InvoiceIcon fill="#1140E7" />,
-  //   path: '/tenancy-agreements',
-  // },
-  // {
-  //   title: 'Collaborations',
-  //   icon: <CollaborationIcon fill="#616161" />,
-  //   sec: <CollaborationIcon fill="#1140E7" />,
-  //   hover: <CollaborationIcon fill="#1140E7" />,
-  //   path: '/collaborations',
-  // },
-  // {
-  //   title: 'Calendar',
-  //   icon: <CalendarIcon fill="#616161" />,
-  //   sec: <CalendarIcon fill="#1140E7" />,
-  //   hover: <CalendarIcon fill="#1140E7" />,
-  //   path: '/calendar',
-  // },
-  // {
-  //   title: 'Settings',
-  //   icon: <SettingsIcon fill="#616161" />,
-  //   sec: <SettingsIcon fill="#1140E7" />,
-  //   hover: <SettingsIcon fill="#1140E7" />,
-  //   path: '/settings',
-  // },
+  {
+    title: 'Messages',
+    icon: <MessageIcon fill="#616161" />,
+    sec: <MessageIcon fill="#1140E7" />,
+    hover: <MessageIcon fill="#1140E7" />,
+    path: '/messages',
+  },
+  {
+    title: 'Tenancy Agreements',
+    icon: <InvoiceIcon fill="#616161" />,
+    sec: <InvoiceIcon fill="#1140E7" />,
+    hover: <InvoiceIcon fill="#1140E7" />,
+    path: '/tenancy-agreements',
+  },
+  {
+    title: 'Collaborations',
+    icon: <CollaborationIcon fill="#616161" />,
+    sec: <CollaborationIcon fill="#1140E7" />,
+    hover: <CollaborationIcon fill="#1140E7" />,
+    path: '/collaborations',
+  },
+  {
+    title: 'Calendar',
+    icon: <CalendarIcon fill="#616161" />,
+    sec: <CalendarIcon fill="#1140E7" />,
+    hover: <CalendarIcon fill="#1140E7" />,
+    path: '/calendar',
+  },
+  {
+    title: 'Settings',
+    icon: <SettingsIcon fill="#616161" />,
+    sec: <SettingsIcon fill="#1140E7" />,
+    hover: <SettingsIcon fill="#1140E7" />,
+    path: '/settings',
+  },
 ];
 
 export const tenantSidebarData = [
@@ -232,9 +232,15 @@ export const tenantSidebarData = [
     icon: <HomeIcon fill="#616161" />,
     sec: <HomeIcon fill="#1140E7" />,
     hover: <HomeIcon fill="#1140E7" />,
-    path: '/my-properties/all',
+    path: '/tenant/property',
   },
-
+  {
+    title: 'Transactions',
+    icon: <PaymentsIcon fill="#616161" />,
+    sec: <PaymentsIcon fill="#1140E7" />,
+    hover: <PaymentsIcon fill="#1140E7" />,
+    path: '/transactions',
+  },
   {
     title: 'Messages',
     icon: <MessageIcon fill="#616161" />,
@@ -468,6 +474,29 @@ export const dashboardData = [
   {
     id: 4,
     label: 'Unlisted Properties',
+    value: '1.01',
+  },
+];
+
+export const tenantCounts = [
+  {
+    id: 1,
+    label: 'Total Tenants',
+    value: '1.01',
+  },
+  {
+    id: 2,
+    label: 'Active Tenants',
+    value: '1.01',
+  },
+  {
+    id: 2,
+    label: 'Pending Move-ins',
+    value: '1.01',
+  },
+  {
+    id: 4,
+    label: 'Vacated Properties',
     value: '1.01',
   },
 ];

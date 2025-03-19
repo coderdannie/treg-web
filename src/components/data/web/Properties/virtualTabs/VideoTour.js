@@ -60,6 +60,7 @@ export default function VideoTour({ data }) {
           <video
             src={activeVideo.videoLink}
             controls
+            autoPlay
             className="w-full h-full object-cover"
             style={{
               transform: `scale(${zoom})`,
@@ -110,10 +111,14 @@ export default function VideoTour({ data }) {
               onClick={() => handleThumbnailClick(video)}
             >
               <video
-                src={video?.thumbnailUrl}
-                alt="property video"
+                autoPlay
+                muted
+                loop
                 className="w-full h-full object-cover rounded-md"
-              />
+              >
+                <source src={video?.thumbnailUrl} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             </div>
           ))}
         </div>

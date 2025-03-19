@@ -31,7 +31,7 @@ const Wallet = () => {
         src="/assets/wallet-bg.svg"
         alt="treg background"
       />
-      <div className="max-w-[1077px] px-4 mx-auto w-full relative z-30">
+      <div className="max-w-[1077px] px-4 mx-auto w-full relative ">
         <div className="flex sm:items-center justify-between flex-col sm:flex-row gap-3 ">
           <div>
             <div className="pb-4 sm:pb-6">

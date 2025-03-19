@@ -43,7 +43,7 @@ const Properties = () => {
   const { data, isLoading } = useGetAllPublicProperties();
 
   return (
-    <div className="align-element">
+    <div className="align-element pb-10">
       <SearchFilters />
       <div>
         <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#18181B]">

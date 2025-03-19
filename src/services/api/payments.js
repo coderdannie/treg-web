@@ -27,3 +27,8 @@ export const addAccountDetails = async (body) => {
   const res = await axiosInstance.post(API.ADD_ACCOUNT_DETAILS, body);
   return res.data;
 };
+
+export const createPropertyPayment = async (body) => {
+  const res = await axiosInstance.post(API.CREATE_PROPERTY_PAYMENT, body);
+  return res.data;
+};

@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from 'react-query';
 import {
   addAccountDetails,
+  createPropertyPayment,
   getBanks,
   listingPayment,
   resolveName,
@@ -10,6 +11,15 @@ import {
 export const useListingPayment = (options = {}) => {
   const { mutate, isLoading } = useMutation(listingPayment, {
     mutationKey: 'listingPayment',
+    ...options,
+  });
+
+  return { mutate, isLoading };
+};
+
+export const useCreatePropertyPayment = (options = {}) => {
+  const { mutate, isLoading } = useMutation(createPropertyPayment, {
+    mutationKey: 'createPropertyPayment',
     ...options,
   });
 

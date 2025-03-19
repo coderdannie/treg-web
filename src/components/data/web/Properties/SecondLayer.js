@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { FaCalendarAlt } from 'react-icons/fa';
@@ -14,13 +13,15 @@ import {
   FaCouch,
 } from 'react-icons/fa';
 import { MdOtherHouses } from 'react-icons/md';
-
 import Form from './Form';
 import { Link } from 'react-router-dom';
 import PropertyCard from '../../../common/PropertyCard';
 import { useGetAllPublicProperties } from '../../../../services/query/properties';
+import EscrowModal from '../../../modals/EscrowModal';
+import AuthModal from '../../../modals/AuthModal';
 
 const SecondLayer = ({ data }) => {
+  const user = sessionStorage.getItem('user');
   const [selectedDates, setSelectedDates] = useState([]);
   const maxDates = 3;
   const availableDates = [
@@ -29,7 +30,24 @@ const SecondLayer = ({ data }) => {
     'Saturday - Nov 6',
     'Sunday - Nov 7',
   ];
+  const [isShow, setIsShow] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   const { data: properties } = useGetAllPublicProperties();
+
+  // Disable scrolling when modal is open
+  useEffect(() => {
+    if (isShow) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+
+    // Cleanup function to remove the class when the component unmounts
+    return () => {
+      document.body.classList.remove('no-scroll');
+    };
+  }, [isShow]);
 
   const handleDateSelection = (date) => {
     if (selectedDates.includes(date)) {
@@ -62,25 +80,32 @@ const SecondLayer = ({ data }) => {
     <div className="my-[44px]">
       <div className="flex flex-col min-991:flex-row gap-8">
         <div className="text-[#616161] min-991:w-[60%] ">
-          <h4 className="text-lg capitalize  sm:text-xl md:text-2xl font-medium  text-[#363636] ">
-            {data?.title}
-          </h4>
+          <div className="flex items-center justify-between">
+            <h4 className="text-lg capitalize  sm:text-xl md:text-2xl font-medium  text-[#363636] ">
+              {data?.title}
+            </h4>
+            <div>
+              <p className="text-xl md:text-2xl font-semibold text-[#101828]">
+                ₦
+                {data
+                  ? Number(data?.pricePerYear?.$numberDecimal).toLocaleString(
+                      undefined,
+                      {
+                        minimumFractionDigits: 2,
+                      }
+                    )
+                  : '0.00'}
+              </p>
+              <span className="text-center text-sm block">
+                {data?.rentalPeriod}
+              </span>
+            </div>
+          </div>
+
           <p className=" md:text-lg capitalize text-[#616161]">
             {data?.location}
           </p>
           <p className="text-[#6A6A6A] pt-4 text-sm md:text-base">
-            {/* Welcome to your potential new home. This lovely, single-story home
-            showcases an open floor plan with luxury vinyl plank flooring and a
-            great room that features volume ceilings. Enjoy the convenience of a
-            dedicated laundry room with direct garage access. The modern kitchen
-            boasts an island, 36-in. upper cabinets, Silestone countertops in
-            Blanco Maple, a Moen chrome faucet, a Kohler stainless steel sink
-            and Whirlpool stainless steel appliances. Relax in the primary
-            suite, which features a tray ceiling, walk-in closet and connecting
-            bath that offers a dual-sink vanity, linen closet and walk-in shower
-            with tile surround. Enjoy the outdoors on the covered back patio.
-            See sales counselor for approximate timing required for move-in
-            ready homes. */}
             {data?.description}
           </p>
           <div className="py-6">
@@ -105,7 +130,7 @@ const SecondLayer = ({ data }) => {
               <MapContainer
                 center={[43.65107, -79.347015]}
                 zoom={13}
-                className="h-64 w-full rounded-md"
+                className="h-64 w-full rounded-md !z-0"
               >
                 <TileLayer url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png" />
                 <Marker
@@ -149,8 +174,23 @@ const SecondLayer = ({ data }) => {
             </div>
           </div>
         </div>
-        <div className=" min-991:w-[40%] w-full ">
+        <div className=" min-991:w-[40%] w-full mt-7 ">
           <Form />
+          <div className="border border-[#C8C8C8] mt-7 rounded-xl py-6 px-5">
+            <p>Ready to secure this property?</p>
+            <button
+              className="primary-btn mt-4 w-full"
+              onClick={() => {
+                if (user) {
+                  setIsShow(true);
+                } else {
+                  setIsOpen(true);
+                }
+              }}
+            >
+              Proceed to Payment
+            </button>
+          </div>
         </div>
       </div>
       <div>
@@ -174,6 +214,12 @@ const SecondLayer = ({ data }) => {
           </div>
         </div>
       </div>
+      <EscrowModal
+        isOpen={isShow}
+        onClose={() => setIsShow(false)}
+        data={data}
+      />
+      <AuthModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 };

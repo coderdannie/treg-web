@@ -75,6 +75,10 @@ and Opera ::-webkit-scrollbar {
   --secondary-foreground: 0 0% 9%;
   --muted: 0 0% 96.1%;
 }
+
+.no-scroll {
+  overflow: hidden !important;
+}
 body {
   font-family: 'Poppins';
 }

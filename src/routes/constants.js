@@ -26,7 +26,15 @@ export const PRIVATE_PATHS = {
   INQUIRES: '/inquires',
   ADD_PROPERTY_INFO: '/add-property-info',
   PROPERTY_UPLOADS: '/property-uploads',
+  VIEW_PROPERTY_DETAILS: '/my-properties/view-details/:id',
   TRANSACTIONS: '/transactions',
   MESSAGES: '/messages',
+
+  INSURANCE_DETAILS: '/insurance-details',
+  TENANT_MGT: '/tenant-mgt',
+  SETTINGS: '/settings',
+
+  //tenant route
   TENANT_DASHBOARD: '/tenant/dashboard',
+  TENANT_PROPERTY: '/tenant/property',
 };

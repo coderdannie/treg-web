@@ -42,6 +42,34 @@ export const getAllProperties = async ({ queryKey }) => {
   return res.data;
 };
 
+export const getAllTenantPropertyHistories = async ({ queryKey }) => {
+  const [, page, limit, start, end, status] = queryKey;
+
+  let query = '';
+
+  if (page) {
+    query = query + `page=${page}&`;
+  }
+  if (limit) {
+    query = query + `limit=${limit}&`;
+  }
+  if (start) {
+    query = query + `startDate=${start}&`;
+  }
+
+  if (end) {
+    query = query + `endDate=${end}&`;
+  }
+  if (status) {
+    query = query + `status=${status}`;
+  }
+
+  const res = await axiosInstance.get(
+    `${API.GET_TENANT_PROPERTY_HISTORIES}?${query}`
+  );
+  return res.data;
+};
+
 export const completeListing = async (id) => {
   const res = await axiosInstance.patch(API.COMPLETE_LISTING(id));
   return res.data;
@@ -60,6 +88,13 @@ export const getPublicPropertyDetails = async ({ queryKey }) => {
   return res.data;
 };
 
+export const getPropertyDetails = async ({ queryKey }) => {
+  const [, id] = queryKey;
+  const res = await axiosInstance.get(
+    `${API.GET_PUBLIC_PROPERTY_DETAILS}/${id}/get`
+  );
+  return res.data;
+};
 export const getPropertiesCountByStatus = async (query) => {
   const res = await axiosInstance.get(API.GET_PROPERTIES_COUNTS(query.id));
   return res.data;
@@ -68,5 +103,10 @@ export const getPropertiesCountByStatus = async (query) => {
 export const getAllCounts = async ({ queryKey }) => {
   const [,] = queryKey;
   const res = await axiosInstance.get(API.GET_ALL_COUNTS);
+  return res.data;
+};
+
+export const updateProperty = async (id, data) => {
+  const res = await axiosInstance.patch(API.UPDATE_PROPERTY(id), data);
   return res.data;
 };

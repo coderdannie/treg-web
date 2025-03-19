@@ -25,7 +25,7 @@ const FormInput = ({
   return (
     <div className="form-control mb-2">
       <div className="flex justify-between items-center mb-1">
-        <label htmlFor={name} className="label">
+        <label htmlFor={name} className="label font-semibold">
           <span className="label-text text-[#666666]">{label}</span>
         </label>
         {type === 'password' && (
@@ -53,7 +53,7 @@ const FormInput = ({
           placeholder={placeholder}
           inputMode={inputMode}
           pattern={pattern}
-          className={`input border-[2px] w-full input-bordered focus:ring-0 focus:outline-none ${size} placeholder-custom  !text-[#333333]  font-light ${
+          className={`input border-[2px] w-full input-bordered focus:ring-0 focus:outline-none ${size} placeholder-custom  !text-[#333333]   ${
             type === 'number' ? 'no-spinner' : ''
           }`}
           style={{
