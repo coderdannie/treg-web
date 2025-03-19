@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { FaCalendarAlt } from 'react-icons/fa';
@@ -21,7 +21,7 @@ import EscrowModal from '../../../modals/EscrowModal';
 import AuthModal from '../../../modals/AuthModal';
 
 const SecondLayer = ({ data }) => {
-  const user = sessionStorage.getItem('user');
+  const user = JSON.parse(sessionStorage.getItem('user'));
   const [selectedDates, setSelectedDates] = useState([]);
   const maxDates = 3;
   const availableDates = [
@@ -34,6 +34,13 @@ const SecondLayer = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const { data: properties } = useGetAllPublicProperties();
+
+  const isLandlordOrAgent = useMemo(() => {
+    return (
+      user &&
+      (user?.data?.userType === 'Landlord' || user?.data?.userType === 'Agent')
+    );
+  }, [user]);
 
   // Disable scrolling when modal is open
   useEffect(() => {
@@ -176,21 +183,23 @@ const SecondLayer = ({ data }) => {
         </div>
         <div className=" min-991:w-[40%] w-full mt-7 ">
           <Form />
-          <div className="border border-[#C8C8C8] mt-7 rounded-xl py-6 px-5">
-            <p>Ready to secure this property?</p>
-            <button
-              className="primary-btn mt-4 w-full"
-              onClick={() => {
-                if (user) {
-                  setIsShow(true);
-                } else {
-                  setIsOpen(true);
-                }
-              }}
-            >
-              Proceed to Payment
-            </button>
-          </div>
+          {!isLandlordOrAgent && (
+            <div className="border border-[#C8C8C8] mt-7 rounded-xl py-6 px-5">
+              <p>Ready to secure this property?</p>
+              <button
+                className="primary-btn mt-4 w-full"
+                onClick={() => {
+                  if (user) {
+                    setIsShow(true);
+                  } else {
+                    setIsOpen(true);
+                  }
+                }}
+              >
+                Proceed to Payment
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <div>
