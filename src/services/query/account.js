@@ -5,6 +5,7 @@ import {
   createTransactionPin,
   getUser,
   getWalletInfo,
+  confirmMovedIn,
 } from '../api/account';
 
 export const useGetUser = (options = {}) => {
@@ -52,4 +53,16 @@ export const useGetWalletInfo = (options = {}) => {
   );
 
   return { data, isLoading, refetch, isError };
+};
+
+export const useConfirmMovedIn = (options = {}) => {
+  const { mutate, isLoading } = useMutation(
+    (payload) => confirmMovedIn(payload.id),
+    {
+      mutationKey: 'CompleteListing',
+      ...options,
+    }
+  );
+
+  return { mutate, isLoading };
 };

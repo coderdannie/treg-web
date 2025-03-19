@@ -25,3 +25,8 @@ export const getWalletInfo = async () => {
   const res = await axiosInstance.get(API.GET_WALLET_INFO);
   return res.data;
 };
+
+export const confirmMovedIn = async (id) => {
+  const res = await axiosInstance.post(API.CONFIRM_MOVED_IN(id));
+  return res.data;
+};

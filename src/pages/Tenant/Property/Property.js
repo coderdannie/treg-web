@@ -121,6 +121,7 @@ const Property = () => {
             setLimit={setLimit}
             startRow={startRow}
             endRow={endRow}
+            refetch={refetch}
           />
         </div>
       </div>

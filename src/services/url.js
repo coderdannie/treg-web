@@ -36,3 +36,5 @@ export const GET_WALLET_INFO = 'users/wallet/get';
 export const UPDATE_PROPERTY = (id = '') => `/properties/${id}/update`;
 export const GET_TENANT_PROPERTY_HISTORIES = 'properties/tenant/rent-histories';
 export const CREATE_PROPERTY_PAYMENT = 'payments/pay-for-property';
+export const CONFIRM_MOVED_IN = (id = '') => `payments/move-in/${id}`;
+export const TENANT_TRANSACTIONS = 'transactions/tenant';

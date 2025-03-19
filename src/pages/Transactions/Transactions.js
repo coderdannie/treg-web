@@ -1,18 +1,31 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   headers,
   statuses,
   transHeaders,
 } from '../../components/common/constants';
 import CustomTable from '../../components/common/CustomTable';
-import { useGetAgentTransactions } from '../../services/query/transaction';
+import {
+  useGetAgentTransactions,
+  useGetTenantTransactions,
+} from '../../services/query/transaction';
 import { formatDateTime } from '../../utils/helper';
 import { FiEye } from 'react-icons/fi';
 import { FiFilter } from 'react-icons/fi';
 import TransactionDetails from '../../components/modals/TransactionDetails';
 
 const Transactions = () => {
+  const user = JSON.parse(sessionStorage.getItem('user'));
+  const isLandlordOrAgent = useMemo(() => {
+    return (
+      user &&
+      (user?.data?.userType === 'Landlord' || user?.data?.userType === 'Agent')
+    );
+  }, [user]);
+
   const { data, isLoading } = useGetAgentTransactions();
+  const { data: tenantTransactions, isLoading: isLoadingTenantTransations } =
+    useGetTenantTransactions();
   const [selectedStatus, setSelectedStatus] = useState('All');
 
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +36,11 @@ const Transactions = () => {
     setSelectedRow(row);
     setIsShow(true);
   };
+
+  // Determine which dataset to use based on user type
+  const transactionsData = isLandlordOrAgent
+    ? data?.data
+    : tenantTransactions?.data;
 
   return (
     <div>
@@ -67,10 +85,10 @@ const Transactions = () => {
       <CustomTable
         headers={transHeaders}
         skeletonRows={3}
-        isLoading={isLoading}
+        isLoading={isLoading || isLoadingTenantTransations} // Handle loading for both datasets
       >
-        {data?.data?.length ? (
-          data?.data?.map((row, rowIndex) => (
+        {transactionsData?.length ? (
+          transactionsData.map((row, rowIndex) => (
             <tr key={rowIndex}>
               <td className="whitespace-nowrap px-6 py-4">
                 {row?.transactionRef?.slice(0, 20)}

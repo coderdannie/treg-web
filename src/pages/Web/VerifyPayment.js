@@ -154,9 +154,9 @@ const VerifyPayment = () => {
                 className="mt-6 w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition-colors"
                 onClick={() => {
                   if (type.includes('house-rent')) {
-                    navigate('/my-properties/all');
-                  } else {
                     navigate('/tenant/property');
+                  } else {
+                    navigate('/my-properties/all');
                   }
                 }}
               >
