@@ -6,6 +6,7 @@ import {
   listingPayment,
   resolveName,
   verifyPayment,
+  verifyPropertyPayment,
 } from '../api/payments';
 
 export const useListingPayment = (options = {}) => {
@@ -28,6 +29,15 @@ export const useCreatePropertyPayment = (options = {}) => {
 
 export const useVerifyPayment = (options = {}) => {
   const { mutate, isLoading } = useMutation(verifyPayment, {
+    mutationKey: 'verifyPayment',
+    ...options,
+  });
+
+  return { mutate, isLoading };
+};
+
+export const useVerifyPropertyPayment = (options = {}) => {
+  const { mutate, isLoading } = useMutation(verifyPropertyPayment, {
     mutationKey: 'verifyPayment',
     ...options,
   });

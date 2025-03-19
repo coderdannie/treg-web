@@ -3,10 +3,14 @@ import { useSearchParams, useNavigate } from 'react-router-dom'; // Import useNa
 import Banner from '../../components/common/Banner';
 import vectorBg from '../../assets/vectorBg.png';
 import { motion } from 'framer-motion';
-import { useVerifyPayment } from '../../services/query/payments';
+import {
+  useVerifyPayment,
+  useVerifyPropertyPayment,
+} from '../../services/query/payments';
 import toast from 'react-hot-toast';
 
 const VerifyPayment = () => {
+  const type = localStorage.getItem('paymentType');
   const [status, setStatus] = useState('pending'); // 'pending', 'success', 'failure'
   const [progress, setProgress] = useState(0);
 
@@ -20,7 +24,7 @@ const VerifyPayment = () => {
   const errorToast = (message) => toast.error(message, { duration: 3000 });
   const successToast = (message) => toast.success(message, { duration: 3000 });
 
-  const { mutate, isLoading } = useVerifyPayment({
+  const { mutate } = useVerifyPayment({
     onSuccess: (res) => {
       successToast(res?.message);
       setStatus('success');
@@ -33,6 +37,18 @@ const VerifyPayment = () => {
     },
   });
 
+  const { mutate: mutateVerify } = useVerifyPropertyPayment({
+    onSuccess: (res) => {
+      successToast(res?.message);
+      setStatus('success');
+    },
+    onError: (res) => {
+      setStatus('failure');
+      errorToast(
+        res?.response?.data?.message || res?.message || 'An Error Occurred'
+      );
+    },
+  });
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => (prev < 100 ? prev + 5 : prev));
@@ -43,7 +59,11 @@ const VerifyPayment = () => {
 
       // Send the reference to the backend
       if (reference) {
-        mutate({ reference });
+        if (type.includes('house-rent')) {
+          mutateVerify({ reference });
+        } else {
+          mutate({ reference });
+        }
       } else {
         errorToast('Reference not found in URL');
         setStatus('failure');

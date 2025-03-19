@@ -11,7 +11,7 @@ const EscrowModal = ({ isOpen, onClose, data }) => {
   const { mutate, isLoading } = useCreatePropertyPayment({
     onSuccess: (res) => {
       successToast(res?.message);
-
+      localStorage.setItem('paymentType', 'house-rent');
       const authUrl = res?.data?.data?.authorization_url;
 
       if (authUrl?.startsWith('http://') || authUrl?.startsWith('https://')) {

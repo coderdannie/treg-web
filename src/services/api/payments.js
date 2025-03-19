@@ -11,6 +11,11 @@ export const verifyPayment = async (body) => {
   return res.data;
 };
 
+export const verifyPropertyPayment = async (body) => {
+  const res = await axiosInstance.post(API.VERIFY_PROPERTY_PAYMENT, body);
+  return res.data;
+};
+
 export const getBanks = async () => {
   const res = await axiosInstance.get(API.GET_BANKS);
   return res.data;
