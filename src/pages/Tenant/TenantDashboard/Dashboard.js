@@ -7,18 +7,12 @@ import { useGetAllTenantPropertyHistories } from '../../../services/query/proper
 const Dashboard = () => {
   const { data, isLoading } = useGetUser();
 
-  const {
-    data: allProperties,
-    isLoading: isLoadingProperty,
-    refetch,
-  } = useGetAllTenantPropertyHistories();
+  const { data: allProperties, isLoading: isLoadingProperty } =
+    useGetAllTenantPropertyHistories();
 
-  // Find the first property with status 'Rented'
   const rentedProperty = allProperties?.data?.find(
     (property) => property.status === 'Rented'
   );
-
-  console.log(rentedProperty); // Log the rented property for debugging
 
   return (
     <div>

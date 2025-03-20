@@ -105,6 +105,12 @@ const PaymentHistory = () => {
           )}
         </CustomTable>
       </div>
+      <TransactionDetails
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        row={selectedRow}
+        details={selectedRow}
+      />
     </div>
   );
 };
