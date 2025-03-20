@@ -164,7 +164,7 @@ const TransactionsTable = ({
                     ref={(ref) => (dropdownRefs.current[rowIndex] = ref)}
                     className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-md z-50"
                   >
-                    {row.status !== 'Paid' && row.status !== 'Rent' && (
+                    {row.status !== 'Paid' && row.status !== 'Rented' && (
                       <button
                         className="flex items-center gap-1 w-full text-left px-4 py-2 hover:bg-gray-100"
                         onClick={() => handleEdit(row._id)}
