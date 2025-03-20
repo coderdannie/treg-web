@@ -39,3 +39,4 @@ export const CREATE_PROPERTY_PAYMENT = 'payments/pay-for-property';
 export const CONFIRM_MOVED_IN = (id = '') => `payments/move-in/${id}`;
 export const TENANT_TRANSACTIONS = 'transactions/tenant';
 export const GET_BANK_DETAILS = 'payments/bank-account/get';
+export const WITHDRAW_FUNDS = 'payments/withdraw';

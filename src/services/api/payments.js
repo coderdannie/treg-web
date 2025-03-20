@@ -42,3 +42,8 @@ export const getBankDetails = async () => {
   const res = await axiosInstance.get(API.GET_BANK_DETAILS);
   return res.data;
 };
+
+export const withdrawFunds = async (body) => {
+  const res = await axiosInstance.post(API.WITHDRAW_FUNDS, body);
+  return res.data;
+};

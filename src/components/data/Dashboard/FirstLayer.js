@@ -15,13 +15,51 @@ import {
 import { PropertyItemSkeleton, SkeletonCard } from '../../Loaders/SkeletonCard';
 import Wallet from '../Dashboard/Wallet';
 import { Withdrawal } from '../../modals/Withdrawal';
-import { useGetBankDetails } from '../../../services/query/payments';
+import {
+  useGetBankDetails,
+  useWithdrawFunds,
+} from '../../../services/query/payments';
+import Pin from '../../modals/Pin';
+import toast from 'react-hot-toast';
 
 const FirstLayer = () => {
+  const errorToast = (message) => toast.error(message, { duration: 3000 });
+  const successToast = (message) => toast.success(message, { duration: 3000 });
+
   const { data, isLoading: isLoadingUser, refetch } = useGetUser();
   const [filter, setFilter] = useState('week');
   const [showModal, setShowModal] = useState(false);
   const [showWithdrawal, setShowWithdrawal] = useState(false);
+  const [openSuccessModal, setOpenSucessModal] = useState(false);
+  const [openPinModal, setOpenPinModal] = useState(false);
+  const [pin, setPin] = useState('');
+
+  const [values, setValues] = useState({
+    bankName: '',
+    accNumber: '',
+    amount: '',
+    accName: '',
+  });
+
+  const { mutate: mutateWithdraw, isLoading } = useWithdrawFunds({
+    onSuccess: (res) => {
+      successToast(res?.message);
+      setOpenSucessModal(true);
+    },
+    onError: (res) => {
+      errorToast(
+        res?.response?.data?.message || res?.message || 'An Error Occurred'
+      );
+    },
+  });
+
+  const handleWithdraw = () => {
+    mutateWithdraw({
+      amount: Number(values?.amount.replace(/\D/g, '')),
+      pin: pin,
+    });
+  };
+
   const navigate = useNavigate();
   const { data: walletInfo, isLoading: isLoadingInfo } = useGetWalletInfo();
 
@@ -38,7 +76,6 @@ const FirstLayer = () => {
   const { mutate: mutateUnlisted, data: unlistedCount } =
     useGetPropertiesByStatus();
   const { data: allCount, isLoading: isLoadingAllCounts } = useGetAllCounts();
-  console.log(allCount);
 
   const {
     mutate: mutateActiveCounts,
@@ -301,7 +338,18 @@ const FirstLayer = () => {
         isOpen={showWithdrawal}
         details={bankDetails?.data}
         walletInfo={walletInfo}
+        values={values}
+        setValues={setValues}
+        setOpenPinModal={setOpenPinModal}
         onClose={() => setShowWithdrawal(false)}
+      />
+      <Pin
+        active={openPinModal}
+        setActive={setOpenPinModal}
+        pin={pin}
+        setPin={setPin}
+        action={handleWithdraw}
+        isLoading={isLoading}
       />
     </div>
   );

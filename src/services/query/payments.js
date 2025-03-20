@@ -8,6 +8,7 @@ import {
   resolveName,
   verifyPayment,
   verifyPropertyPayment,
+  withdrawFunds,
 } from '../api/payments';
 
 export const useListingPayment = (options = {}) => {
@@ -82,4 +83,13 @@ export const useGetBankDetails = (options = {}) => {
   );
 
   return { data, isLoading, refetch };
+};
+
+export const useWithdrawFunds = (options = {}) => {
+  const { mutate, isLoading } = useMutation(withdrawFunds, {
+    mutationKey: 'withdrawFunds',
+    ...options,
+  });
+
+  return { mutate, isLoading };
 };
