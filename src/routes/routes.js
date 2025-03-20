@@ -22,6 +22,7 @@ const {
   VERIFY_PAYMENT,
   BLOG,
   TERMS,
+  VERIFY_RENT_PAYMENT,
 } = PUBLIC_PATHS;
 
 const {
@@ -75,6 +76,9 @@ const ContactUs = WithSuspense(lazy(() => import('../pages/Web/ContactUs')));
 
 const Blog = WithSuspense(lazy(() => import('../pages/Web/Blog')));
 
+const VerifyRentPayment = WithSuspense(
+  lazy(() => import('../pages/Web/VerifyRentPayment'))
+);
 //strictly private routes
 const Dashboard = WithSuspense(
   lazy(() => import('../pages/Dashboard/Dashboard'))
@@ -155,6 +159,7 @@ export const PUBLIC_ROUTES = [
     element: <PublicPropertiesVirtualTour />,
   },
   { path: VERIFY_PAYMENT, element: <VerifyPayment /> },
+  { path: VERIFY_RENT_PAYMENT, element: <VerifyRentPayment /> },
   { path: BLOG, element: <Blog /> },
   { path: TERMS, element: <Terms /> },
 

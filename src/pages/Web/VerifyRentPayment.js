@@ -3,10 +3,10 @@ import { useSearchParams, useNavigate } from 'react-router-dom'; // Import useNa
 import Banner from '../../components/common/Banner';
 import vectorBg from '../../assets/vectorBg.png';
 import { motion } from 'framer-motion';
-import { useVerifyPayment } from '../../services/query/payments';
+import { useVerifyPropertyPayment } from '../../services/query/payments';
 import toast from 'react-hot-toast';
 
-const VerifyPayment = () => {
+const VerifyRentPayment = () => {
   const [status, setStatus] = useState('pending');
   const [progress, setProgress] = useState(0);
 
@@ -20,7 +20,7 @@ const VerifyPayment = () => {
   const errorToast = (message) => toast.error(message, { duration: 3000 });
   const successToast = (message) => toast.success(message, { duration: 3000 });
 
-  const { mutate } = useVerifyPayment({
+  const { mutate } = useVerifyPropertyPayment({
     onSuccess: (res) => {
       successToast(res?.message);
       setStatus('success');
@@ -32,7 +32,6 @@ const VerifyPayment = () => {
       );
     },
   });
-
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => (prev < 100 ? prev + 5 : prev));
@@ -40,7 +39,6 @@ const VerifyPayment = () => {
 
     setTimeout(() => {
       clearInterval(interval);
-
       // Send the reference to the backend
       if (reference) {
         mutate({ reference });
@@ -133,7 +131,7 @@ const VerifyPayment = () => {
               <button
                 className="mt-6 w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition-colors"
                 onClick={() => {
-                  navigate('/my-properties/all');
+                  navigate('/tenant/property');
                 }}
               >
                 Go Back
@@ -146,4 +144,4 @@ const VerifyPayment = () => {
   );
 };
 
-export default VerifyPayment;
+export default VerifyRentPayment;
