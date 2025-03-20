@@ -63,7 +63,7 @@ const PropertyUploads = () => {
         successToast(res?.message);
 
         const authUrl = res?.data?.data?.authorization_url;
-
+        localStorage.setItem('paymentType', 'house-listing');
         if (authUrl?.startsWith('http://') || authUrl?.startsWith('https://')) {
           window.location.replace(authUrl); // Redirects user immediately
         } else {

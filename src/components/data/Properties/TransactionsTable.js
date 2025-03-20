@@ -3,7 +3,10 @@ import { FiMoreVertical } from 'react-icons/fi';
 import CustomTable from '../../common/CustomTable';
 import { formatDate } from '../../../utils/helper';
 import { useNavigate } from 'react-router-dom';
-import { CiEdit, CiViewList } from 'react-icons/ci'; // Import CiViewList
+import { CiEdit, CiViewList } from 'react-icons/ci';
+import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
+import { useListingPayment } from '../../../services/query/payments';
+import toast from 'react-hot-toast';
 
 const TransactionsTable = ({
   data,
@@ -15,6 +18,9 @@ const TransactionsTable = ({
   setLimit,
   limit,
 }) => {
+  const errorToast = (message) => toast.error(message, { duration: 3000 });
+  const successToast = (message) => toast.success(message, { duration: 3000 });
+
   const [openDropdown, setOpenDropdown] = useState(null);
   const navigate = useNavigate();
   const dropdownRefs = useRef({});
@@ -33,6 +39,32 @@ const TransactionsTable = ({
     navigate(`/my-properties/view-details/${rowId}`);
     setOpenDropdown(null);
     sessionStorage.setItem('action', 'view');
+  };
+
+  const { mutate, isLoading: isInitializing } = useListingPayment({
+    onSuccess: (res) => {
+      successToast(res?.message);
+
+      const authUrl = res?.data?.data?.authorization_url;
+      localStorage.setItem('paymentType', 'house-listing');
+      if (authUrl?.startsWith('http://') || authUrl?.startsWith('https://')) {
+        window.location.replace(authUrl); // Redirects user immediately
+      } else {
+        errorToast('Invalid authorization URL received.');
+      }
+    },
+    onError: (res) => {
+      errorToast(
+        res?.response?.data?.message || res?.message || 'An Error Occurred'
+      );
+    },
+  });
+
+  const handleActivate = (row) => {
+    mutate({
+      amount: row?.pricePerYear?.$numberDecimal,
+      propertyId: row?._id,
+    });
   };
 
   useEffect(() => {
@@ -140,12 +172,26 @@ const TransactionsTable = ({
                       <span>Edit</span>
                     </button>
                     <button
-                      className="flex items-center gap-1 w-full text-left px-4 py-2 hover:bg-gray-100"
+                      className="flex border-t  items-center gap-1 w-full text-left px-4 py-2 hover:bg-gray-100"
                       onClick={() => handleViewMore(row._id)}
                     >
                       <CiViewList />
                       <span>View More</span>
                     </button>
+                    {row.status === 'Unlisted' && (
+                      <button
+                        className="flex border-t items-center gap-1 w-full text-left px-4 py-2 hover:bg-gray-100"
+                        onClick={() => handleActivate(row)}
+                      >
+                        {isInitializing ? (
+                          <span className="loading loading-dots loading-xs"></span>
+                        ) : (
+                          <IoMdCheckmarkCircleOutline />
+                        )}
+
+                        <span>Activate</span>
+                      </button>
+                    )}
                   </div>
                 )}
               </div>

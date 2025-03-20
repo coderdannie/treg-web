@@ -11,6 +11,7 @@ import UpdateKycModal from '../../components/modals/UpdateKyc';
 import { useGetUser } from '../../services/query/account';
 import { useGetAllProperties } from '../../services/query/properties';
 import { formatDates } from '../../utils/helper';
+import { useListingPayment } from '../../services/query/payments';
 
 const Properties = () => {
   const { type } = useParams();
