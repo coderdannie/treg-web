@@ -1,9 +1,25 @@
 import PaymentHistory from '../../../components/data/TenantDashboard/PaymentHistory';
 import Profile from '../../../components/data/TenantDashboard/Profile';
+import { SkeletonLoader } from '../../../components/Loaders/SkeletonCard';
 import { useGetUser } from '../../../services/query/account';
+import { useGetAllTenantPropertyHistories } from '../../../services/query/properties';
 
 const Dashboard = () => {
   const { data, isLoading } = useGetUser();
+
+  const {
+    data: allProperties,
+    isLoading: isLoadingProperty,
+    refetch,
+  } = useGetAllTenantPropertyHistories();
+
+  // Find the first property with status 'Rented'
+  const rentedProperty = allProperties?.data?.find(
+    (property) => property.status === 'Rented'
+  );
+
+  console.log(rentedProperty); // Log the rented property for debugging
+
   return (
     <div>
       <div>
@@ -39,32 +55,70 @@ const Dashboard = () => {
                 <h3 className="font-semibold text-base">
                   Current Property Details
                 </h3>
-                <p className="text-gray-700">
-                  <strong className="font-medium">Property ID:</strong>{' '}
-                  TREG-PROP-78901
-                </p>
-                <p className="text-gray-700">
-                  <strong>Landlord Name:</strong> Grace Adebayo
-                </p>
-                <p className="text-gray-700">
-                  <strong>Lease Start Date:</strong> January 1, 2024
-                </p>
-                <p className="text-gray-700">
-                  <strong>Lease End Date:</strong> December 31, 2024
-                </p>
+                {isLoadingProperty ? (
+                  <SkeletonLoader />
+                ) : (
+                  <div>
+                    {rentedProperty ? (
+                      <>
+                        <p className="text-gray-700">
+                          <strong className="font-medium">Property ID:</strong>{' '}
+                          {rentedProperty._id || 'N/A'}
+                        </p>
+                        <p className="text-gray-700">
+                          <strong>Title:</strong>{' '}
+                          {rentedProperty?.propertyId.title || 'N/A'}
+                        </p>
+                        <p className="text-gray-700">
+                          <strong>Type:</strong>{' '}
+                          {rentedProperty?.propertyId?.type || 'N/A'}
+                        </p>
+                        <p className="text-gray-700">
+                          <strong>Location:</strong>{' '}
+                          {rentedProperty?.propertyId?.location || 'N/A'}
+                        </p>
+                        <p className="text-gray-700">
+                          <strong>Price Per Year:</strong>
+                          {''} ₦
+                          {Number(
+                            rentedProperty?.propertyId?.pricePerYear
+                              ?.$numberDecimal
+                          )?.toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                          }) || '0.00'}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-gray-700">No rented property found.</p>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="mt-4 border-t pt-4">
                 <h3 className="text-md font-medium">Status</h3>
-                <p className="text-gray-700">
-                  <strong>Rent Due:</strong> ₦300,000{' '}
-                  <span className="text-gray-500">
-                    (Next payment: March 1, 2024)
-                  </span>
-                </p>
-                <p className="text-gray-700">
-                  <strong>Lease Expiry:</strong> 42 days remaining
-                </p>
+                {rentedProperty ? (
+                  <>
+                    <p className="text-gray-700">
+                      <strong>Rent Due:</strong> ₦
+                      {Number(
+                        rentedProperty.pricePerYear?.$numberDecimal
+                      )?.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      }) || '0.00'}{' '}
+                      <span className="text-gray-500">
+                        (Next payment: {rentedProperty.nextPaymentDate || 'N/A'}
+                        )
+                      </span>
+                    </p>
+                    <p className="text-gray-700">
+                      <strong>Lease Expiry:</strong>{' '}
+                      {rentedProperty.leaseExpiryDays || '0'} days remaining
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-gray-700">No status available.</p>
+                )}
               </div>
             </div>
           </div>

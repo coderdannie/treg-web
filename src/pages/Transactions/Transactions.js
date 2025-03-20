@@ -85,7 +85,7 @@ const Transactions = () => {
       <CustomTable
         headers={transHeaders}
         skeletonRows={3}
-        isLoading={isLoading || isLoadingTenantTransations} // Handle loading for both datasets
+        isLoading={isLoading || isLoadingTenantTransations}
       >
         {transactionsData?.length ? (
           transactionsData.map((row, rowIndex) => (

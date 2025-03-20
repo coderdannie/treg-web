@@ -35,3 +35,22 @@ export const PropertyItemSkeleton = () => {
     </li>
   );
 };
+
+export const SkeletonLoader = () => {
+  return (
+    <div className="animate-pulse">
+      <div className="mt-4 grid text-sm gap-2 font-medium">
+        <p className="font-semibold text-base bg-gray-200 h-6 w-1/2 rounded"></p>
+        <p className="text-gray-700 bg-gray-200 h-4 w-3/4 rounded"></p>
+        <p className="text-gray-700 bg-gray-200 h-4 w-3/4 rounded"></p>
+        <p className="text-gray-700 bg-gray-200 h-4 w-3/4 rounded"></p>
+        <p className="text-gray-700 bg-gray-200 h-4 w-3/4 rounded"></p>
+      </div>
+      <div className="mt-4 border-t pt-4">
+        <p3 className="text-md font-medium bg-gray-200 h-6 w-1/3 rounded"></p3>
+        <p className="text-gray-700 bg-gray-200 h-4 w-3/4 rounded mt-2"></p>
+        <p className="text-gray-700 bg-gray-200 h-4 w-3/4 rounded mt-2"></p>
+      </div>
+    </div>
+  );
+};

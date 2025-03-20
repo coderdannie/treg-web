@@ -4,6 +4,7 @@ import { FiFilter } from 'react-icons/fi';
 import { useGetAllTenantPropertyHistories } from '../../../services/query/properties';
 import { formatDates } from '../../../utils/helper';
 import PropertyHisTable from '../../../components/data/Tenant/PropertyHisTable';
+
 const Property = () => {
   const [isOpen, setIsOpen] = useState(false);
 

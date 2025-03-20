@@ -42,7 +42,7 @@ const TransactionTable = () => {
           isLoading={isLoading}
         >
           {data?.data?.length ? (
-            data?.data?.map((row, rowIndex) => (
+            data?.data?.slice(0, 6).map((row, rowIndex) => (
               <tr key={rowIndex}>
                 <td className="whitespace-nowrap px-6 py-4">
                   {row?.transactionRef?.slice(0, 20)}
