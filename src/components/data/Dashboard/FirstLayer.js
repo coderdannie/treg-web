@@ -4,7 +4,7 @@ import { FaTemperatureThreeQuarters } from 'react-icons/fa6';
 import { GoArrowUpRight } from 'react-icons/go';
 import AreaChart from './AreaChart';
 import { dashboardData } from '../../common/constants';
-import { useGetUser } from '../../../services/query/account';
+import { useGetUser, useGetWalletInfo } from '../../../services/query/account';
 import { useNavigate } from 'react-router-dom';
 import UpdateKycModal from '../../modals/UpdateKyc';
 import {
@@ -14,17 +14,21 @@ import {
 } from '../../../services/query/properties';
 import { PropertyItemSkeleton, SkeletonCard } from '../../Loaders/SkeletonCard';
 import Wallet from '../Dashboard/Wallet';
+import { Withdrawal } from '../../modals/Withdrawal';
+import { useGetBankDetails } from '../../../services/query/payments';
 
 const FirstLayer = () => {
   const { data, isLoading: isLoadingUser, refetch } = useGetUser();
   const [filter, setFilter] = useState('week');
   const [showModal, setShowModal] = useState(false);
-
+  const [showWithdrawal, setShowWithdrawal] = useState(false);
   const navigate = useNavigate();
+  const { data: walletInfo, isLoading: isLoadingInfo } = useGetWalletInfo();
 
   const { data: allProperties, isLoading: isLoadingProperties } =
     useGetAllPublicProperties();
 
+  const { data: bankDetails } = useGetBankDetails();
   const {
     mutate,
     data: rentedCount,
@@ -130,7 +134,13 @@ const FirstLayer = () => {
           <span>Add New Property</span>
         </button>
       </div>
-      {isLandlordOrAgent && isKycCompleted && <Wallet />}
+      {isLandlordOrAgent && isKycCompleted && (
+        <Wallet
+          setShowModal={setShowWithdrawal}
+          data={walletInfo}
+          isLoading={isLoadingInfo}
+        />
+      )}
 
       {/* Dashboard Cards Section */}
       <div className="flex overflow-x-scroll gap-4 mt-8 dashboard-cards">
@@ -287,6 +297,12 @@ const FirstLayer = () => {
         </div>
       </div>
       <UpdateKycModal showModal={showModal} setShowModal={setShowModal} />
+      <Withdrawal
+        isOpen={showWithdrawal}
+        details={bankDetails?.data}
+        walletInfo={walletInfo}
+        onClose={() => setShowWithdrawal(false)}
+      />
     </div>
   );
 };

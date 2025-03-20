@@ -127,7 +127,10 @@ export const validateAddPropertySchema = Yup.object().shape({
 });
 
 export const validateVerifyKycSchema = Yup.object().shape({
-  phoneNo: Yup.string().required('Phone number is required'),
+  phoneNo: Yup.string()
+    .required('Phone number is required')
+    .matches(/^[0-9]+$/, 'Phone number must contain only digits')
+    .length(10, 'Phone number must be 11 digits'),
   yearsOfExperience: Yup.string().required('Years of experience is required'),
   serviceArea: Yup.string().required('Service area is required'),
   address: Yup.string().required('Office address is required'),

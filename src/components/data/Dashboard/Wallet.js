@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { RiEyeLine } from 'react-icons/ri';
 import { GoEyeClosed } from 'react-icons/go';
-import { useGetWalletInfo } from '../../../services/query/account';
 import WalletSkeleton from '../../Loaders/WalletSkeleton';
 
-const Wallet = () => {
+const Wallet = ({ setShowModal, data, isLoading }) => {
   const [showAvailableBalance, setShowAvailableBalance] = useState(false);
   const [showEscrowBalance, setShowEscrowBalance] = useState(false);
-  const { data, isLoading } = useGetWalletInfo();
 
   const toggleAvailableBalance = () => {
     setShowAvailableBalance(!showAvailableBalance);
@@ -114,7 +112,10 @@ const Wallet = () => {
             </div>
           </div>
 
-          <button className="bg-white w-fit mt-2 sm:mt-0 text-primary flex rounded-lg gap-2 items-center py-3 px-5 font-semibold text-sm">
+          <button
+            className="bg-white w-fit mt-2 sm:mt-0 text-primary flex rounded-lg gap-2 items-center py-3 px-5 font-semibold text-sm"
+            onClick={() => setShowModal(true)}
+          >
             <img
               src="/assets/money-send-circle.svg"
               className="w-5"

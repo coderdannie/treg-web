@@ -15,6 +15,7 @@ const FormInput = ({
   placeholder,
   inputMode,
   pattern,
+  icon, // Add icon prop
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -41,6 +42,12 @@ const FormInput = ({
       </div>
 
       <div className="relative">
+        {/* Conditionally render the icon */}
+        {icon && (
+          <div className="absolute text-2xl font-semibold left-3 top-1/2 transform -translate-y-1/2 z-10">
+            {icon}
+          </div>
+        )}
         <input
           type={type === 'password' && showPassword ? 'text' : type}
           name={name}
@@ -55,9 +62,10 @@ const FormInput = ({
           pattern={pattern}
           className={`input border-[2px] w-full input-bordered focus:ring-0 focus:outline-none ${size} placeholder-custom  !text-[#333333]   ${
             type === 'number' ? 'no-spinner' : ''
-          }`}
+          } ${icon ? 'pl-10' : ''}`} // Add padding if icon is present
           style={{
             borderColor: error ? 'red' : value ? '#1140E7' : '',
+            backgroundColor: value ? '#E8EEFD' : '',
           }}
         />
         {error && <div className="text-red-500 text-xs mt-1">{error}</div>}

@@ -21,6 +21,7 @@ const {
   PUBLIC_PROPERTY_VIRTUAL_TOUR,
   VERIFY_PAYMENT,
   BLOG,
+  TERMS,
 } = PUBLIC_PATHS;
 
 const {
@@ -132,6 +133,8 @@ const TenantProperty = WithSuspense(
   lazy(() => import('../pages/Tenant/Property/Property'))
 );
 
+const Terms = WithSuspense(lazy(() => import('../pages/Web/Terms')));
+
 export const PUBLIC_ROUTES = [
   { path: LOGIN, element: <Login /> },
   { path: REGISTER, element: <Register /> },
@@ -153,6 +156,7 @@ export const PUBLIC_ROUTES = [
   },
   { path: VERIFY_PAYMENT, element: <VerifyPayment /> },
   { path: BLOG, element: <Blog /> },
+  { path: TERMS, element: <Terms /> },
 
   { path: '*', element: <Navigate to="/" replace /> },
 ];

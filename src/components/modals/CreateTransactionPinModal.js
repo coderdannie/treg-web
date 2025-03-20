@@ -4,7 +4,7 @@ import RICIBs from 'react-individual-character-input-boxes';
 import { useCreateTransactionPin } from '../../services/query/account';
 import { useNavigate } from 'react-router-dom';
 
-const TransactionPinModal = ({ active, setActive, userData }) => {
+const CreateTransactionPinModal = ({ active, setActive, userData }) => {
   const [createPin, setCreatePin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
   const [step, setStep] = useState(1);
@@ -173,4 +173,4 @@ const TransactionPinModal = ({ active, setActive, userData }) => {
   );
 };
 
-export default TransactionPinModal;
+export default CreateTransactionPinModal;

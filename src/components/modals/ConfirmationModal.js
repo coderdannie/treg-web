@@ -1,4 +1,4 @@
-import { MdWarning } from 'react-icons/md'; // Import the warning icon
+import { MdWarning } from 'react-icons/md';
 
 export const ConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
   return (

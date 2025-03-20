@@ -2,6 +2,7 @@ import { useMutation, useQuery } from 'react-query';
 import {
   addAccountDetails,
   createPropertyPayment,
+  getBankDetails,
   getBanks,
   listingPayment,
   resolveName,
@@ -69,4 +70,16 @@ export const useAddAccountDetails = (options = {}) => {
   });
 
   return { mutate, isLoading };
+};
+
+export const useGetBankDetails = (options = {}) => {
+  const { data, isLoading, refetch } = useQuery(
+    'getBankDetails',
+    getBankDetails,
+    {
+      ...options,
+    }
+  );
+
+  return { data, isLoading, refetch };
 };

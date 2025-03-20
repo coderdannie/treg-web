@@ -18,7 +18,7 @@ import {
   useGetUser,
 } from '../../services/query/account';
 import Loader from '../../components/Loaders/Loader';
-import TransactionPinModal from '../../components/modals/TransactionPin';
+import CreateTransactionPinModal from '../../components/modals/CreateTransactionPinModal';
 import {
   useAddAccountDetails,
   useGetBanks,
@@ -232,8 +232,7 @@ const UpdateKyc = () => {
             <div className="grid mt-5 gap-2">
               <Formik
                 initialValues={initialKycValues}
-                validation
-                Schema={validateVerifyKycSchema}
+                validationSchema={validateVerifyKycSchema}
                 onSubmit={handleSubmit}
               >
                 {({
@@ -259,6 +258,7 @@ const UpdateKyc = () => {
                           error={touched.name && errors.name}
                           placeholder="Enter your Agency name"
                         />
+
                         <FormInput
                           label="Phone number (required)"
                           name="phoneNo"
@@ -543,7 +543,7 @@ const UpdateKyc = () => {
           )}
         </motion.div>
       </div>
-      <TransactionPinModal
+      <CreateTransactionPinModal
         active={isOpen}
         setActive={setIsOpen}
         userData={data?.data}

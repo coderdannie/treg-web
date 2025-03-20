@@ -18,6 +18,7 @@ export const PUBLIC_PATHS = {
   UPDATE_KYC: '/update-kyc',
   VERIFY_PAYMENT: '/verify-payment',
   BLOG: '/blog',
+  TERMS: '/terms',
 };
 
 export const PRIVATE_PATHS = {
