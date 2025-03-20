@@ -70,7 +70,7 @@ const TransactionTable = () => {
                     }}
                     className={`
                       ${
-                        row?.status === 'Success'
+                        row?.status === 'success'
                           ? 'text-[#036B26] bg-[#E7F6EC] cursor-pointer relative'
                           : row?.status === 'Failed'
                           ? 'text-red-600 bg-[#FFE1E1] cursor-pointer relative'
