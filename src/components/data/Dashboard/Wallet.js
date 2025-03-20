@@ -54,7 +54,7 @@ const Wallet = ({ setShowModal, data, isLoading }) => {
                             '0.00'
                         )}
                   </span>
-                  <span className="text-white">
+                  <span className="text-white text-base">
                     {showAvailableBalance
                       ? data?.data?.mainBalance?.$numberDecimal === '0'
                         ? ''
@@ -83,17 +83,17 @@ const Wallet = ({ setShowModal, data, isLoading }) => {
                   <span className="text-white font-semibold text-xl">
                     ₦{' '}
                     {showEscrowBalance
-                      ? data?.data?.mainBalance?.$numberDecimal === '0'
+                      ? data?.data?.escrow?.$numberDecimal === '0'
                         ? '0.00'
                         : Math.floor(
-                            Number(data?.data?.mainBalance?.$numberDecimal)
+                            Number(data?.data?.escrow?.$numberDecimal)
                           )?.toLocaleString() || '0.00'
                       : maskAmount(
-                          data?.data?.mainBalance?.$numberDecimal?.toString() ||
+                          data?.data?.escrow?.$numberDecimal?.toString() ||
                             '0.00'
                         )}
                   </span>
-                  <span className="text-white">
+                  <span className="text-white text-base">
                     {showEscrowBalance
                       ? data?.data?.escrow?.$numberDecimal === '0'
                         ? ''

@@ -4,6 +4,7 @@ import { FaPhone } from 'react-icons/fa6';
 import { FaUsers } from 'react-icons/fa6';
 
 const SixthLayer = () => {
+  const user = !!sessionStorage.getItem('user');
   return (
     <section className="  lg:pt-10  pb-20 align-element">
       <h3 className="text-lg  sm:text-xl md:text-2xl font-semibold text-[#18181B] ">
@@ -39,27 +40,29 @@ const SixthLayer = () => {
           View all agents
         </Link>
       </div>
-      <div className="bg-[#C8E6FF] p-6 py-10  flex items-center justify-between  mx-auto mt-20 gap-6 flex-col sm:flex-row">
-        <div className="flex items-center flex-col sm:flex-row gap-4">
-          <div className="bg-white p-3 rounded-full shadow ">
-            <FaUsers className="text-blue-600" size={32} />
+      {!user && (
+        <div className="bg-[#C8E6FF] p-6 py-10  flex items-center justify-between  mx-auto mt-20 gap-6 flex-col sm:flex-row">
+          <div className="flex items-center flex-col sm:flex-row gap-4">
+            <div className="bg-white p-3 rounded-full shadow ">
+              <FaUsers className="text-blue-600" size={32} />
+            </div>
+            <div className="text-center sm:text-left">
+              <h3 className="text-lg  md:text-xl text-[#282828] font-medium pb-1">
+                Become An Agent
+              </h3>
+              <p className="text-sm md:text-base text-gray-600">
+                Become an agent and unlock a world of opportunities.
+              </p>
+            </div>
           </div>
-          <div className="text-center sm:text-left">
-            <h3 className="text-lg  md:text-xl text-[#282828] font-medium pb-1">
-              Become An Agent
-            </h3>
-            <p className="text-sm md:text-base text-gray-600">
-              Become an agent and unlock a world of opportunities.
-            </p>
-          </div>
+          <Link
+            to="/create-account"
+            className="bg-[#0061E0] text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition font-semibold"
+          >
+            Join Now
+          </Link>
         </div>
-        <Link
-          to="/create-account"
-          className="bg-[#0061E0] text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition font-semibold"
-        >
-          Join Now
-        </Link>
-      </div>
+      )}
     </section>
   );
 };
