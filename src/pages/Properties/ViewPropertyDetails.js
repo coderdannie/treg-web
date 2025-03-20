@@ -89,7 +89,7 @@ const ViewPropertyDetails = () => {
         noOfRooms: data?.data?.numberOfRooms || 'N/A',
         ownerName: data?.data?.propertyOwner || 'N/A',
         insurerName: data?.data?.insuranceCompany || 'N/A',
-        insuranceType: data?.data?.riskInsured || 'N/A',
+        riskInsured: data?.data?.insuranceType || 'N/A',
       });
     }
   }, [data, id, action]);
