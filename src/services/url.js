@@ -18,7 +18,7 @@ export const UPLOAD_PROPERTY_VIDEOS = 'media/upload-videos';
 export const LISTING_PAYMENT = 'payments/pay-for-listing';
 export const GET_ALL_PROPERTIES = 'properties/all';
 export const VERIFY_PAYMENT = 'payments/verify-listing-payment';
-export const VERIFY_PROPERTY_PAYMENT = 'payments/verify-rent-payment';
+export const VERIFY_PROPERTY_PAYMENT = 'payments/verify-property-payment';
 export const COMPLETE_LISTING = (id = '') =>
   `properties/complete-listing/${id}`;
 export const GET_ALL_PUBLIC_PROPERTIES = 'properties/all/unauthenticated';
