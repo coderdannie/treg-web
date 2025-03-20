@@ -87,7 +87,7 @@ const SecondLayer = ({ data }) => {
     <div className="my-[44px]">
       <div className="flex flex-col min-991:flex-row gap-8">
         <div className="text-[#616161] min-991:w-[60%] ">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <h4 className="text-lg capitalize  sm:text-xl md:text-2xl font-medium  text-[#363636] ">
               {data?.title}
             </h4>
@@ -109,8 +109,8 @@ const SecondLayer = ({ data }) => {
             </div>
           </div>
 
-          <p className=" md:text-lg capitalize text-[#616161]">
-            {data?.location}
+          <p className=" font-medium text-sm md:text-base capitalize text-[#616161] mt-2 sm:mt-0">
+            Location: <span className="md:text-lg">{data?.location}</span>
           </p>
           <p className="text-[#6A6A6A] pt-4 text-sm md:text-base">
             {data?.description}

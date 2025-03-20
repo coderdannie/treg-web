@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { IoChevronBackSharp } from 'react-icons/io5';
 import { useNavigate, useParams } from 'react-router-dom';
 import PropertyCarousel from '../../components/data/web/Properties/PropertyCarousel';
@@ -9,6 +10,10 @@ const PropertyDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data } = useGetPublicProperties(id);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className="align-element pt-8">
@@ -24,7 +29,9 @@ const PropertyDetails = () => {
       </h3>
       <VirtualTour data={data} />
       {/* <PropertyCarousel data={data} /> */}
-
+      <p className="pt-3 font-medium text-sm">
+        This property is insured by {data?.data?.insuranceCompany}
+      </p>
       <SecondLayer data={data?.data} />
     </div>
   );
