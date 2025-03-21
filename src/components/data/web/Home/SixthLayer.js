@@ -2,12 +2,15 @@ import { Link } from 'react-router-dom';
 import { agents } from '../../../common/constants';
 import { FaPhone } from 'react-icons/fa6';
 import { FaUsers } from 'react-icons/fa6';
+import { useGetAllAgents } from '../../../../services/query/agents';
 
 const SixthLayer = () => {
   const user = !!sessionStorage.getItem('user');
+  const { data, isLoading } = useGetAllAgents();
+  console.log(data);
   return (
     <section className="  lg:pt-10  pb-20 align-element">
-      <h3 className="text-lg  sm:text-xl md:text-2xl font-semibold text-[#18181B] ">
+      <h3 className="text-lg text-center md:text-left sm:text-xl md:text-2xl font-semibold text-[#18181B] ">
         Meet our Top Ranking Agents
       </h3>
       <div className="max-w-7xl mx-auto p-4">

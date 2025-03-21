@@ -132,7 +132,7 @@ const VerifyOtp = () => {
 
   useEffect(() => {
     if (data || resendData) {
-      setTimeLeft(300);
+      setTimeLeft(120000);
     }
   }, [data, resendData]);
 

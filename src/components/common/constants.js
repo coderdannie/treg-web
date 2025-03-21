@@ -1,5 +1,3 @@
-import { RxDashboard } from 'react-icons/rx';
-import { TbSmartHome } from 'react-icons/tb';
 import { IoIosArrowDown } from 'react-icons/io';
 import { MdFormatListBulleted } from 'react-icons/md';
 import { LuListChecks } from 'react-icons/lu';
