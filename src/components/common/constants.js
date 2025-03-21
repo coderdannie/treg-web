@@ -30,18 +30,14 @@ export const navItems = [
         name: 'New Listings',
         path: '/properties/:filter',
       },
+
       {
         id: 2,
-        name: 'Price Reduced',
-        path: '/properties/:filter',
-      },
-      {
-        id: 3,
         name: 'New Construction',
         path: '/properties/:filter',
       },
       {
-        id: 4,
+        id: 3,
         name: 'Insured Homes',
         path: '/properties/:filter',
       },
@@ -64,11 +60,31 @@ export const filterOptions = [
       },
       {
         id: 2,
-        name: 'Terrace',
+        name: 'Apartment',
       },
       {
         id: 3,
-        name: 'Detached',
+        name: 'Duplex',
+      },
+      {
+        id: 4,
+        name: 'Bungalow',
+      },
+      {
+        id: 5,
+        name: 'Self Contain',
+      },
+      {
+        id: 6,
+        name: 'Penthouse',
+      },
+      {
+        id: 7,
+        name: 'Terraced House',
+      },
+      {
+        id: 8,
+        name: 'Loft',
       },
     ],
   },
@@ -649,5 +665,28 @@ export const videos = [
     propertyId: '67cc5bf1e07bdd2a117091c0',
     videoLink:
       'https://res.cloudinary.com/dmdvssgw7/video/upload/v1741446182/videos/file_yjjuzu.mp4',
+  },
+];
+
+export const topCitiesData = [
+  {
+    name: 'Abuja',
+    imgUrl:
+      'https://res.cloudinary.com/dgxtavaez/image/upload/v1742495338/dapo-abideen-mqzmjt_4T1w-unsplash_uz3jzp.jpg',
+  },
+  {
+    name: 'Lagos',
+    imgUrl:
+      'https://res.cloudinary.com/dgxtavaez/image/upload/v1742496339/tunde-buremo-kF0-RhpHhRA-unsplash_jighgw.jpg',
+  },
+  {
+    name: 'Port Harcourt',
+    imgUrl:
+      'https://res.cloudinary.com/dgxtavaez/image/upload/v1742497624/45520496121ada3d4b2147ede0acd5dc_hscpsc.jpg',
+  },
+  {
+    name: 'Enugu',
+    imgUrl:
+      'https://res.cloudinary.com/dgxtavaez/image/upload/v1742496550/ovinuchi-ejiohuo-OxesnxkySD0-unsplash_qgo9rm.jpg',
   },
 ];

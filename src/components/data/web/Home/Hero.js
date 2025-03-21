@@ -2,10 +2,9 @@ import { motion, useSpring, useTransform } from 'framer-motion';
 import Balancer from 'react-wrap-balancer';
 import heroBg from '../../../../assets/hero-gradient.png';
 import heroBg2 from '../../../../assets/vectorBg.png';
-import { filterOptions } from '../../../common/constants';
 import { useState, useEffect, useRef } from 'react';
-import { RiArrowDownSLine } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
+import HeroSearchFilters from '../../../common/HeroSearchFilters';
 
 // Utility function to combine class names
 function cn(...classes) {
@@ -214,61 +213,7 @@ export default function ProductFeatures() {
         }}
       >
         <div className="hidden sm:flex items-center  gap-4 bg-white">
-          <ul className="flex border border-[#D4D4D4] rounded-md space-x-4 sm:space-x-8 justify-center text-[#818181] font-medium py-3 px-7">
-            {filterOptions.map((item) => (
-              <li key={item.id} className="relative group">
-                {/* Parent Menu Item */}
-                <button
-                  onClick={() =>
-                    setOpenDropdown(openDropdown === item.id ? null : item.id)
-                  }
-                  className="hover:text-primary text-xs sm:text-sm font-normal transition flex items-center gap-1"
-                >
-                  {item.text}
-                  {item.sub && (
-                    <RiArrowDownSLine
-                      className={`transition-transform duration-300 ${
-                        openDropdown === item.id ? 'rotate-180' : 'rotate-0'
-                      }`}
-                    />
-                  )}
-                </button>
-
-                {/* Dropdown Menu */}
-                {item.sub && openDropdown === item.id && (
-                  <motion.ul
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{
-                      duration: 0.3,
-                      ease: 'easeOut',
-                      staggerChildren: 0.1,
-                    }}
-                    className="absolute grid gap-2 pb-3 left-0 mt-4 w-[185px] bg-white px-[6px] py-[6px] shadow-xl border rounded-md overflow-hidden z-50"
-                    onMouseEnter={() => setOpenDropdown(item.id)}
-                    onMouseLeave={() => setOpenDropdown(null)}
-                  >
-                    {item.sub.map((subItem) => (
-                      <motion.li
-                        key={subItem.id}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
-                        transition={{ duration: 0.3 }}
-                        className="px-4 py-1 text-[#061C3D] hover:bg-[#F0F5FF] cursor-pointer text-sm"
-                      >
-                        <button onClick={() => setOpenDropdown(null)}>
-                          {subItem.name}
-                        </button>
-                      </motion.li>
-                    ))}
-                  </motion.ul>
-                )}
-              </li>
-            ))}
-          </ul>
-          <button className="primary-btn">Search</button>
+          <HeroSearchFilters />
         </div>
         {!user && (
           <ul className="flex sm:hidden mt-4 items-center gap-3">
