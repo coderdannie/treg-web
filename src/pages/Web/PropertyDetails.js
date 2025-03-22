@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { IoChevronBackSharp } from 'react-icons/io5';
 import { useNavigate, useParams } from 'react-router-dom';
-import PropertyCarousel from '../../components/data/web/Properties/PropertyCarousel';
 import SecondLayer from '../../components/data/web/Properties/SecondLayer';
 import { useGetPublicProperties } from '../../services/query/properties';
 import VirtualTour from './VirtualTour';
@@ -28,10 +27,12 @@ const PropertyDetails = () => {
         Property Details
       </h3>
       <VirtualTour data={data} />
-      {/* <PropertyCarousel data={data} /> */}
-      <p className="pt-3 font-medium text-sm">
-        This property is insured by {data?.data?.insuranceCompany}
-      </p>
+      {data?.data?.insured && (
+        <p className="pt-3 font-medium text-sm">
+          This property is insured by {data?.data?.insuranceCompany}
+        </p>
+      )}
+
       <SecondLayer data={data?.data} />
     </div>
   );

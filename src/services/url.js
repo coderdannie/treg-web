@@ -41,3 +41,5 @@ export const TENANT_TRANSACTIONS = 'transactions/tenant';
 export const GET_BANK_DETAILS = 'payments/bank-account/get';
 export const WITHDRAW_FUNDS = 'payments/withdraw';
 export const GET_ALL_AGENTS = 'public/agents/all';
+export const RATE_AGENT_LANDLORD = (id = '') => `users/${id}/rate`;
+export const GET_AGENT = 'public/agents';

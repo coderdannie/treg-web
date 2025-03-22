@@ -4,6 +4,8 @@ import { IoIosArrowDown } from 'react-icons/io';
 import Select from 'react-select';
 import { agents } from '../../../common/constants';
 import { Link } from 'react-router-dom';
+import { useGetAllAgents } from '../../../../services/query/agents';
+import PropertyCardSkeleton from '../../../Loaders/PropertyCardSkeleton';
 
 const FirstLayer = () => {
   const [values, setValues] = useState({
@@ -11,6 +13,7 @@ const FirstLayer = () => {
     state: '',
   });
 
+  const { data, isLoading } = useGetAllAgents();
   const [country, setCountry] = useState({
     value: 'Nigeria',
     label: 'Nigeria',
@@ -158,32 +161,48 @@ const FirstLayer = () => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-1 mt-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {agents.map((agent) => (
-          <Link
-            key={agent.id}
-            className="bg-white rounded-xl shadow-md overflow-hidden p-4"
-            to={`/agents/${agent.id}`}
-          >
-            <img
-              src={agent.image}
-              alt={agent.name}
-              className="w-full object-top   h-40 object-cover rounded-md"
-            />
-            <div className="mt-4">
-              <h3 className="md:text-lg font-semibold text-[#101828]">
-                {agent.name}
-              </h3>
-              <p className="text-[#475467] text-sm">{agent.role}</p>
-              <div className="rounded-md bg-[#A1D8FF] my-4 h-[3px]"></div>
-              <button className="mt-2 py-2 w-full primary-btn">
-                View Profile
-              </button>
-            </div>
-          </Link>
-        ))}
+      <div className="grid grid-cols-1 mt-[100px] md:mt-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {isLoading ? (
+          // Show skeleton loaders while loading
+          Array.from({ length: 8 }).map((_, index) => (
+            <PropertyCardSkeleton key={index} />
+          ))
+        ) : data?.data?.length > 0 ? (
+          // Show agents if data is available
+          data?.data?.map((agent) => (
+            <Link
+              key={agent.id}
+              className="bg-white rounded-xl shadow-md overflow-hidden p-4"
+              to={`/agents/${agent._id}`}
+            >
+              <img
+                src={agent.avatar}
+                alt={agent.firstName}
+                className="w-full object-center h-40 object-cover rounded-md"
+              />
+              <div className="mt-4">
+                <h3 className="md:text-lg font-semibold text-[#101828]">
+                  {agent.lastName} {agent.firstName}
+                </h3>
+                <p className="text-[#475467] text-sm">Real Estate Agent</p>
+                <div className="rounded-md bg-[#A1D8FF] my-4 h-[3px]"></div>
+                <button className="mt-2 py-2 w-full primary-btn">
+                  View Profile
+                </button>
+              </div>
+            </Link>
+          ))
+        ) : (
+          // Fallback text when no agents are found
+          <div className="col-span-full text-center py-10">
+            <p className="text-gray-600 text-lg">
+              No agents found matching your criteria.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
 };
+
 export default FirstLayer;

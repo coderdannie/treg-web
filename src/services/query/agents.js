@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { getAllAgents } from '../api/agents';
+import { getAgent, getAllAgents } from '../api/agents';
 
 export const useGetAllAgents = (options = {}) => {
   const { data, isLoading, refetch, isError } = useQuery(
@@ -11,4 +11,12 @@ export const useGetAllAgents = (options = {}) => {
   );
 
   return { data, isLoading, refetch, isError };
+};
+
+export const useGetAgent = (id = '', options = {}) => {
+  const { data, isLoading, refetch } = useQuery(['getAgent', id], getAgent, {
+    ...options,
+  });
+
+  return { data, isLoading, refetch };
 };

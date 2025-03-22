@@ -20,6 +20,7 @@ export const PUBLIC_PATHS = {
   VERIFY_RENT_PAYMENT: '/verify-rent-payment',
   BLOG: '/blog',
   TERMS: '/terms',
+  REVIEW: '/review/:id',
 };
 
 export const PRIVATE_PATHS = {

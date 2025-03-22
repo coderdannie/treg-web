@@ -6,6 +6,7 @@ import {
   getUser,
   getWalletInfo,
   confirmMovedIn,
+  rateLandlordOrAgent,
 } from '../api/account';
 
 export const useGetUser = (options = {}) => {
@@ -59,7 +60,19 @@ export const useConfirmMovedIn = (options = {}) => {
   const { mutate, isLoading } = useMutation(
     (payload) => confirmMovedIn(payload.id),
     {
-      mutationKey: 'CompleteListing',
+      mutationKey: 'confirmMovedIn',
+      ...options,
+    }
+  );
+
+  return { mutate, isLoading };
+};
+
+export const useRateLandlordOrAgent = (options = {}) => {
+  const { mutate, isLoading } = useMutation(
+    (payload) => rateLandlordOrAgent(payload.id, payload.data),
+    {
+      mutationKey: 'UPDATE_PRODUCT',
       ...options,
     }
   );

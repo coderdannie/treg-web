@@ -77,8 +77,7 @@ export const AuthLayout = ({ children }) => {
 
 export const NonAuthLayout = ({ children }) => {
   const location = useLocation();
-  const isLocationVirtualTour = location.pathname.includes('virtual');
-  console.log(isLocationVirtualTour);
+
   const routes = [
     '/login',
     '/register',
@@ -89,6 +88,7 @@ export const NonAuthLayout = ({ children }) => {
     '/update-kyc',
     '/verify-payment',
     '/verify-rent-payment',
+    '/review',
   ];
 
   const shouldHideNavbar = routes.some((route) =>
@@ -97,7 +97,7 @@ export const NonAuthLayout = ({ children }) => {
 
   return (
     <div>
-      {shouldHideNavbar || isLocationVirtualTour ? '' : <Navbar />}
+      {!shouldHideNavbar && <Navbar />}
       {children}
       {!shouldHideNavbar && <Footer />}
     </div>

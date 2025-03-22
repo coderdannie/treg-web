@@ -3,7 +3,8 @@ import { CiMail } from 'react-icons/ci';
 import { BsTelephone } from 'react-icons/bs';
 import { GoLink } from 'react-icons/go';
 
-const RealEstateProfile = () => {
+const RealEstateProfile = ({ data }) => {
+  console.log(data);
   return (
     <div className=" mx-auto">
       <div className="grid gap-7 rounded-lg   space-y-6">

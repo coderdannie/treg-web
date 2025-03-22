@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { ConfirmationModal } from '../../modals/ConfirmationModal';
 import { useConfirmMovedIn } from '../../../services/query/account';
 import PropertyDetailsDrawer from '../../modals/PropertiesDetailsDrawer';
+import { FaStar } from 'react-icons/fa';
 
 const PropertyHisTable = ({
   data,
@@ -191,6 +192,15 @@ const PropertyHisTable = ({
                         onClick={() => handleViewDetails(row)} // Handle "View Details" click
                       >
                         <span>View Details</span>
+                      </button>
+                      <button
+                        className="flex items-center w-full text-left px-4 py-2 hover:bg-gray-100"
+                        onClick={() => {
+                          navigate(`/review/${row?.agentId?._id}`);
+                        }}
+                      >
+                        <FaStar />
+                        <span>Drop Review</span>
                       </button>
                     </div>
                   )}

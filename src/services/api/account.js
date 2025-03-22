@@ -30,3 +30,8 @@ export const confirmMovedIn = async (id) => {
   const res = await axiosInstance.post(API.CONFIRM_MOVED_IN(id));
   return res.data;
 };
+
+export const rateLandlordOrAgent = async (id, data) => {
+  const res = await axiosInstance.post(API.RATE_AGENT_LANDLORD(id), data);
+  return res.data;
+};

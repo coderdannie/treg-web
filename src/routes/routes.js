@@ -23,6 +23,7 @@ const {
   BLOG,
   TERMS,
   VERIFY_RENT_PAYMENT,
+  REVIEW,
 } = PUBLIC_PATHS;
 
 const {
@@ -139,6 +140,8 @@ const TenantProperty = WithSuspense(
 
 const Terms = WithSuspense(lazy(() => import('../pages/Web/Terms')));
 
+const Review = WithSuspense(lazy(() => import('../pages/Web/Review')));
+
 export const PUBLIC_ROUTES = [
   { path: LOGIN, element: <Login /> },
   { path: REGISTER, element: <Register /> },
@@ -162,6 +165,7 @@ export const PUBLIC_ROUTES = [
   { path: VERIFY_RENT_PAYMENT, element: <VerifyRentPayment /> },
   { path: BLOG, element: <Blog /> },
   { path: TERMS, element: <Terms /> },
+  { path: REVIEW, element: <Review /> },
 
   { path: '*', element: <Navigate to="/" replace /> },
 ];
