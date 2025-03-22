@@ -28,11 +28,11 @@ export const navItems = [
         name: 'All',
         path: '/properties/all',
       },
-      {
-        id: 2,
-        name: 'New Listings',
-        path: '/properties/New Listings',
-      },
+      // {
+      //   id: 2,
+      //   name: 'New Listings',
+      //   path: '/properties/New Listings',
+      // },
 
       {
         id: 3,

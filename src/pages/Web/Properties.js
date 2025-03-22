@@ -11,6 +11,8 @@ import { FcLike } from 'react-icons/fc';
 import { FcLikePlaceholder } from 'react-icons/fc';
 
 const Properties = () => {
+  const storedFilters = JSON.parse(sessionStorage.getItem('propertyFilters'));
+
   const [filters, setFilters] = useState({
     location: '',
     minPrice: '',
@@ -18,6 +20,17 @@ const Properties = () => {
     rooms: '',
     propertyType: '',
   });
+
+  useEffect(() => {
+    if (storedFilters) {
+      setFilters({
+        location: storedFilters.location,
+        minPrice: storedFilters.minPrice,
+        maxPrice: storedFilters.maxPrice,
+        propertyType: storedFilters.propertyType,
+      });
+    }
+  }, []);
 
   const controls = useAnimation();
   const [isLiked] = useState(true);
@@ -56,18 +69,6 @@ const Properties = () => {
   }, [controls, inView]);
 
   console.log(filter);
-
-  const cardVariants = {
-    hidden: { scale: 0.8, opacity: 0 },
-    visible: (i) => ({
-      scale: 1,
-      opacity: 1,
-      transition: {
-        delay: i * 0.3, // Staggered delay
-        duration: 0.5,
-      },
-    }),
-  };
 
   return (
     <div className="align-element pb-10">

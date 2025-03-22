@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 import { FaChevronDown, FaCheck } from 'react-icons/fa';
-import { useGetAllPublicProperties } from '../../services/query/properties';
 import { useNavigate } from 'react-router-dom';
 
 const propertyTypes = [
@@ -44,6 +44,8 @@ const Dropdown = ({ label, options, value, onChange }) => (
 );
 
 const HeroSearchFilters = () => {
+  const errorToast = (message) => toast.error(message, { duration: 3000 });
+
   const [filters, setFilters] = useState({
     location: '',
     minPrice: '',
@@ -53,23 +55,19 @@ const HeroSearchFilters = () => {
   });
   const navigate = useNavigate();
 
-  const { data } = useGetAllPublicProperties(
-    1,
-    1,
-    filters.location,
-    filters.propertyType,
-    filters.minPrice,
-    filters.maxPrice
-  );
-
   const handleChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
+  const hasSomeFilterValue = Object.values(filters).some((value) => value);
+
   const handleSendValues = () => {
-    console.log('Sending filter values:', filters);
-    navigate('/properties/all');
-    // alert(`Filter values sent: ${JSON.stringify(filters, null, 2)}`);
+    if (hasSomeFilterValue) {
+      sessionStorage.setItem('propertyFilters', JSON.stringify(filters));
+      navigate('/properties/All');
+    } else {
+      errorToast('Kindly Select At Least One Filter');
+    }
   };
 
   return (
