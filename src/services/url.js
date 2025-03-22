@@ -22,7 +22,7 @@ export const VERIFY_PROPERTY_PAYMENT = 'payments/verify-property-payment';
 export const COMPLETE_LISTING = (id = '') =>
   `properties/complete-listing/${id}`;
 export const GET_ALL_PUBLIC_PROPERTIES = 'public/properties/all';
-export const GET_PUBLIC_PROPERTY_DETAILS = 'properties';
+export const GET_PUBLIC_PROPERTY_DETAILS = 'public/properties';
 export const GET_PROPERTIES_COUNTS = (id) =>
   `properties/count-by-status?status=${id}`;
 export const CREATE_TRANSACTION_PIN = 'users/create-pin';

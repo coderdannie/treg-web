@@ -19,7 +19,7 @@ const Properties = () => {
   const { data } = useGetUser();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState('All');
+  const [selectedStatus, setSelectedStatus] = useState('');
   const [startValue, startChange] = useState('');
   const [showStartDate, setShowStartDate] = useState(false);
   const [showEndDate, setShowEndDate] = useState(false);

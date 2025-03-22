@@ -15,21 +15,21 @@ const SixthLayer = () => {
       </h3>
       <div className="max-w-7xl mx-auto p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {agents.map((agent) => (
+          {data?.data?.slice(0, 4).map((agent) => (
             <div
-              key={agent.id}
+              key={agent?._id}
               className="bg-white rounded-xl shadow-md overflow-hidden p-4"
             >
               <img
-                src={agent.image}
+                src={agent.avatar}
                 alt={agent.name}
                 className="w-full object-top   h-40 object-cover rounded-md"
               />
               <div className="mt-4">
                 <h3 className="md:text-lg font-semibold text-[#101828]">
-                  {agent.name}
+                  {agent.firstName} {agent.lastName}
                 </h3>
-                <p className="text-[#475467] text-sm">{agent.role}</p>
+                <p className="text-[#475467] text-sm">Real Estate Agent</p>
                 <div className="rounded-md bg-[#A1D8FF] my-4 h-[3px]"></div>
                 <div className="mt-2 flex items-center gap-2 text-blue-600">
                   <FaPhone size={16} />
@@ -39,7 +39,7 @@ const SixthLayer = () => {
             </div>
           ))}
         </div>
-        <Link className="secondary-btn w-fit mt-7 mx-auto block">
+        <Link to="/agents" className="secondary-btn w-fit mt-7 mx-auto block">
           View all agents
         </Link>
       </div>

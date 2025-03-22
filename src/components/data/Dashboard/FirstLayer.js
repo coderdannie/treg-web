@@ -34,6 +34,9 @@ const FirstLayer = () => {
   const [openPinModal, setOpenPinModal] = useState(false);
   const [pin, setPin] = useState('');
 
+  const { data: allProperties, isLoading: isLoadingProperties } =
+    useGetAllPublicProperties();
+
   const [values, setValues] = useState({
     bankName: '',
     accNumber: '',
@@ -62,9 +65,6 @@ const FirstLayer = () => {
 
   const navigate = useNavigate();
   const { data: walletInfo, isLoading: isLoadingInfo } = useGetWalletInfo();
-
-  const { data: allProperties, isLoading: isLoadingProperties } =
-    useGetAllPublicProperties();
 
   const { data: bankDetails } = useGetBankDetails();
   const {

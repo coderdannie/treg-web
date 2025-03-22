@@ -34,10 +34,9 @@ const Navbar = () => {
       document.body.style.overflow = 'auto';
     }
   }, [isDrawerOpen]);
-
   const handleSubItemClick = (subItem) => {
     setSelectedSubItem(subItem);
-    navigate(`properties/${subItem.name}`);
+    navigate(`/properties/${subItem.name}`); // Use absolute path
     setIsDrawerOpen(false);
   };
 

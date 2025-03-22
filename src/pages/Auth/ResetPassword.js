@@ -82,8 +82,8 @@ const ResetPassword = () => {
             Set a password
           </h4>
           <p>
-            Your previous password has been reseted. Please set a new password
-            for your account.
+            Your previous password has been reset. Please set a new password for
+            your account.
           </p>
           <Formik
             initialValues={initPassValues}

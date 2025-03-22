@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
 import { FaChevronDown, FaCheck } from 'react-icons/fa';
 
-const propertyTypes = ['Flat', 'Terrace', 'Detached', 'Duplex'];
+const propertyTypes = [
+  'Flat',
+  'Apartment',
+  'Duplex',
+  'Bungalow',
+  'Self Contain',
+  'Penthouse',
+  'Terraced House',
+  'Loft',
+];
+
 const priceOptions = ['Low', 'Medium', 'High'];
 const roomOptions = ['1', '2', '3+'];
 
-const SearchFilters = () => {
-  const [filters, setFilters] = useState({
-    location: '',
-    price: '',
-    rooms: '',
-    propertyType: '',
-  });
-
+const SearchFilters = ({ filters, setFilters }) => {
   const handleChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
@@ -69,12 +71,27 @@ const SearchFilters = () => {
             onChange={(e) => handleChange('location', e.target.value)}
           />
         </label>
-        <Dropdown
-          label="Price"
-          options={priceOptions}
-          value={filters.price}
-          onChange={(value) => handleChange('price', value)}
-        />
+        <div className="flex gap-2">
+          <label className="input flex border-2  border-[#BDBDBD] items-center gap-2 focus-within:border-0">
+            <input
+              type="number"
+              className="grow placeholder:text-sm w-24 !border-0 !focus:outline-none 
+            !focus-visible:outline-none"
+              placeholder="Min Price"
+              value={filters.minPrice}
+              onChange={(e) => handleChange('minPrice', e.target.value)}
+            />
+          </label>
+          <label className="input flex border-2  border-[#BDBDBD] items-center gap-2 focus-within:border-0">
+            <input
+              type="number"
+              className="grow placeholder:text-sm w-24 border-0 focus:outline-none focus-visible:outline-none"
+              placeholder="Max Price"
+              value={filters.maxPrice}
+              onChange={(e) => handleChange('maxPrice', e.target.value)}
+            />
+          </label>
+        </div>
         <Dropdown
           label="Rooms"
           options={roomOptions}

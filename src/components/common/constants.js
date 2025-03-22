@@ -25,19 +25,24 @@ export const navItems = [
     sub: [
       {
         id: 1,
+        name: 'All',
+        path: '/properties/all',
+      },
+      {
+        id: 2,
         name: 'New Listings',
-        path: '/properties/:filter',
+        path: '/properties/New Listings',
       },
 
       {
-        id: 2,
+        id: 3,
         name: 'New Construction',
-        path: '/properties/:filter',
+        path: '/properties/New Construction',
       },
       {
-        id: 3,
+        id: 4,
         name: 'Insured Homes',
-        path: '/properties/:filter',
+        path: '/properties/Insured Homes',
       },
     ],
   },

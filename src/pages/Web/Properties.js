@@ -11,6 +11,14 @@ import { FcLike } from 'react-icons/fc';
 import { FcLikePlaceholder } from 'react-icons/fc';
 
 const Properties = () => {
+  const [filters, setFilters] = useState({
+    location: '',
+    minPrice: '',
+    maxPrice: '',
+    rooms: '',
+    propertyType: '',
+  });
+
   const controls = useAnimation();
   const [isLiked] = useState(true);
   const [ref, inView] = useInView({
@@ -19,7 +27,28 @@ const Properties = () => {
   });
 
   const { filter } = useParams();
+  const { data, isLoading } = useGetAllPublicProperties(
+    1,
+    1,
+    filters.location,
+    filters.propertyType,
+    filters.minPrice,
+    filters.maxPrice,
+    filter.includes('Insured'),
+    filter.includes('Construction')
+  );
 
+  useEffect(() => {
+    if (filter.includes('All')) {
+      setFilters({
+        location: '',
+        minPrice: '',
+        maxPrice: '',
+        rooms: '',
+        propertyType: '',
+      });
+    }
+  }, [filter]);
   useEffect(() => {
     if (inView) {
       controls.start('visible'); // Start animation when in view
@@ -40,11 +69,9 @@ const Properties = () => {
     }),
   };
 
-  const { data, isLoading } = useGetAllPublicProperties();
-
   return (
     <div className="align-element pb-10">
-      <SearchFilters />
+      <SearchFilters filters={filters} setFilters={setFilters} />
       <div>
         <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#18181B]">
           Browse New Property Listings

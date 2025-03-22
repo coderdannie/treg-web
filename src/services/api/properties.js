@@ -75,15 +75,71 @@ export const completeListing = async (id) => {
   return res.data;
 };
 
-export const getAllPublicProperties = async () => {
-  const res = await axiosInstance.get(API.GET_ALL_PUBLIC_PROPERTIES);
+export const getAllPublicProperties = async ({ queryKey }) => {
+  const [
+    ,
+    page,
+    limit,
+    location,
+    type,
+    minPrice,
+    maxPrice,
+    insured,
+    newConstruction,
+    status,
+    searchTerm,
+  ] = queryKey;
+
+  let query = '';
+
+  if (page) {
+    query = query + `page=${page}&`;
+  }
+  if (limit) {
+    query = query + `limit=${limit}&`;
+  }
+
+  if (location) {
+    query = query + `location=${location}&`;
+  }
+  if (searchTerm) {
+    query = query + `searchTerm=${searchTerm}&`;
+  }
+
+  if (type) {
+    query = query + `type=${type}&`;
+  }
+
+  if (minPrice) {
+    query = query + `minPrice=${minPrice}&`;
+  }
+
+  if (maxPrice) {
+    query = query + `maxPrice=${maxPrice}&`;
+  }
+
+  if (insured) {
+    query = query + `insured=${insured}&`;
+  }
+
+  if (newConstruction) {
+    query = query + `newConstruction=${newConstruction}&`;
+  }
+
+  if (status) {
+    query = query + `status=${status}`;
+  }
+
+  const res = await axiosInstance.get(
+    `${API.GET_ALL_PUBLIC_PROPERTIES}?${query}`
+  );
   return res.data;
 };
 
 export const getPublicPropertyDetails = async ({ queryKey }) => {
   const [, id] = queryKey;
   const res = await axiosInstance.get(
-    `${API.GET_PUBLIC_PROPERTY_DETAILS}/${id}/get/unauthenticated`
+    `${API.GET_PUBLIC_PROPERTY_DETAILS}/${id}/get`
   );
   return res.data;
 };

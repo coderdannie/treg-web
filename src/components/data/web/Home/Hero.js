@@ -2,7 +2,7 @@ import { motion, useSpring, useTransform } from 'framer-motion';
 import Balancer from 'react-wrap-balancer';
 import heroBg from '../../../../assets/hero-gradient.png';
 import heroBg2 from '../../../../assets/vectorBg.png';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import HeroSearchFilters from '../../../common/HeroSearchFilters';
 
@@ -141,7 +141,6 @@ export default function ProductFeatures() {
   const sentence = 'Rent your next home with confidence';
   const words = sentence.split(' ');
 
-  const [openDropdown, setOpenDropdown] = useState(null);
   return (
     <section
       className="storybook-fix  px-4 sm:px-0 flex  w-full flex-col items-center gap-4 py-14 md:py-10 hero "

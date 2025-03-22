@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { filterOptions } from './constants';
-import { RiArrowDownSLine } from 'react-icons/ri';
-import { motion } from 'framer-motion';
 
 import { FaChevronDown, FaCheck } from 'react-icons/fa';
+import { useGetAllPublicProperties } from '../../services/query/properties';
+import { useNavigate } from 'react-router-dom';
 
 const propertyTypes = [
   'Flat',
@@ -52,15 +51,25 @@ const HeroSearchFilters = () => {
     rooms: '',
     propertyType: '',
   });
+  const navigate = useNavigate();
+
+  const { data } = useGetAllPublicProperties(
+    1,
+    1,
+    filters.location,
+    filters.propertyType,
+    filters.minPrice,
+    filters.maxPrice
+  );
 
   const handleChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSendValues = () => {
-    // Send the filter values (e.g., to an API or another component)
     console.log('Sending filter values:', filters);
-    alert(`Filter values sent: ${JSON.stringify(filters, null, 2)}`);
+    navigate('/properties/all');
+    // alert(`Filter values sent: ${JSON.stringify(filters, null, 2)}`);
   };
 
   return (
@@ -108,12 +117,14 @@ const HeroSearchFilters = () => {
         <input
           type="text"
           className="grow placeholder:text-sm"
-          placeholder="Search by location"
+          placeholder="Search by state"
           value={filters.location}
           onChange={(e) => handleChange('location', e.target.value)}
         />
       </label>
-      <button className="primary-btn">Search</button>
+      <button className="primary-btn" onClick={handleSendValues}>
+        Search
+      </button>
     </ul>
   );
 };

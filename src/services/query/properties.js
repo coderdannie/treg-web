@@ -90,9 +90,33 @@ export const useCompleteListing = (options = {}) => {
   return { mutate, isLoading };
 };
 
-export const useGetAllPublicProperties = (options = {}) => {
+export const useGetAllPublicProperties = (
+  page = 1,
+  limit = '',
+  location = '',
+  type = '',
+  minPrice = '',
+  maxPrice = '',
+  insured = '',
+  newConstruction = '',
+  status = '',
+  searchTerm = '',
+  options = {}
+) => {
   const { data, isLoading, refetch, isError } = useQuery(
-    'GET_PUBLIC_PROPERTIES',
+    [
+      'GET_PUBLIC_PROPERTIES',
+      page,
+      limit,
+      location,
+      type,
+      minPrice,
+      maxPrice,
+      insured,
+      newConstruction,
+      status,
+      searchTerm,
+    ],
     getAllPublicProperties,
     {
       ...options,
