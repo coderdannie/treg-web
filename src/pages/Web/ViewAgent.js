@@ -16,8 +16,8 @@ const ViewAgent = () => {
   }, []);
 
   return (
-    <section className="align-element pt-14">
-      <RealEstateProfile data={data} isLoading={isLoading} />
+    <section className="align-element pt-14 pb-10">
+      <RealEstateProfile data={data?.data} isLoading={isLoading} />
       <div className="mt-[28px] gap-7">
         <div
           className="border-2 border-[#D4D0D0] rounded-md 

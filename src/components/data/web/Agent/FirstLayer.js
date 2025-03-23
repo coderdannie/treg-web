@@ -177,7 +177,7 @@ const FirstLayer = () => {
               <img
                 src={agent.avatar}
                 alt={agent.firstName}
-                className="w-full object-center h-40 object-cover rounded-md"
+                className="w-full h-24 rounded-md object-cover"
               />
               <div className="mt-4">
                 <h3 className="md:text-lg font-semibold text-[#101828]">

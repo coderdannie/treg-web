@@ -14,7 +14,6 @@ import {
 
 const VerifyOtp = () => {
   const successToast = (message) => toast.success(message, { duration: 3000 });
-
   const errorToast = (message) => toast.error(message, { duration: 3000 });
 
   const [values, setValues] = useState({
@@ -36,7 +35,7 @@ const VerifyOtp = () => {
     useVerifyPasswordOtp({
       onSuccess: (res) => {
         navigate('/reset-password');
-        sessionStorage.removeItem('passwordOt');
+        sessionStorage.removeItem('passwordOtp');
         successToast(res?.message);
       },
       onError: (err) => {
@@ -65,10 +64,11 @@ const VerifyOtp = () => {
     },
     onError: (res) => {
       errorToast(
-        res?.response?.data?.message || res?.message || 'An Error Occured'
+        res?.response?.data?.message || res?.message || 'An Error Occurred'
       );
     },
   });
+
   const {
     mutate: resendMutate,
     data: resendData,
@@ -79,10 +79,11 @@ const VerifyOtp = () => {
     },
     onError: (res) => {
       errorToast(
-        res?.response?.data?.message || res?.message || 'An Error Occured'
+        res?.response?.data?.message || res?.message || 'An Error Occurred'
       );
     },
   });
+
   const isFormValid = Object.values(values).every(
     (value) => value.trim() !== ''
   );
@@ -101,19 +102,15 @@ const VerifyOtp = () => {
     }
   };
 
-  const [timeLeft, setTimeLeft] = useState(20);
+  const [timeLeft, setTimeLeft] = useState(120); // 2 minutes in seconds
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setTimeLeft(timeLeft - 1);
+    const timer = setInterval(() => {
+      setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
     }, 1000);
 
-    if (timeLeft === 0) {
-      clearTimeout(timer);
-    }
-
-    return () => clearTimeout(timer);
-  }, [timeLeft]);
+    return () => clearInterval(timer);
+  }, []);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
@@ -132,7 +129,7 @@ const VerifyOtp = () => {
 
   useEffect(() => {
     if (data || resendData) {
-      setTimeLeft(120000);
+      setTimeLeft(120); // Reset timer to 2 minutes when OTP is resent
     }
   }, [data, resendData]);
 
@@ -183,7 +180,7 @@ const VerifyOtp = () => {
                 <div className={email ? 'mt-1' : 'mt-2 text-center'}>
                   <div className="flex items-center gap-1">
                     O.T.P will expire in
-                    <p color={timeLeft < 30 ? 'red' : ''}>
+                    <p style={{ color: timeLeft < 30 ? 'red' : '' }}>
                       {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
                     </p>
                   </div>
@@ -192,12 +189,11 @@ const VerifyOtp = () => {
                     <button
                       className={
                         timeLeft === 0
-                          ? 'cursor-pointer text-[#B71C1C] font-bold  hover:underline opacity-100 mt-1 text-sm'
+                          ? 'cursor-pointer text-[#B71C1C] font-bold hover:underline opacity-100 mt-1 text-sm'
                           : 'text-sm cursor-auto opacity-50 text-[#B71C1C] font-bold'
                       }
                       disabled={timeLeft !== 0}
-                      fontWeight={500}
-                      onClick={() => (timeLeft === 0 ? handleSend() : '')}
+                      onClick={timeLeft === 0 ? handleSend : undefined}
                     >
                       Resend OTP
                     </button>

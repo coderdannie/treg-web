@@ -693,3 +693,18 @@ export const topCitiesData = [
       'https://res.cloudinary.com/dgxtavaez/image/upload/v1742496550/ovinuchi-ejiohuo-OxesnxkySD0-unsplash_qgo9rm.jpg',
   },
 ];
+
+export const realEstateRoles = [
+  { label: 'Real Estate', value: 'Real Estate' },
+  { label: 'Realtor', value: 'Realtor' },
+  { label: 'Buyer Agent', value: 'Buyer Agent' },
+  { label: 'Seller Agent', value: 'Seller Agent' },
+  { label: 'Dual Agent', value: 'Dual Agent' },
+  { label: 'Real Estate Broker', value: 'Real Estate Broker' },
+  { label: 'Associate Broker', value: 'Associate Broker' },
+  { label: 'Real Estate Investor', value: 'Real Estate Investor' },
+  { label: 'Leasing', value: 'Leasing' },
+  { label: 'Relocation Specialist', value: 'Relocation Specialist' },
+  { label: 'Real Estate Consultant', value: 'Real Estate Consultant' },
+  { label: 'New Construction', value: 'New Construction' },
+];

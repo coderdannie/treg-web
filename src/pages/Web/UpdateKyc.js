@@ -26,8 +26,10 @@ import {
 } from '../../services/query/payments';
 import Select from 'react-select';
 import { IoIosArrowDown } from 'react-icons/io';
+import { realEstateRoles } from '../../components/common/constants';
 
 const UpdateKyc = () => {
+  const user = JSON.parse(sessionStorage.getItem('user'));
   const errorToast = (message) => toast.error(message, { duration: 3000 });
   const successToast = (message) => toast.success(message, { duration: 3000 });
   const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +45,7 @@ const UpdateKyc = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isLoadingUser || !data?.data) return; //Early return if loading or no data
+    if (isLoadingUser || !data?.data) return; // Early return if loading or no data
 
     const userData = data?.data;
 
@@ -178,6 +180,8 @@ const UpdateKyc = () => {
       yearsOfExperience: Number(values.yearsOfExperience),
       serviceAreas: values.serviceArea,
       officeAddress: values.address,
+      agentType: values.agencyType,
+      bio: values?.bio,
     });
   };
   const handleAddSupportingDocs = () => {
@@ -243,6 +247,7 @@ const UpdateKyc = () => {
                   handleBlur,
                   handleSubmit,
                   isValid,
+                  setValues,
                   dirty,
                 }) => (
                   <Form onSubmit={handleSubmit}>
@@ -285,6 +290,73 @@ const UpdateKyc = () => {
                           }
                           placeholder="Enter your years of experience"
                         />
+                        {user?.data?.userType === 'Agent' && (
+                          <div className="w-full relative mb-2">
+                            <p className="text-[#444] font-semibold mb-2 text-sm">
+                              Real Estate Roles
+                            </p>
+                            <Select
+                              styles={customStyles}
+                              components={{
+                                IndicatorSeparator: () => (
+                                  <div style={{ display: 'none' }}></div>
+                                ),
+                                DropdownIndicator: () => (
+                                  <div>
+                                    <IoIosArrowDown className="h-3.5 w-3.5 text-[#646668]" />
+                                  </div>
+                                ),
+                              }}
+                              onChange={(selectedOption) => {
+                                setValues((prevValues) => ({
+                                  ...prevValues,
+                                  agencyType: selectedOption?.value,
+                                }));
+                              }}
+                              placeholder="Select Role"
+                              value={realEstateRoles.find(
+                                (option) => option.value === values.agencyType
+                              )}
+                              options={realEstateRoles}
+                            />
+                          </div>
+                        )}
+                        {user?.data?.userType && (
+                          <div className="flex flex-col mb-2">
+                            <label className="pb-2">Enter Bio (required)</label>
+                            <textarea
+                              value={values.bio}
+                              name="bio"
+                              onChange={(e) => {
+                                const inputText = e.target.value;
+                                const words = inputText
+                                  .split(/\s+/)
+                                  .filter(Boolean);
+
+                                if (words.length <= 300) {
+                                  handleChange(e);
+                                }
+                              }}
+                              // maxLength={500}
+                              placeholder="Enter Bio."
+                              className="mt-1 p-3 border-2 border-gray-300 rounded-md focus:ring-0 focus:outline-none"
+                              rows={4}
+                              onBlur={handleBlur}
+                              style={{
+                                borderColor: errors.bio
+                                  ? 'red'
+                                  : values.bio
+                                  ? '#1140E7'
+                                  : '',
+                              }}
+                            />
+                            <p className="text-sm text-gray-500 mt-1">
+                              Word count:{' '}
+                              {values.bio.split(/\s+/).filter(Boolean).length}
+                              /300
+                            </p>
+                          </div>
+                        )}
                         <div className="flex flex-col">
                           <label className="pb-2">
                             Service Areas (required)
@@ -329,15 +401,19 @@ const UpdateKyc = () => {
                             !values.address ||
                             !values.phoneNo ||
                             !values.serviceArea ||
-                            !values.yearsOfExperience
-                              ? '!bg-gray-300 !border-0'
+                            !values.yearsOfExperience ||
+                            (user?.data?.userType === 'Agent' &&
+                              (!values.bio || !values.agencyType))
+                              ? '!bg-gray-300 !border-0 pointer-events-none '
                               : 'bg-primary'
                           }`}
                           disabled={
                             !values.address ||
                             !values.phoneNo ||
                             !values.serviceArea ||
-                            !values.yearsOfExperience
+                            !values.yearsOfExperience ||
+                            (user?.data?.userType === 'Agent' &&
+                              (!values.bio || !values.agencyType))
                           }
                         >
                           {isLoading ? (

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AiOutlineDownload } from 'react-icons/ai';
 import { statuses, tenantCounts } from '../../components/common/constants';
 import { FiFilter } from 'react-icons/fi';
@@ -8,11 +8,83 @@ import { GoArrowUpRight } from 'react-icons/go';
 import TransactionTable from '../../components/data/TenantMgt/TransactionTable';
 import { FiSearch } from 'react-icons/fi';
 import { BiSortAlt2 } from 'react-icons/bi';
+import { useGetAllRentals } from '../../services/query/agents';
+import { formatDates } from '../../utils/helper';
 
 const TenantMgt = () => {
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const [startValue, startChange] = useState('');
+  const [showStartDate, setShowStartDate] = useState(false);
+  const [showEndDate, setShowEndDate] = useState(false);
+  const [endValue, endChange] = useState('');
+  const [duration, setDuration] = useState('');
+
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(25);
+
+  const {
+    data: allRentals,
+    isLoading: isLoadingRentals,
+    refetch,
+  } = useGetAllRentals(
+    page,
+    limit,
+    startValue ? formatDates(new Date(startValue)) : '',
+    endValue ? formatDates(new Date(endValue)) : '',
+    searchTerm.toLowerCase()
+  );
+
+  const { startRow, endRow } = useMemo(() => {
+    if (!allRentals) {
+      return { startRow: 1, endRow: 0 };
+    }
+
+    const currentPage = page;
+    const itemsPerPage = limit;
+    const totalItems = allRentals?.meta?.totalItems || 0;
+
+    const currentStartRow = (currentPage - 1) * itemsPerPage + 1;
+    const currentEndRow = Math.min(currentPage * itemsPerPage, totalItems);
+
+    return { startRow: currentStartRow, endRow: currentEndRow };
+  }, [allRentals, page, limit]);
+
+  useEffect(() => {
+    refetch();
+  }, [allRentals?.data]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [limit, selectedStatus]);
+
+  useEffect(() => {
+    const calculateDates = () => {
+      const currentDate = new Date();
+      let startDate;
+
+      if (duration.includes('3 months')) {
+        startDate = new Date();
+        startDate.setMonth(currentDate.getMonth() - 3);
+      } else if (duration.includes('6 months')) {
+        startDate = new Date();
+        startDate.setMonth(currentDate.getMonth() - 6);
+      } else {
+        startChange('');
+        endChange('');
+      }
+
+      if (startDate) {
+        startChange(startDate.toISOString().split('T')[0]);
+        endChange(currentDate.toISOString().split('T')[0]);
+      }
+    };
+
+    calculateDates();
+  }, [duration]);
 
   return (
     <div>
@@ -92,6 +164,7 @@ const TenantMgt = () => {
             type="text"
             placeholder="Search"
             className={`w-24 transition-all duration-300 bg-transparent outline-none border-b border-gray-300 focus:w-40 focus:border-gray-500`}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <div className="flex items-center gap-1 cursor-pointer hover:text-gray-700 transition">
@@ -99,7 +172,16 @@ const TenantMgt = () => {
           <span>Sort</span>
         </div>
       </div>
-      <TransactionTable />
+      <TransactionTable
+        isLoading={isLoadingRentals}
+        data={allRentals}
+        page={page}
+        setPage={setPage}
+        limit={limit}
+        setLimit={setLimit}
+        startRow={startRow}
+        endRow={endRow}
+      />
     </div>
   );
 };

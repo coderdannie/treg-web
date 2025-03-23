@@ -54,6 +54,8 @@ export const initialKycValues = {
   address: '',
   imageFile: '',
   imageFileType: '',
+  bio: '',
+  agencyType: '',
 };
 
 export const validatePword = Yup.object().shape({

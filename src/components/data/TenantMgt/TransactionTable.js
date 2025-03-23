@@ -1,47 +1,21 @@
-import { formatDate } from '../../../utils/helper';
+import { formatDate, formatDateTime } from '../../../utils/helper';
 import CustomTable from '../../common/CustomTable';
 import { FiMoreVertical } from 'react-icons/fi';
 
-const TransactionTable = () => {
-  const data = [
-    {
-      id: 'TREG-TN-01234',
-      Name: 'Akin Lewis',
-      Property: '2-Bedroom Flat, Ikeja',
-      MoveInDate: '2024-11-15',
-      Duration: '1 year',
-      Status: 'Pending Move-in',
-    },
-    {
-      id: 'TREG-TN-01234',
-      Name: 'Akin Lewis',
-      Property: '2-Bedroom Flat, Ikeja',
-      MoveInDate: '2024-11-15',
-      Duration: '1 year',
-      Status: 'Pending Move-in',
-    },
-    {
-      id: 'TREG-TN-01234',
-      Name: 'Akin Lewis',
-      Property: '2-Bedroom Flat, Ikeja',
-      MoveInDate: '2024-11-15',
-      Duration: '1 year',
-      Status: 'Pending Review',
-    },
-    {
-      id: 'TREG-TN-01234',
-      Name: 'Akin Lewis',
-      Property: '2-Bedroom Flat, Ikeja',
-      MoveInDate: '2024-11-15',
-      Duration: '1 year',
-      Status: 'Active',
-    },
-  ];
-
+const TransactionTable = ({
+  data,
+  isLoading,
+  startRow,
+  endRow,
+  page,
+  setPage,
+  setLimit,
+  limit,
+}) => {
   return (
     <div>
       <CustomTable
-        // isLoading={isLoading}
+        isLoading={isLoading}
         headers={[
           'Tenant ID',
           'Tenant Name',
@@ -51,33 +25,41 @@ const TransactionTable = () => {
           'Status',
           'Actions',
         ]}
-        // paginationValues={{
-        //   startRow,
-        //   endRow,
-        //   total: data?.data?.length,
-        //   page: data?.meta?.page,
-        //   pageCount: data?.meta?.totalPages,
-        //   onNext: () =>
-        //     data?.meta?.page !== data?.meta?.totalPages
-        //       ? setPage(page + 1)
-        //       : null,
-        //   onPrevious: () => (data?.meta?.page !== 1 ? setPage(page - 1) : null),
-        //   setLimit,
-        //   limit,
-        // }}
-        // useDefaultPagination
-        // skeletonRows={3}
+        paginationValues={{
+          startRow,
+          endRow,
+          total: data?.data?.length,
+          page: data?.meta?.page,
+          pageCount: data?.meta?.totalPages,
+          onNext: () =>
+            data?.meta?.page !== data?.meta?.totalPages
+              ? setPage(page + 1)
+              : null,
+          onPrevious: () => (data?.meta?.page !== 1 ? setPage(page - 1) : null),
+          setLimit,
+          limit,
+        }}
+        useDefaultPagination
+        skeletonRows={3}
       >
-        {data?.length ? (
-          data?.map((row, rowIndex) => (
+        {data?.data?.length ? (
+          data?.data?.map((row, rowIndex) => (
             <tr key={rowIndex}>
-              <td className="whitespace-nowrap px-6 py-4">{row?.id}</td>
-              <td className="whitespace-nowrap px-6 py-4">{row?.Name}</td>
-              <td className="whitespace-nowrap px-6 py-4">{row.Property}</td>
-              <td className="whitespace-nowrap px-6 py-4">{row.MoveInDate}</td>
+              <td className="whitespace-nowrap px-6 py-4">{row?._id}</td>
               <td className="whitespace-nowrap px-6 py-4">
-                {/* {formatDate(row?.createdAt)} */}
-                {row.Duration}
+                {row?.tenantId?.lastName} {row?.tenantId?.firstName}
+              </td>
+              <td className="whitespace-nowrap px-6 py-4">
+                {row.propertyId?.title}
+              </td>
+              <td className="whitespace-nowrap px-6 py-4">
+                {formatDateTime(row?.createdAt)}
+              </td>
+              <td className="whitespace-nowrap px-6 py-4">
+                {row?.rentDuration}{' '}
+                {row?.propertyId?.rentalPeriod.includes('Year')
+                  ? 'year'
+                  : 'month'}
               </td>
 
               <td className="whitespace-nowrap px-6 py-4">
@@ -90,15 +72,15 @@ const TransactionTable = () => {
                   }}
                   className={`
                  ${
-                   row.Status === 'Available'
+                   row?.status === 'Available'
                      ? 'text-[#036B26] bg-[#E7F6EC] cursor-pointer relative'
-                     : row.Status === 'Rented'
+                     : row?.status === 'Rented'
                      ? 'text-red-600 bg-[#FFE1E1] cursor-pointer relative'
                      : 'text-yellow-600 bg-yellow-300 cursor-pointer relative'
                  }
                  `}
                 >
-                  {row.Status === 'Available' ? 'Active' : row.Status}
+                  {row.status === 'Available' ? 'Active' : row.status}
                 </p>
               </td>
               <td className="whitespace-nowrap px-6 py-4 ">
