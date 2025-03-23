@@ -15,6 +15,8 @@ const FormStepOne = ({
   checkedItems,
   rentalPeriod,
   isLoading,
+  statesOptions,
+  isCountry,
   handleSubmit,
 }) => {
   const handleCustomChange = (e) => {
@@ -85,7 +87,37 @@ const FormStepOne = ({
     }));
   };
 
-  const isFormFilled = Object.values(values).every((value) => value);
+  const updateTextViews2 = (event) => {
+    let inputValue = event.target.value;
+
+    inputValue = inputValue.replace(/[^0-9.]/g, '');
+
+    // Prevent multiple decimal points
+    const parts = inputValue.split('.');
+    if (parts.length > 2) return;
+
+    // Format the number with commas (only before the decimal point)
+    const integerPart = parts[0];
+    const formattedIntegerPart = integerPart.replace(
+      /\B(?=(\d{3})+(?!\d))/g,
+      ','
+    );
+
+    const decimalPart = parts[1] !== undefined ? `.${parts[1]}` : '';
+
+    // Combine integer and decimal parts
+    const formattedValue = formattedIntegerPart + decimalPart;
+
+    setValues((prevValues) => ({
+      ...prevValues,
+      cautionFee: formattedValue,
+    }));
+  };
+
+  const isFormFilled = Object.entries(values).every(([key, value]) => {
+    if (key === 'cautionFee') return true;
+    return value;
+  });
 
   const customStyles = {
     control: (provided, state) => ({
@@ -125,7 +157,7 @@ const FormStepOne = ({
         placeholder="Luxurious 3-Bedroom Flat in Lagos"
       />
       <div>
-        <p className=" pb-2 ">Property Type</p>
+        <p className=" pb-2 text-sm">Property Type</p>
         <Select
           styles={customStyles}
           placeholder="Select Property Type"
@@ -149,7 +181,7 @@ const FormStepOne = ({
         />
       </div>
       <div className="flex flex-col">
-        <label className="pb-2">Property Description</label>
+        <label className="pb-2 text-sm">Property Description</label>
         <textarea
           value={values.description}
           name="description"
@@ -230,8 +262,39 @@ const FormStepOne = ({
         onChange={handleInputChange}
         placeholder="123, Adetokunbo Way, Allen Avenue, Lagos"
       />
+      <div>
+        <p className=" pb-2 text-sm ">Select State</p>
+
+        <Select
+          styles={customStyles}
+          placeholder="Select State"
+          options={statesOptions}
+          value={values?.state}
+          isDisabled={!values?.country}
+          components={{
+            IndicatorSeparator: () => <div style={{ display: 'none' }}></div>,
+            DropdownIndicator: () => (
+              <div>
+                {isCountry ? (
+                  <div className="spinner border-t-transparent border-4 border-[#E7F2FF] w-6 h-6 rounded-full animate-spin"></div>
+                ) : (
+                  <IoIosArrowDown size="15px" color="#646668" />
+                )}
+              </div>
+            ),
+          }}
+          name="state"
+          onChange={(selectedOption) => {
+            setValues({
+              ...values,
+              state: selectedOption,
+            });
+          }}
+        />
+      </div>
+
       <FormInput
-        label="Price per year"
+        label={`Price Per ${rentalPeriod ? 'Year' : 'Month'}`}
         name="amount"
         type="tel"
         value={values.amount}
@@ -239,6 +302,18 @@ const FormStepOne = ({
         pattern="[0-9.,]+"
         holder="Enter Amount"
         onChange={updateTextViews}
+        placeholder="Enter Amount"
+      />
+
+      <FormInput
+        label="Caution fee(optional)"
+        name="cautionFee"
+        type="tel"
+        value={values.cautionFee}
+        inputMode="decimal"
+        pattern="[0-9.,]+"
+        holder="Enter Amount"
+        onChange={updateTextViews2}
         placeholder="Enter Amount"
       />
 

@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-import { sidebarData } from '../../common/constants'; // Your provided array
+import { sidebarData, tenantSidebarData } from '../../common/constants'; // Your provided array
 import Logo from '../../common/Logo';
 import { LuLogOut } from 'react-icons/lu';
 import { useLogOut } from '../../../utils/helper';
+import { useGetUser } from '../../../services/query/account';
 
 const SideDrawer = ({ isOpen, onClose }) => {
-  const [isUser] = useState(false);
+  const { data, isLoading: isUser } = useGetUser();
   const [isLoading, setIsLoading] = useState(false);
   const [openSubItems, setOpenSubItems] = useState({});
   const [showMenu, setShowMenu] = useState(false);
@@ -72,7 +73,10 @@ const SideDrawer = ({ isOpen, onClose }) => {
             </div>
           ) : (
             <div className="flex-1">
-              {sidebarData.map((item, i) => (
+              {(data?.data?.userType === 'Tenant'
+                ? tenantSidebarData
+                : sidebarData
+              ).map((item, i) => (
                 <div key={i} className="mb-2">
                   <div
                     className={`flex items-center px-4 py-3 cursor-pointer rounded-lg transition-colors duration-300 ${
@@ -144,27 +148,28 @@ const SideDrawer = ({ isOpen, onClose }) => {
           className="pb-10 hover:text-red-500 flex justify-between border-[#314169] p-4 text-center text-sm cursor-pointer"
           onClick={() => action()}
         >
-          <div className="flex gap-2">
-            <div className="avatar placeholder">
-              <div className="ring-primary bg-primary w-8 h-8 rounded-full ring"></div>
-            </div>
-            <div className="text-left">
-              <h4 className="font-semibold text-sm">Ola Samuel</h4>
-              <p className="text-[#475367] hover:text-red-500 text-xs">
-                olasamuel@treg.com
-              </p>
-            </div>
+          <div className="flex gap-2 pl-2 ">
+            {isLoading ? (
+              <div className="flex items-center justify-center gap-2 text-[12px]">
+                <span className="loading loading-spinner loading-sm "></span>
+                Logging Out
+              </div>
+            ) : (
+              <div className="flex items-center text-xl justify-center gap-2 ">
+                <LuLogOut />
+              </div>
+            )}
+            {!isLoading && (
+              <div className="text-left">
+                <h5 className="font-semibold text-sm">
+                  {data?.data?.lastName ?? '--'} {data?.data?.firstName ?? '--'}
+                </h5>
+                <p className="text-[#475367] hover:text-red-500 text-xs">
+                  {data?.data?.email}
+                </p>
+              </div>
+            )}
           </div>
-          {isLoading ? (
-            <div className="flex items-center justify-center gap-2 text-[12px]">
-              <span className="loading loading-spinner loading-sm"></span>
-              Logging Out
-            </div>
-          ) : (
-            <div className="flex items-center text-xl justify-center gap-2">
-              <LuLogOut />
-            </div>
-          )}
         </div>
       </div>
     </div>

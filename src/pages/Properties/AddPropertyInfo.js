@@ -1,13 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import FormStepOne from '../../components/data/Properties/FormStepOne';
 import toast from 'react-hot-toast';
 import { useAddProperty } from '../../services/query/properties';
 import { useNavigate } from 'react-router-dom';
 import { IoChevronBackOutline } from 'react-icons/io5';
+import { useGetCountriesStates } from '../../services/query/locations';
 
 const AddPropertyInfo = () => {
   const errorToast = (message) => toast.error(message, { duration: 3000 });
+
+  const [country, setCountry] = useState({
+    value: 'Nigeria',
+    label: 'Nigeria',
+  });
 
   const generateDescription = async (inputs) => {
     try {
@@ -51,7 +57,11 @@ const AddPropertyInfo = () => {
     noOfRooms: '',
     location: '',
     amount: '',
+    country: { value: 'Nigeria', label: 'Nigeria' },
+    state: '',
+    cautionFee: '',
   });
+
   const navigate = useNavigate();
 
   const [selectedAmenities, setSelectedAmenities] = useState([]);
@@ -74,6 +84,42 @@ const AddPropertyInfo = () => {
       );
     },
   });
+
+  const { data: countriess, isLoading: isCountry } = useGetCountriesStates();
+
+  const countriesOptions = countriess?.data?.map((country) => ({
+    value: country?.name,
+    label: country?.name,
+  }));
+
+  const states = countriess?.data?.filter(
+    (item) => item?.name === country?.value
+  );
+
+  const statesOptions =
+    countriess?.data &&
+    states[0]?.states?.map(
+      (state) =>
+        ({
+          value: state?.name?.replace(' State', ''),
+          label: state?.name?.replace(' State', ''),
+        } || [])
+    );
+
+  useEffect(() => {
+    if (countriesOptions && values.country.value !== 'Nigeria') {
+      const nigeriaOption = countriesOptions.find(
+        (option) => option.value === 'Nigeria'
+      );
+      if (nigeriaOption) {
+        setValues((prevValues) => ({
+          ...prevValues,
+          country: nigeriaOption,
+        }));
+        setCountry(nigeriaOption);
+      }
+    }
+  }, [countriesOptions, values.country]);
 
   const handleSubmit = () => {
     if (checkedItems.insured) {
@@ -98,6 +144,8 @@ const AddPropertyInfo = () => {
         rentalPeriod: rentalPeriod ? 'Yearly' : 'Monthly',
         insured: checkedItems.insured,
         newConstruction: checkedItems.newConstruction,
+        state: values?.state?.value,
+        cautionFee: Number(values?.cautionFee),
       });
     }
   };
@@ -130,6 +178,8 @@ const AddPropertyInfo = () => {
           checkedItems={checkedItems}
           setCheckedItems={setCheckedItems}
           isLoading={isLoading}
+          statesOptions={statesOptions}
+          isCountry={isCountry}
           handleSubmit={handleSubmit}
         />
       </div>

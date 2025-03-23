@@ -155,14 +155,16 @@ const SideBar = () => {
                 <LuLogOut />
               </div>
             )}
-            <div className="text-left">
-              <h5 className="font-semibold text-sm">
-                {data?.data?.lastName ?? '--'} {data?.data?.firstName ?? '--'}
-              </h5>
-              <p className="text-[#475367] hover:text-red-500 text-xs">
-                {data?.data?.email}
-              </p>
-            </div>
+            {!isLoading && (
+              <div className="text-left">
+                <h5 className="font-semibold text-sm">
+                  {data?.data?.lastName ?? '--'} {data?.data?.firstName ?? '--'}
+                </h5>
+                <p className="text-[#475367] hover:text-red-500 text-xs">
+                  {data?.data?.email}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

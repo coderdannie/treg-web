@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useGetCountriesStates } from '../../../../services/query/locations';
 import { IoIosArrowDown } from 'react-icons/io';
 import Select from 'react-select';
-import { agents } from '../../../common/constants';
 import { Link } from 'react-router-dom';
 import { useGetAllAgents } from '../../../../services/query/agents';
 import PropertyCardSkeleton from '../../../Loaders/PropertyCardSkeleton';
