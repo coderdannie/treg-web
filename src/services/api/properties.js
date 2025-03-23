@@ -80,7 +80,7 @@ export const getAllPublicProperties = async ({ queryKey }) => {
     ,
     page,
     limit,
-    location,
+    state,
     type,
     minPrice,
     maxPrice,
@@ -99,8 +99,8 @@ export const getAllPublicProperties = async ({ queryKey }) => {
     query = query + `limit=${limit}&`;
   }
 
-  if (location) {
-    query = query + `location=${location}&`;
+  if (state) {
+    query = query + `state=${state}&`;
   }
   if (searchTerm) {
     query = query + `searchTerm=${searchTerm}&`;
