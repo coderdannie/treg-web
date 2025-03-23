@@ -92,7 +92,7 @@ export const useCompleteListing = (options = {}) => {
 
 export const useGetAllPublicProperties = (
   page = 1,
-  limit = '',
+  limit = 25,
   location = '',
   type = '',
   minPrice = '',

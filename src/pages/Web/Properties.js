@@ -42,7 +42,7 @@ const Properties = () => {
   const { filter } = useParams();
   const { data, isLoading } = useGetAllPublicProperties(
     1,
-    1,
+    25,
     filters.location,
     filters.propertyType,
     filters.minPrice,
