@@ -62,6 +62,8 @@ const InsuranceDetails = () => {
       propertyOwner: values?.ownerName,
       insuranceCompany: values?.insurerName,
       insuranceType: values?.riskInsured,
+      state: values?.state?.value,
+      cautionFee: Number(values?.cautionFee),
     });
   };
 
