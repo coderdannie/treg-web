@@ -10,8 +10,9 @@ const EscrowModal = ({ isOpen, onClose, data }) => {
   const successToast = (message) => toast.success(message, { duration: 3000 });
 
   const [duration, setDuration] = useState('');
-  const rentalPeriod = data?.rentalPeriod;
-  const cautionFee = parseFloat(data?.cautionFee?.$numberDecimal || '0');
+  const rentalPeriod = data?.rentalPeriod; // Get rentalPeriod from data
+  const cautionFee = parseFloat(data?.cautionFee?.$numberDecimal || '0'); // Get cautionFee from data
+  const escrowCharges = 100; // Hardcoded escrow charges
 
   const { mutate, isLoading } = useCreatePropertyPayment({
     onSuccess: (res) => {
@@ -40,9 +41,14 @@ const EscrowModal = ({ isOpen, onClose, data }) => {
         rentDuration: Number(duration),
       });
     } else {
-      errorToast('Please specify a duration before proceeding.');
+      errorToast('Please specify a duration before submitting.');
     }
   };
+
+  const totalAmount =
+    Number(data?.pricePerYear?.$numberDecimal) * duration +
+    cautionFee +
+    escrowCharges;
 
   return (
     <AnimatePresence>
@@ -107,6 +113,14 @@ const EscrowModal = ({ isOpen, onClose, data }) => {
               </div>
             )}
 
+            {/* Escrow Charges Notification */}
+            <div className="mb-4">
+              <p className="text-gray-700">
+                Escrow charges of{' '}
+                <strong>${escrowCharges.toLocaleString()}</strong> apply.
+              </p>
+            </div>
+
             {/* Rent Duration Input */}
             <FormInput
               label={`Enter Rent Duration (in ${rentalPeriod})`}
@@ -118,6 +132,30 @@ const EscrowModal = ({ isOpen, onClose, data }) => {
               pattern="[0-9.,]+"
               placeholder="1"
             />
+
+            {/* Total Amount Breakdown */}
+            {duration && (
+              <div className="mt-4 text-left ">
+                <p className="text-gray-700">
+                  <strong className="font-medium">Rent Amount:</strong> ₦{' '}
+                  {data?.pricePerYear?.$numberDecimal?.toLocaleString()}
+                </p>
+                {cautionFee > 0 && (
+                  <p className="text-gray-700">
+                    <strong className="font-medium">Caution Fee:</strong> ₦{' '}
+                    {cautionFee.toLocaleString()}
+                  </p>
+                )}
+                <p className="text-gray-700">
+                  <strong className="font-medium">Escrow Charges:</strong>₦{' '}
+                  {escrowCharges.toLocaleString()}
+                </p>
+                <p className="text-gray-700 font-semibold">
+                  <strong className="font-medium"> Total Amount:</strong> ₦{' '}
+                  {totalAmount.toLocaleString()}
+                </p>
+              </div>
+            )}
 
             {/* Proceed to Payment Button */}
             <button
