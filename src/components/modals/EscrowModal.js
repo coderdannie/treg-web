@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoMdCloseCircle } from 'react-icons/io';
 import { useCreatePropertyPayment } from '../../services/query/payments';
 import toast from 'react-hot-toast';
+import FormInput from '../common/FormInput';
 
 const EscrowModal = ({ isOpen, onClose, data }) => {
   const errorToast = (message) => toast.error(message, { duration: 3000 });
   const successToast = (message) => toast.success(message, { duration: 3000 });
+
+  const [duration, setDuration] = useState('');
+  const rentalPeriod = data?.rentalPeriod;
+  const cautionFee = parseFloat(data?.cautionFee?.$numberDecimal || '0');
 
   const { mutate, isLoading } = useCreatePropertyPayment({
     onSuccess: (res) => {
@@ -26,15 +31,19 @@ const EscrowModal = ({ isOpen, onClose, data }) => {
       );
     },
   });
-  console.log(data);
 
   const handleSubmit = () => {
-    mutate({
-      amount: Number(data?.pricePerYear?.$numberDecimal),
-      agentId: data?.agentId,
-      propertyId: data?._id,
-    });
+    if (duration) {
+      mutate({
+        agentId: data?.agentId,
+        propertyId: data?._id,
+        rentDuration: Number(duration),
+      });
+    } else {
+      errorToast('Please specify a duration before proceeding.');
+    }
   };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -75,14 +84,44 @@ const EscrowModal = ({ isOpen, onClose, data }) => {
             <h2 className="text-xl font-semibold mb-4">
               Secure Your Rent with Escrow!
             </h2>
-            <p className="text-gray-700 mb-8">
+            <p className="text-gray-700 mb-4">
               Protect your money and ensure a smooth rental experience with TREG
               Escrow Services. Your funds stay safe until you get the keys{' '}
               <strong>—no scams, no stress!</strong>
             </p>
 
+            {/* Rent Duration Type Display */}
+            <div className="mb-4">
+              <p className="text-gray-700">
+                This property allows <strong>{rentalPeriod}</strong> payments.
+              </p>
+            </div>
+
+            {/* Caution Fee Notification */}
+            {cautionFee > 0 && (
+              <div className="mb-4">
+                <p className="text-gray-700">
+                  A caution fee of{' '}
+                  <strong>${cautionFee.toLocaleString()}</strong> applies.
+                </p>
+              </div>
+            )}
+
+            {/* Rent Duration Input */}
+            <FormInput
+              label={`Enter Rent Duration (in ${rentalPeriod})`}
+              name="duration"
+              value={duration}
+              type="number"
+              onChange={(e) => setDuration(e.target.value)}
+              inputMode="decimal"
+              pattern="[0-9.,]+"
+              placeholder="1"
+            />
+
+            {/* Proceed to Payment Button */}
             <button
-              className="w-full secondary-btn py-3 hover:bg-primary hover:text-white"
+              className="w-full mt-3 secondary-btn py-3 hover:bg-primary hover:text-white"
               onClick={handleSubmit}
             >
               {isLoading ? (
