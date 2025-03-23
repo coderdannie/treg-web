@@ -24,6 +24,8 @@ const MediaUpload = ({
   // Image Upload Handler with Auto Upload
   const onDropImages = useCallback(
     async (acceptedFiles) => {
+      if (isLoading || isUploading) return; // Prevent upload if already processing
+
       // Filter out invalid file types
       const validFiles = acceptedFiles.filter((file) =>
         allowedImageTypes.includes(file.type)
@@ -32,7 +34,6 @@ const MediaUpload = ({
       // Show error if invalid files are found
       if (validFiles.length !== acceptedFiles.length) {
         errorToast('Invalid file type. Only JPG, JPEG, and PNG are allowed');
-
         return; // Stop further execution
       }
 
@@ -59,12 +60,14 @@ const MediaUpload = ({
         setImages((prev) => prev.filter((file) => !validFiles.includes(file)));
       }
     },
-    [images, mutatePhotosUpload, propertyId, setImages]
+    [images, mutatePhotosUpload, propertyId, setImages, isLoading, isUploading]
   );
 
   // Video Upload Handler with Auto Upload
   const onDropVideos = useCallback(
     async (acceptedFiles) => {
+      if (isLoading || isUploading) return; // Prevent upload if already processing
+
       // Check if adding files will exceed the limit
       if (videos.length + acceptedFiles.length > 20) {
         toast.error('Cannot upload more than 20 videos.');
@@ -89,20 +92,16 @@ const MediaUpload = ({
         );
       }
     },
-    [videos, mutate, propertyId, setVideos]
+    [videos, mutate, propertyId, setVideos, isLoading, isUploading]
   );
-
-  // Document Upload (if needed)
-  const onDropDocuments = useCallback((acceptedFiles) => {
-    setDocuments((prev) => [...prev, ...acceptedFiles]);
-  }, []);
 
   // Dropzone configuration
   const { getRootProps: getImageProps, getInputProps: getImageInput } =
     useDropzone({
       onDrop: onDropImages,
-      accept: 'image/jpg, image/jpeg, image/png', // Explicitly specify allowed types
+      accept: 'image/jpg, image/jpeg, image/png',
       multiple: true,
+      disabled: isLoading,
     });
 
   const { getRootProps: getVideoProps, getInputProps: getVideoInput } =
@@ -110,6 +109,7 @@ const MediaUpload = ({
       onDrop: onDropVideos,
       accept: 'video/*',
       multiple: true,
+      disabled: isUploading,
     });
 
   return (
@@ -117,7 +117,11 @@ const MediaUpload = ({
       {/* Image Upload */}
       <div
         {...getImageProps()}
-        className="border-2 border-dashed p-6 text-center rounded-lg cursor-pointer"
+        className={`border-2 border-dashed p-6 text-center rounded-lg ${
+          isLoading || isUploading
+            ? 'opacity-50 pointer-events-none'
+            : 'cursor-pointer'
+        }`}
       >
         <IoImagesOutline className="text-4xl text-primary mx-auto" />
         <p>
@@ -140,7 +144,9 @@ const MediaUpload = ({
       {/* Video Upload */}
       <div
         {...getVideoProps()}
-        className="border-2 border-dashed p-6 text-center rounded-lg cursor-pointer mt-4"
+        className={`border-2 border-dashed p-6 text-center rounded-lg mt-4 ${
+          isLoading ? 'opacity-50 pointer-events-none' : 'cursor-pointer'
+        }`}
       >
         <IoVideocamOutline className="text-4xl text-primary mx-auto" />
         <p>
