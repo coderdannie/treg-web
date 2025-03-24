@@ -46,3 +46,4 @@ export const GET_AGENT = 'public/agents';
 export const GET_RENTALS = 'properties/agent/rentals';
 export const GET_AGENT_RATINGS = 'public/agents';
 export const GET_AGENT_SALES = 'public/agents';
+export const GET_TENANT_COUNTS = 'properties/agent/tenants/count';

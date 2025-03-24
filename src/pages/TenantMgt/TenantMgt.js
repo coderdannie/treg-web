@@ -10,6 +10,7 @@ import { FiSearch } from 'react-icons/fi';
 import { BiSortAlt2 } from 'react-icons/bi';
 import { useGetAllRentals } from '../../services/query/agents';
 import { formatDates } from '../../utils/helper';
+import { useGetTenantCountsByStatus } from '../../services/query/properties';
 
 const TenantMgt = () => {
   const [selectedStatus, setSelectedStatus] = useState('All');
@@ -22,9 +23,14 @@ const TenantMgt = () => {
   const [showEndDate, setShowEndDate] = useState(false);
   const [endValue, endChange] = useState('');
   const [duration, setDuration] = useState('');
-
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
+
+  const { data: allCounts, isLoading: isLoadingCounts } =
+    useGetTenantCountsByStatus();
+  const { data: activeCounts } = useGetTenantCountsByStatus('Rented');
+  const { data: pendingCounts } = useGetTenantCountsByStatus('Paid');
+  const { data: expiredCounts } = useGetTenantCountsByStatus('Expired');
 
   const {
     data: allRentals,
@@ -132,7 +138,7 @@ const TenantMgt = () => {
       </div>
       {/* Dashboard Cards Section */}
       <div className="flex overflow-x-scroll gap-4 mt-8 dashboard-cards">
-        {isLoading
+        {isLoadingCounts
           ? Array.from({ length: 4 }).map((_, index) => (
               <SkeletonCard key={index} />
             ))
@@ -142,7 +148,15 @@ const TenantMgt = () => {
                 className="w-full min-w-[257px] border border-[#E4E7EC] bg-white p-4 rounded-xl h-full"
               >
                 <div className="text-sm h-full">
-                  <p className="text-[#344054] font-semibold text-xl">0</p>
+                  <p className="text-[#344054] font-semibold text-xl">
+                    {i === 0
+                      ? allCounts?.data
+                      : i === 1
+                      ? activeCounts?.data
+                      : i === 2
+                      ? pendingCounts?.data
+                      : expiredCounts?.data}
+                  </p>
                   <div className="flex items-center gap-4">
                     <p>{data?.label}</p>
                     <div className="flex justify-center items-center border border-[#E4E7EC] rounded-full w-10 h-10">

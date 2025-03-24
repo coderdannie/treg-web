@@ -12,6 +12,7 @@ import {
   getPropertyDetails,
   updateProperty,
   getAllTenantPropertyHistories,
+  getTenantsCountByStatus,
 } from '../api/properties';
 
 export const useAddProperty = (options = {}) => {
@@ -182,4 +183,16 @@ export const useUpdateProperty = (options = {}) => {
   );
 
   return { mutate, isLoading };
+};
+
+export const useGetTenantCountsByStatus = (id = '', options = {}) => {
+  const { data, isLoading, refetch } = useQuery(
+    ['getProperty', id],
+    getTenantsCountByStatus,
+    {
+      ...options,
+    }
+  );
+
+  return { data, isLoading, refetch };
 };

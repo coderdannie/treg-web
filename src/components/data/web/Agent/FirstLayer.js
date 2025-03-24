@@ -5,6 +5,7 @@ import Select from 'react-select';
 import { Link } from 'react-router-dom';
 import { useGetAllAgents } from '../../../../services/query/agents';
 import PropertyCardSkeleton from '../../../Loaders/PropertyCardSkeleton';
+import Pagination from '../../../common/Pagination';
 
 const FirstLayer = () => {
   const [values, setValues] = useState({

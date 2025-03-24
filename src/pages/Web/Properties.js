@@ -9,9 +9,12 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FcLike } from 'react-icons/fc';
 import { FcLikePlaceholder } from 'react-icons/fc';
+import Pagination from '../../components/common/Pagination.js';
 
 const Properties = () => {
   const storedFilters = JSON.parse(sessionStorage.getItem('propertyFilters'));
+  const [currentPage, setCurrentPage] = useState(1); // Add page state
+  const itemsPerPage = 25;
 
   const [filters, setFilters] = useState({
     location: '',
@@ -35,14 +38,22 @@ const Properties = () => {
   const controls = useAnimation();
   const [isLiked] = useState(true);
   const [ref, inView] = useInView({
-    triggerOnce: true, // Only trigger once
-    threshold: 0.1, // Adjust threshold if needed
+    triggerOnce: true,
+    threshold: 0.1,
   });
 
   const { filter } = useParams();
+  const [meta, setMeta] = useState({
+    totalItems: 0,
+    totalPages: 0,
+    page: 1,
+    hasNextPage: false,
+    hasPreviousPage: false,
+  });
+
   const { data, isLoading } = useGetAllPublicProperties(
-    1,
-    25,
+    currentPage,
+    itemsPerPage,
     filters.location,
     filters.propertyType,
     filters.minPrice,
@@ -50,6 +61,12 @@ const Properties = () => {
     filter.includes('Insured'),
     filter.includes('Construction')
   );
+
+  useEffect(() => {
+    if (data?.meta) {
+      setMeta(data.meta);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (filter.includes('All')) {
@@ -65,11 +82,20 @@ const Properties = () => {
 
   useEffect(() => {
     if (inView) {
-      controls.start('visible'); // Start animation when in view
+      controls.start('visible');
     }
   }, [controls, inView]);
 
-  console.log(filter);
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    // Optional: Scroll to top when page changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters, filter]);
 
   return (
     <div className="align-element pb-10">
@@ -88,7 +114,7 @@ const Properties = () => {
                 <PropertyCardSkeleton key={index} />
               ))
             ) : data?.data?.length > 0 ? (
-              data.data.map((property, index) => (
+              data.data.map((property) => (
                 <Link
                   key={property?._id}
                   className="h-full"
@@ -108,7 +134,6 @@ const Properties = () => {
 
                     <div className="p-4">
                       <p className="text-sm">
-                        {' '}
                         <span className="text-primary text-lg">•</span>
                         {property?.type}
                       </p>
@@ -127,7 +152,7 @@ const Properties = () => {
                           Amenities:
                         </span>{' '}
                         {property?.amenities?.slice(0, 3)?.map((item, i) => (
-                          <div key={i}>{`${item} ${i !== 2 ? ',' : ''}`}</div>
+                          <span key={i}>{`${item}${i !== 2 ? ', ' : ''}`}</span>
                         ))}{' '}
                         {property?.amenities?.length > 3 && '...'}
                       </p>
@@ -152,6 +177,13 @@ const Properties = () => {
               </div>
             )}
           </div>
+
+          {/* Add Pagination component */}
+          {data?.data?.length && (
+            <div className="mt-8">
+              <Pagination meta={meta} onPageChange={handlePageChange} />
+            </div>
+          )}
         </div>
       </div>
     </div>

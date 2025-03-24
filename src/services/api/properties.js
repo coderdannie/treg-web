@@ -170,3 +170,9 @@ export const updateProperty = async (id, data) => {
   const res = await axiosInstance.patch(API.UPDATE_PROPERTY(id), data);
   return res.data;
 };
+
+export const getTenantsCountByStatus = async ({ queryKey }) => {
+  const [, id] = queryKey;
+  const res = await axiosInstance.get(`${API.GET_TENANT_COUNTS}?status=${id}`);
+  return res.data;
+};
