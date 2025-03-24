@@ -44,3 +44,5 @@ export const GET_ALL_AGENTS = 'public/agents/all';
 export const RATE_AGENT_LANDLORD = (id = '') => `users/${id}/rate`;
 export const GET_AGENT = 'public/agents';
 export const GET_RENTALS = 'properties/agent/rentals';
+export const GET_AGENT_RATINGS = 'public/agents';
+export const GET_AGENT_SALES = 'public/agents';

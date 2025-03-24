@@ -15,10 +15,10 @@ const PropertyCard = ({
       <motion.div
         key={property?._id}
         className="bg-white rounded-xl h-full shadow-md overflow-hidden text-left cursor-pointer hover:shadow-xl transition-all duration-300 ease-out"
-        custom={custom} // Use the index for staggered animation
+        custom={custom}
         initial="hidden"
-        animate={controls} // Use controls to trigger animation
-        variants={cardVariants} // Pass variants for animation
+        animate={controls}
+        variants={cardVariants}
       >
         <div className="h-40 relative">
           <img
@@ -48,13 +48,13 @@ const PropertyCard = ({
                 )
               : '0.00'}
           </h3>
-          <p className="text-gray-600 text-xs gap-2 flex flex-wrap">
+          <div className="text-gray-600 text-xs gap-2 flex flex-wrap">
             <span className="font-semibold text-[#475467]">Amenities:</span>{' '}
             {property?.amenities?.slice(0, 3)?.map((item, i) => (
-              <div key={i}>{`${item} ${i !== 2 ? ',' : ''}`}</div>
+              <span key={i}>{`${item}${i !== 2 ? ', ' : ''}`}</span>
             ))}{' '}
             {property?.amenities?.length > 3 && '...'}
-          </p>
+          </div>
           <div className="bg-primary w-full h-[3px] rounded-md my-3"></div>
           <p className="text-sm text-[#475467] mt-2">
             {property?.description?.length > 20

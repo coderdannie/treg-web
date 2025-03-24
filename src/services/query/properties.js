@@ -99,6 +99,7 @@ export const useGetAllPublicProperties = (
   maxPrice = '',
   insured = '',
   newConstruction = '',
+  agentId = '',
   status = '',
   searchTerm = '',
   options = {}
@@ -114,6 +115,7 @@ export const useGetAllPublicProperties = (
       maxPrice,
       insured,
       newConstruction,
+      agentId,
       status,
       searchTerm,
     ],

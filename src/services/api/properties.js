@@ -86,6 +86,7 @@ export const getAllPublicProperties = async ({ queryKey }) => {
     maxPrice,
     insured,
     newConstruction,
+    agentId,
     status,
     searchTerm,
   ] = queryKey;
@@ -124,6 +125,9 @@ export const getAllPublicProperties = async ({ queryKey }) => {
 
   if (newConstruction) {
     query = query + `newConstruction=${newConstruction}&`;
+  }
+  if (agentId) {
+    query = query + `agentId=${agentId}`;
   }
 
   if (status) {

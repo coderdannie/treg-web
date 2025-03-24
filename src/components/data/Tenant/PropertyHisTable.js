@@ -194,10 +194,15 @@ const PropertyHisTable = ({
                         <span>View Details</span>
                       </button>
                       <button
-                        className="flex items-center w-full text-left px-4 py-2 hover:bg-gray-100"
+                        className={`flex items-center border-b gap-1 w-full text-left px-4 py-2 ${
+                          row.status === 'Paid'
+                            ? 'opacity-50 cursor-not-allowed'
+                            : 'hover:bg-gray-100'
+                        }`}
                         onClick={() => {
                           navigate(`/review/${row?.agentId?._id}`);
                         }}
+                        disabled={row.status === 'Paid'}
                       >
                         <FaStar />
                         <span>Drop Review</span>

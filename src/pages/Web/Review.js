@@ -9,79 +9,97 @@ import { useRateLandlordOrAgent } from '../../services/query/account';
 import toast from 'react-hot-toast';
 
 const Review = () => {
-  const errorToast = (message) => toast.error(message, { duration: 3000 });
-  const successToast = (message) => toast.success(message, { duration: 3000 });
+  // Toast helpers
+  const showError = (message) => toast.error(message, { duration: 3000 });
+  const showSuccess = (message) => toast.success(message, { duration: 3000 });
 
   const { id } = useParams();
   const navigate = useNavigate();
+
+  // State management
   const [ratings, setRatings] = useState({
     sociability: 0,
     responsiveness: 0,
     nonInterference: 0,
     experience: 0,
   });
-  const [feedback, setFeedback] = useState(''); // State for textarea input
+  const [feedback, setFeedback] = useState('');
+  const [hoveredRating, setHoveredRating] = useState({
+    category: null,
+    value: 0,
+  });
 
+  // Check if at least one rating is provided
+  const hasRatings = Object.values(ratings).some((rating) => rating > 0);
+
+  // Rating change handler
   const handleRatingChange = (category, rating) => {
-    setRatings((prevRatings) => ({
-      ...prevRatings,
-      [category]: rating,
-    }));
+    setRatings((prev) => ({ ...prev, [category]: rating }));
   };
 
+  // Hover handlers for better UX
+  const handleMouseEnter = (category, value) => {
+    setHoveredRating({ category, value });
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredRating({ category: null, value: 0 });
+  };
+
+  // API mutation
   const { mutate, isLoading } = useRateLandlordOrAgent({
     onSuccess: (res) => {
-      successToast(res?.message);
-      navigate('/my-properties/all');
+      showSuccess(res?.message);
+      navigate('/tenant/property');
     },
-    onError: (res) => {
-      errorToast(
-        res?.response?.data?.message || res?.message || 'An Error Occurred'
+    onError: (err) => {
+      showError(
+        err?.response?.data?.message || err?.message || 'An Error Occurred'
       );
     },
   });
 
+  // Form submission
   const handleSubmit = () => {
-    // Check if at least one rating is provided
-    if (Object.values(ratings).every((rating) => rating === 0)) {
-      errorToast('Please provide ratings in at least one category.');
+    if (!hasRatings) {
+      showError('Please provide at least one rating');
       return;
     }
 
-    // Prepare the payload
-    const payload = {
-      sociability: ratings.sociability,
-      responsiveness: ratings.responsiveness,
-      nonInterference: ratings.nonInterference,
-      experience: ratings.experience,
-      feedback: feedback,
-    };
-
-    // Send the payload to the API
-    mutate({ id, data: payload });
+    mutate({
+      id,
+      data: { ...ratings, feedback },
+    });
   };
 
-  // Memoize the renderStars function to avoid unnecessary re-renders
+  // Memoized star renderer with hover effects
   const renderStars = useMemo(
     () => (category) => {
       return (
         <div className="flex">
           {[...Array(5)].map((_, index) => {
             const ratingValue = index + 1;
+            const isHovered =
+              hoveredRating.category === category &&
+              ratingValue <= hoveredRating.value;
+            const isActive = ratingValue <= ratings[category];
+
             return (
               <FaStar
                 key={index}
-                className="cursor-pointer"
-                color={ratingValue <= ratings[category] ? '#ffc107' : '#e4e5e9'}
+                className="cursor-pointer transition-colors"
+                color={isHovered ? '#ffc107' : isActive ? '#ffc107' : '#e4e5e9'}
                 size={20}
                 onClick={() => handleRatingChange(category, ratingValue)}
+                onMouseEnter={() => handleMouseEnter(category, ratingValue)}
+                onMouseLeave={handleMouseLeave}
               />
             );
           })}
         </div>
       );
     },
-    [ratings] // Re-run only when ratings change
+    [ratings, hoveredRating]
   );
 
   return (
@@ -89,68 +107,70 @@ const Review = () => {
       style={{
         backgroundImage: `url(${vectorBg})`,
         backgroundPosition: 'center center',
-        fontFamily: 'Sansation',
       }}
     >
       <Banner />
-      <div className="px-5 w-full grid place-items-center my-10 md:my-16 text-[#333333]">
+      <div className="px-5 w-full grid place-items-center my-10 md:my-16">
         <motion.div
           initial={{ y: -50 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white p-6 md:p-8 rounded-3xl border-2 border-[#66666659] max-w-[500px] w-full"
+          className="bg-white p-6 md:p-8 rounded-3xl border-2 border-gray-200 max-w-[500px] w-full"
         >
           <div className="flex justify-end">
             <IoCloseSharp
               onClick={() => navigate(-1)}
-              className="cursor-pointer text-2xl"
+              className="cursor-pointer text-2xl hover:text-primary"
             />
           </div>
-          <div className="p-5 mt-4 border border-gray-300 rounded-md w-full">
+
+          <div className="p-5 mt-4 border border-gray-300 rounded-md">
             <h2 className="text-lg font-semibold mb-2">Rate Your Experience</h2>
             <p className="text-sm text-gray-600 mb-4">
               Rate and review your landlord and agent based on your experience
             </p>
 
-            <h3 className="text-base font-medium mb-2">Rate your Landlord</h3>
-            <p className="text-sm text-gray-600 mb-2">Categories to rate</p>
+            <p className="text-sm text-gray-600 font-medium mb-2">
+              Categories to rate
+            </p>
 
-            <div className="mb-2 flex items-center justify-between flex-wrap gap-1">
-              <label className="text-sm block">Sociability</label>
-              {renderStars('sociability')}
-            </div>
+            {/* Rating Categories */}
+            {Object.entries({
+              sociability: 'Sociability',
+              responsiveness: 'Responsiveness',
+              nonInterference: 'Non-Interference',
+              experience: 'Experience',
+            }).map(([key, label]) => (
+              <div key={key} className="mb-3 flex items-center justify-between">
+                <label className="text-sm">{label}</label>
+                {renderStars(key)}
+              </div>
+            ))}
 
-            <div className="mb-2 flex items-center justify-between flex-wrap gap-1">
-              <label className="text-sm block">Responsiveness</label>
-              {renderStars('responsiveness')}
-            </div>
-
-            <div className="mb-2 flex items-center justify-between flex-wrap gap-1">
-              <label className="text-sm block">Non-Interference</label>
-              {renderStars('nonInterference')}
-            </div>
-
-            <div className="mb-4 flex items-center justify-between flex-wrap gap-1">
-              <label className="text-sm block">Experience</label>
-              {renderStars('experience')}
-            </div>
-
-            <div>
+            {/* Feedback Textarea */}
+            <div className="mt-4">
               <label className="text-sm block mb-1">
-                Share additional feedback
+                Share additional feedback (optional)
               </label>
               <textarea
                 placeholder="Let's hear from you..."
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="w-full p-2 border border-gray-300 rounded-md min-h-[100px]"
                 value={feedback}
-                onChange={(e) => setFeedback(e.target.value)} // Handle textarea input
+                onChange={(e) => setFeedback(e.target.value)}
               />
             </div>
 
+            {/* Submit Button */}
             <button
               onClick={handleSubmit}
-              disabled={isLoading}
-              className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
+              disabled={!hasRatings || isLoading}
+              className={`mt-4 w-full text-white py-2 rounded-md transition-colors ${
+                !hasRatings
+                  ? 'bg-gray-300 cursor-not-allowed'
+                  : isLoading
+                  ? 'bg-blue-400'
+                  : 'bg-primary hover:bg-blue-600'
+              }`}
             >
               {isLoading ? 'Submitting...' : 'Submit Review'}
             </button>

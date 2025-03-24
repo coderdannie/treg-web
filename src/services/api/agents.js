@@ -37,3 +37,15 @@ export const getRentals = async ({ queryKey }) => {
   const res = await axiosInstance.get(`${API.GET_RENTALS}?${query}`);
   return res.data;
 };
+
+export const getAgentRatings = async ({ queryKey }) => {
+  const [, id] = queryKey;
+  const res = await axiosInstance.get(`${API.GET_AGENT_RATINGS}/${id}/rating`);
+  return res.data;
+};
+
+export const getAgentSales = async ({ queryKey }) => {
+  const [, id] = queryKey;
+  const res = await axiosInstance.get(`${API.GET_AGENT_SALES}/${id}/sales`);
+  return res.data;
+};

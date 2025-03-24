@@ -118,9 +118,7 @@ const MediaUpload = ({
       <div
         {...getImageProps()}
         className={`border-2 border-dashed p-6 text-center rounded-lg ${
-          isLoading || isUploading
-            ? 'opacity-50 pointer-events-none'
-            : 'cursor-pointer'
+          isLoading ? 'opacity-50 pointer-events-none' : 'cursor-pointer'
         }`}
       >
         <IoImagesOutline className="text-4xl text-primary mx-auto" />
@@ -145,7 +143,7 @@ const MediaUpload = ({
       <div
         {...getVideoProps()}
         className={`border-2 border-dashed p-6 text-center rounded-lg mt-4 ${
-          isLoading ? 'opacity-50 pointer-events-none' : 'cursor-pointer'
+          isUploading ? 'opacity-50 pointer-events-none' : 'cursor-pointer'
         }`}
       >
         <IoVideocamOutline className="text-4xl text-primary mx-auto" />

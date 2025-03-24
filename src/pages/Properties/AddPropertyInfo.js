@@ -145,7 +145,7 @@ const AddPropertyInfo = () => {
         insured: checkedItems.insured,
         newConstruction: checkedItems.newConstruction,
         state: values?.state?.value,
-        cautionFee: Number(values?.cautionFee),
+        cautionFee: Number(values?.cautionFee.replace(/\D/g, '')),
       });
     }
   };

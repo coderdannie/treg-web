@@ -1,5 +1,11 @@
 import { useQuery } from 'react-query';
-import { getAgent, getAllAgents, getRentals } from '../api/agents';
+import {
+  getAgent,
+  getAgentRatings,
+  getAgentSales,
+  getAllAgents,
+  getRentals,
+} from '../api/agents';
 
 export const useGetAllAgents = (options = {}) => {
   const { data, isLoading, refetch, isError } = useQuery(
@@ -32,6 +38,30 @@ export const useGetAllRentals = (
   const { data, isLoading, refetch } = useQuery(
     ['getAllTenantProperties', page, limit, start, end, searchTerm],
     getRentals,
+    {
+      ...options,
+    }
+  );
+
+  return { data, isLoading, refetch };
+};
+
+export const useGetAgentRatings = (id = '', options = {}) => {
+  const { data, isLoading, refetch } = useQuery(
+    ['getAgentRatings', id],
+    getAgentRatings,
+    {
+      ...options,
+    }
+  );
+
+  return { data, isLoading, refetch };
+};
+
+export const useGetAgentSales = (id = '', options = {}) => {
+  const { data, isLoading, refetch } = useQuery(
+    ['getAgentSales', id],
+    getAgentSales,
     {
       ...options,
     }

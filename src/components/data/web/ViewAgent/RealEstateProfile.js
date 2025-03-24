@@ -2,12 +2,52 @@ import React from 'react';
 import { CiMail } from 'react-icons/ci';
 import { BsTelephone } from 'react-icons/bs';
 import { GoLink } from 'react-icons/go';
+import { FaStar, FaRegStar, FaStarHalfAlt } from 'react-icons/fa';
 
 const Skeleton = ({ className }) => (
   <div className={`animate-pulse bg-gray-200 rounded-md ${className}`}></div>
 );
 
-const RealEstateProfile = ({ data, isLoading }) => {
+const RatingCategory = ({ name, value }) => {
+  const stars = [];
+  const fullStars = Math.floor(value);
+  const hasHalfStar = value % 1 >= 0.5;
+
+  for (let i = 1; i <= 5; i++) {
+    if (i <= fullStars) {
+      stars.push(<FaStar key={i} className="text-yellow-400" />);
+    } else if (i === fullStars + 1 && hasHalfStar) {
+      stars.push(<FaStarHalfAlt key={i} className="text-yellow-400" />);
+    } else {
+      stars.push(<FaRegStar key={i} className="text-yellow-400" />);
+    }
+  }
+
+  return (
+    <div className="flex items-center justify-between mb-3">
+      <span className="text-gray-600 font-medium">{name}</span>
+      <div className="flex items-center">
+        <div className="flex mr-2">{stars}</div>
+        <span className="text-gray-700 font-medium">{value.toFixed(1)}</span>
+      </div>
+    </div>
+  );
+};
+
+const RealEstateProfile = ({ data, isLoading, ratings, sales }) => {
+  const averageRating = ratings?.length
+    ? ratings.reduce((sum, rating) => {
+        return (
+          sum +
+          (rating.sociability +
+            rating.responsiveness +
+            rating.nonInterference +
+            rating.experience) /
+            4
+        );
+      }, 0) / ratings.length
+    : 0;
+
   return (
     <div className="mx-auto">
       <div className="grid gap-7 rounded-lg space-y-6">
@@ -44,19 +84,19 @@ const RealEstateProfile = ({ data, isLoading }) => {
                     {data?.professionalDetails?.yearsOfExperience || 'N/A'}{' '}
                     Years Experience
                   </span>
-                  <span>12 Sales</span>
-                  <span>4.8/5 rating</span>
+                  <span>{sales} Sales</span>
+                  <span>{averageRating.toFixed(1)}/5 rating</span>
                 </div>
               </>
             )}
           </div>
           {isLoading ? (
-            <div className="flex space-x-2 mt-4 md:mt-0 ml-auto">
+            <div className="flex space-x-2 mt-4  mx-auto  md:mt-0 md:ml-auto">
               <Skeleton className="w-24 h-10" />
               <Skeleton className="w-32 h-10" />
             </div>
           ) : (
-            <div className="flex space-x-2 mt-4 md:mt-0 ml-auto">
+            <div className="flex space-x-2 mt-4  md:mt-0 md:ml-auto">
               <button className="btn btn-outline btn-primary flex items-center">
                 <CiMail /> Message
               </button>
@@ -145,34 +185,6 @@ const RealEstateProfile = ({ data, isLoading }) => {
               </div>
             )}
           </div>
-
-          {/* Client Testimonials */}
-          <div className="border-2 text-[#757575] border-[#D4D0D0] rounded-md md:flex-[1.4]">
-            <h3 className="pt-[23px] pb-4 pl-7 border-b-2 border-[#D4D0D0]">
-              Client Testimonials
-            </h3>
-            {isLoading ? (
-              <div className="px-7 pt-[29px] pb-10">
-                <Skeleton className="w-full h-4 mb-2" />
-                <Skeleton className="w-full h-4 mb-2" />
-                <Skeleton className="w-full h-4 mb-2" />
-                <Skeleton className="w-full h-4" />
-              </div>
-            ) : (
-              <div className="grid gap-1 px-7 pt-[29px] pb-10 text-sm md:text-base">
-                <p>
-                  "Working with Ola was a seamless experience! He was always
-                  available to answer my questions and found a place that
-                  checked every box on my list." – Jennifer K.
-                </p>
-                <p>
-                  "Ola’s knowledge of the market and his dedication to his
-                  clients are unmatched. I couldn’t have asked for a better
-                  experience!" – Michael S.
-                </p>
-              </div>
-            )}
-          </div>
         </div>
 
         {/* Collaborate with Ola */}
@@ -237,6 +249,117 @@ const RealEstateProfile = ({ data, isLoading }) => {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Ratings Section - Similar to Fiverr */}
+        <div className="border-2 border-[#D4D0D0] rounded-md p-6">
+          <h3 className="text-xl font-medium mb-6">Customer Reviews</h3>
+
+          {isLoading ? (
+            <div className="space-y-4">
+              <Skeleton className="w-full h-4" />
+              <Skeleton className="w-full h-4" />
+              <Skeleton className="w-full h-4" />
+            </div>
+          ) : ratings?.length ? (
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Average Rating */}
+              <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="flex items-center mb-4">
+                  <div className="text-4xl font-bold mr-4">
+                    {averageRating.toFixed(1)}
+                  </div>
+                  <div>
+                    <div className="flex items-center mb-1">
+                      {[...Array(5)].map((_, i) => (
+                        <span key={i}>
+                          {i < Math.floor(averageRating) ? (
+                            <FaStar className="text-yellow-400 text-xl" />
+                          ) : i === Math.floor(averageRating) &&
+                            averageRating % 1 >= 0.5 ? (
+                            <FaStarHalfAlt className="text-yellow-400 text-xl" />
+                          ) : (
+                            <FaRegStar className="text-yellow-400 text-xl" />
+                          )}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="text-gray-600">
+                      Based on {ratings.length} review
+                      {ratings.length !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Rating Categories */}
+              <div className="space-y-4">
+                <RatingCategory
+                  name="Sociability"
+                  value={
+                    ratings.reduce((sum, r) => sum + r.sociability, 0) /
+                    ratings.length
+                  }
+                />
+                <RatingCategory
+                  name="Responsiveness"
+                  value={
+                    ratings.reduce((sum, r) => sum + r.responsiveness, 0) /
+                    ratings.length
+                  }
+                />
+                <RatingCategory
+                  name="Non-Interference"
+                  value={
+                    ratings.reduce((sum, r) => sum + r.nonInterference, 0) /
+                    ratings.length
+                  }
+                />
+                <RatingCategory
+                  name="Experience"
+                  value={
+                    ratings.reduce((sum, r) => sum + r.experience, 0) /
+                    ratings.length
+                  }
+                />
+              </div>
+
+              {/* Individual Reviews */}
+              <div className="md:col-span-2 space-y-6">
+                <h4 className="font-medium text-lg">Recent Feedback</h4>
+                {ratings.map((rating, index) => (
+                  <div key={index} className="border-b pb-4 last:border-0">
+                    <div className="flex items-center mb-2">
+                      <div className="font-medium mr-2">
+                        {rating.tenantId?.firstName} {rating.tenantId?.lastName}
+                      </div>
+                      <div className="flex text-yellow-400 text-sm">
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i}>
+                            {i <
+                            Math.floor(
+                              (rating.sociability +
+                                rating.responsiveness +
+                                rating.nonInterference +
+                                rating.experience) /
+                                4
+                            ) ? (
+                              <FaStar />
+                            ) : (
+                              <FaRegStar />
+                            )}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-gray-600">{rating.feedback}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="text-gray-600">No reviews yet</p>
+          )}
         </div>
       </div>
     </div>
