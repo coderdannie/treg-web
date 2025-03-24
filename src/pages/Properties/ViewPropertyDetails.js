@@ -41,6 +41,7 @@ const ViewPropertyDetails = () => {
     ownerName: '',
     insurerName: '',
     riskInsured: '',
+    cautionFee: '',
   });
 
   const { mutate, isLoading: isUpdating } = useUpdateProperty({
@@ -72,6 +73,15 @@ const ViewPropertyDetails = () => {
             minimumFractionDigits: 2,
           }
         ) || '0.00';
+
+      const formattedCautionFee =
+        Number(data?.data?.cautionFee?.$numberDecimal)?.toLocaleString(
+          undefined,
+          {
+            minimumFractionDigits: 2,
+          }
+        ) || '0.00';
+
       setSelectedAmenities(data?.data?.amenities);
       setCheckedItems({
         ...checkedItems,
@@ -83,13 +93,14 @@ const ViewPropertyDetails = () => {
         ...values,
         title: data.data.title || 'N/A',
         type: action === 'view' ? formattedType : null,
-        location: data?.data?.location || 'N/A',
+        location: data?.data?.address || 'N/A',
         amount: formattedPrice || 'N/A',
         description: data?.data?.description || 'N/A',
         noOfRooms: data?.data?.numberOfRooms || 'N/A',
         ownerName: data?.data?.propertyOwner || 'N/A',
         insurerName: data?.data?.insuranceCompany || 'N/A',
         riskInsured: data?.data?.insuranceType || 'N/A',
+        cautionFee: formattedCautionFee || 'N/A',
       });
     }
   }, [data, id, action]);
@@ -185,6 +196,33 @@ const ViewPropertyDetails = () => {
     },
     [action]
   );
+
+  const updateTextViews2 = (event) => {
+    let inputValue = event.target.value;
+
+    inputValue = inputValue.replace(/[^0-9.]/g, '');
+
+    // Prevent multiple decimal points
+    const parts = inputValue.split('.');
+    if (parts.length > 2) return;
+
+    // Format the number with commas (only before the decimal point)
+    const integerPart = parts[0];
+    const formattedIntegerPart = integerPart.replace(
+      /\B(?=(\d{3})+(?!\d))/g,
+      ','
+    );
+
+    const decimalPart = parts[1] !== undefined ? `.${parts[1]}` : '';
+
+    // Combine integer and decimal parts
+    const formattedValue = formattedIntegerPart + decimalPart;
+
+    setValues((prevValues) => ({
+      ...prevValues,
+      cautionFee: formattedValue,
+    }));
+  };
 
   const handleSubmit = () => {
     mutate({
@@ -316,15 +354,27 @@ const ViewPropertyDetails = () => {
             </p>
           </div>
           <FormInput
-            label="Price per year"
+            label={`Price Per ${rentalPeriod ? 'Year' : 'Month'}`}
             name="amount"
+            readOnly={action === 'view'}
             type="tel"
             value={values.amount}
-            readOnly={action === 'view'}
             inputMode="decimal"
             pattern="[0-9.,]+"
             holder="Enter Amount"
             onChange={updateTextViews}
+            placeholder="Enter Amount"
+          />
+          <FormInput
+            label="Caution fee(optional)"
+            name="cautionFee"
+            readOnly={action === 'view'}
+            type="tel"
+            value={values.cautionFee}
+            inputMode="decimal"
+            pattern="[0-9.,]+"
+            holder="Enter Amount"
+            onChange={updateTextViews2}
             placeholder="Enter Amount"
           />
           <FormInput
