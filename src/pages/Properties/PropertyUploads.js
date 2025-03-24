@@ -35,7 +35,7 @@ const PropertyUploads = () => {
       onSuccess: (res) => {
         successToast(res?.message);
         mutatePayment({
-          amount: Number(propertyDetails?.data?.pricePerYear?.$numberDecimal),
+          amount: Number(propertyDetails?.data?.rentPrice?.$numberDecimal),
           propertyId: propertyDetails?.data?._id,
         });
       },

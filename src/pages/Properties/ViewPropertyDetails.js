@@ -66,7 +66,7 @@ const ViewPropertyDetails = () => {
         ? { value: defaultType.value, label: defaultType.name }
         : null;
       const formattedPrice =
-        Number(data?.data?.pricePerYear?.$numberDecimal)?.toLocaleString(
+        Number(data?.data?.rentPrice?.$numberDecimal)?.toLocaleString(
           undefined,
           {
             minimumFractionDigits: 2,
@@ -195,7 +195,7 @@ const ViewPropertyDetails = () => {
         description: values.description,
         numberOfRooms: Number(values.noOfRooms),
         location: values?.location,
-        pricePerYear: Number(values?.amount.replace(/\D/g, '')),
+        rentPrice: Number(values?.amount.replace(/\D/g, '')),
         amenities: selectedAmenities,
         rentalPeriod: rentalPeriod ? 'Yearly' : 'Monthly',
         insured: checkedItems.insured,

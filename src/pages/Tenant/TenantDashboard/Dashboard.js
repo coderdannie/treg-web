@@ -75,7 +75,7 @@ const Dashboard = () => {
                           <strong>Price Per Year:</strong>
                           {''} ₦
                           {Number(
-                            rentedProperty?.propertyId?.pricePerYear
+                            rentedProperty?.propertyId?.rentPrice
                               ?.$numberDecimal
                           )?.toLocaleString(undefined, {
                             minimumFractionDigits: 2,
@@ -96,7 +96,7 @@ const Dashboard = () => {
                     <p className="text-gray-700">
                       <strong>Rent Due:</strong> ₦
                       {Number(
-                        rentedProperty.pricePerYear?.$numberDecimal
+                        rentedProperty.rentPrice?.$numberDecimal
                       )?.toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                       }) || '0.00'}{' '}

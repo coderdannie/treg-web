@@ -313,11 +313,12 @@ const FirstLayer = () => {
 
                       <p className="text-[#616161] font-semibold text-xs md:text-sm">
                         ₦
-                        {Number(
-                          dat?.pricePerYear?.$numberDecimal
-                        )?.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                        }) || '0.00'}
+                        {Number(dat?.rentPrice?.$numberDecimal)?.toLocaleString(
+                          undefined,
+                          {
+                            minimumFractionDigits: 2,
+                          }
+                        ) || '0.00'}
                         /{dat?.rentalPeriod}
                       </p>
                     </div>

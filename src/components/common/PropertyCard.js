@@ -40,7 +40,7 @@ const PropertyCard = ({
           <h3 className="text-xl md:text-2xl font-semibold text-[#101828]">
             ₦
             {property
-              ? Number(property?.pricePerYear?.$numberDecimal).toLocaleString(
+              ? Number(property?.rentPrice?.$numberDecimal).toLocaleString(
                   undefined,
                   {
                     minimumFractionDigits: 2,

@@ -62,7 +62,7 @@ const TransactionsTable = ({
 
   const handleActivate = (row) => {
     mutate({
-      amount: row?.pricePerYear?.$numberDecimal,
+      amount: row?.rentPrice?.$numberDecimal,
       propertyId: row?._id,
     });
   };
@@ -120,7 +120,7 @@ const TransactionsTable = ({
             <td className="whitespace-nowrap px-6 py-4">Flat</td>
             <td className="whitespace-nowrap px-6 py-4">
               ₦
-              {Number(row.pricePerYear?.$numberDecimal)?.toLocaleString(
+              {Number(row.rentPrice?.$numberDecimal)?.toLocaleString(
                 undefined,
                 {
                   minimumFractionDigits: 2,

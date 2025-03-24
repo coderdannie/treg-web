@@ -116,7 +116,7 @@ const Properties = () => {
                         ₦
                         {property
                           ? Number(
-                              property?.pricePerYear?.$numberDecimal
+                              property?.rentPrice?.$numberDecimal
                             ).toLocaleString(undefined, {
                               minimumFractionDigits: 2,
                             })

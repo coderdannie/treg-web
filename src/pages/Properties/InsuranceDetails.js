@@ -54,7 +54,7 @@ const InsuranceDetails = () => {
       description: description,
       numberOfRooms: Number(noOfRooms),
       location: propertyLocation,
-      pricePerYear: Number(amount.replace(/\D/g, '')),
+      rentPrice: Number(amount.replace(/\D/g, '')),
       amenities: selectedAmenities,
       rentalPeriod: rentalPeriod ? 'Yearly' : 'Monthly',
       insured: checkedItems.insured,

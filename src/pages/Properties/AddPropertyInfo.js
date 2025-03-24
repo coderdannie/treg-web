@@ -139,7 +139,7 @@ const AddPropertyInfo = () => {
         description: values.description,
         numberOfRooms: Number(values.noOfRooms),
         address: values?.location,
-        pricePerYear: Number(values?.amount.replace(/\D/g, '')),
+        rentPrice: Number(values?.amount.replace(/\D/g, '')),
         amenities: selectedAmenities,
         rentalPeriod: rentalPeriod ? 'Yearly' : 'Monthly',
         insured: checkedItems.insured,

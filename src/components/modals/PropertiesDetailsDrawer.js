@@ -76,9 +76,9 @@ const PropertyDetailsDrawer = ({ isOpen, onClose, propertyDetails }) => {
           <li className="hover:bg-transparent">
             <div className="mb-2">
               <strong>Monthly Rent:</strong> ₦
-              {propertyDetails?.propertyId?.pricePerYear?.$numberDecimal
+              {propertyDetails?.propertyId?.rentPrice?.$numberDecimal
                 ? Number(
-                    propertyDetails.propertyId.pricePerYear.$numberDecimal
+                    propertyDetails.propertyId.rentPrice.$numberDecimal
                   ).toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   })

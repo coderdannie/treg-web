@@ -46,7 +46,7 @@ const EscrowModal = ({ isOpen, onClose, data }) => {
   };
 
   const totalAmount =
-    Number(data?.pricePerYear?.$numberDecimal) * duration +
+    Number(data?.rentPrice?.$numberDecimal) * duration +
     cautionFee +
     escrowCharges;
 
@@ -138,7 +138,7 @@ const EscrowModal = ({ isOpen, onClose, data }) => {
               <div className="mt-4 text-left ">
                 <p className="text-gray-700">
                   <strong className="font-medium">Rent Amount:</strong> ₦{' '}
-                  {data?.pricePerYear?.$numberDecimal?.toLocaleString()}
+                  {data?.rentPrice?.$numberDecimal?.toLocaleString()}
                 </p>
                 {cautionFee > 0 && (
                   <p className="text-gray-700">

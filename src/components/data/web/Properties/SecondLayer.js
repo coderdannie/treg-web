@@ -95,7 +95,7 @@ const SecondLayer = ({ data }) => {
               <p className="text-xl md:text-2xl font-semibold text-[#101828]">
                 ₦
                 {data
-                  ? Number(data?.pricePerYear?.$numberDecimal).toLocaleString(
+                  ? Number(data?.rentPrice?.$numberDecimal).toLocaleString(
                       undefined,
                       {
                         minimumFractionDigits: 2,
