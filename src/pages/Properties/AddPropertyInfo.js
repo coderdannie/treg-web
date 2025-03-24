@@ -150,6 +150,8 @@ const AddPropertyInfo = () => {
     }
   };
 
+  console.log(values);
+
   return (
     <>
       <button

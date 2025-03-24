@@ -63,7 +63,7 @@ const InsuranceDetails = () => {
       insuranceCompany: values?.insurerName,
       insuranceType: values?.riskInsured,
       state: values?.state?.value,
-      cautionFee: Number(values?.cautionFee),
+      cautionFee: Number(values?.cautionFee.replace(/\D/g, '')),
     });
   };
 
