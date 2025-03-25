@@ -42,6 +42,7 @@ const ViewPropertyDetails = () => {
     insurerName: '',
     riskInsured: '',
     cautionFee: '',
+    state: '',
   });
 
   const { mutate, isLoading: isUpdating } = useUpdateProperty({
@@ -101,6 +102,7 @@ const ViewPropertyDetails = () => {
         insurerName: data?.data?.insuranceCompany || 'N/A',
         riskInsured: data?.data?.insuranceType || 'N/A',
         cautionFee: formattedCautionFee || 'N/A',
+        state: data?.data?.state,
       });
     }
   }, [data, id, action]);
@@ -336,6 +338,15 @@ const ViewPropertyDetails = () => {
             readOnly={action === 'view'}
             onChange={handleInputChange}
             placeholder="123, Adetokunbo Way, Allen Avenue, Lagos"
+          />
+          <FormInput
+            label="State"
+            name="state"
+            type="text"
+            value={values.state}
+            readOnly={action === 'view'}
+            onChange={handleInputChange}
+            placeholder="Lagos"
           />
           <div className="flex flex-col">
             <label className="pb-2">Property Description</label>

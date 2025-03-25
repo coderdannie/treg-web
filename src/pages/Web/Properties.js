@@ -179,7 +179,7 @@ const Properties = () => {
           </div>
 
           {/* Add Pagination component */}
-          {data?.data?.length && (
+          {data?.data?.length > 0 && (
             <div className="mt-8">
               <Pagination meta={meta} onPageChange={handlePageChange} />
             </div>

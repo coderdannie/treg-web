@@ -31,7 +31,7 @@ export default function PhotoGallery({ data }) {
   const handlePrevious = () => {
     if (!data?.photos || !activePhoto) return; // Guard clause
     const currentIndex = data.photos.findIndex(
-      (photo) => photo?.propertyId === activePhoto?.propertyId
+      (photo) => photo?.photoLink === activePhoto?.photoLink
     );
     const previousIndex =
       (currentIndex - 1 + data.photos.length) % data.photos.length;
@@ -42,7 +42,7 @@ export default function PhotoGallery({ data }) {
   const handleNext = () => {
     if (!data?.photos || !activePhoto) return; // Guard clause
     const currentIndex = data.photos.findIndex(
-      (photo) => photo?.propertyId === activePhoto?.propertyId
+      (photo) => photo?.photoLink === activePhoto?.photoLink
     );
     const nextIndex = (currentIndex + 1) % data.photos.length;
     setActivePhoto(data.photos[nextIndex]);
@@ -101,9 +101,9 @@ export default function PhotoGallery({ data }) {
         >
           {data.photos?.map((photo) => (
             <div
-              key={photo?.propertyId}
+              key={photo?.photoLink}
               className={`relative flex-shrink-0 w-32 h-20 md:w-40 md:h-24 cursor-pointer rounded-md transition-transform duration-200 border-2 ${
-                photo?.propertyId === activePhoto?.propertyId
+                photo?.photoLink === activePhoto?.photoLink
                   ? 'border-blue-500 scale-110'
                   : 'border-transparent hover:scale-105'
               }`}

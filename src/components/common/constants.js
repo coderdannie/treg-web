@@ -477,7 +477,7 @@ export const whyChooseTreg = [
 export const dashboardData = [
   {
     id: 1,
-    label: 'All Listing',
+    label: 'All Listings',
     value: '1.01',
   },
   {
