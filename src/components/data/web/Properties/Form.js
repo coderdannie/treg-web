@@ -4,19 +4,23 @@ import {
   contactAgentInitValues,
   validateContactSchema,
 } from '../../../../utils/Validation';
-import FormInput from '../../../common/FormInput';
 import { FiCalendar } from 'react-icons/fi';
 import { formatDate } from '../../../../utils/helper';
 import Calendar from 'react-calendar';
+import { FaCalendarAlt } from 'react-icons/fa';
 
-const Contact = () => {
+const Contact = ({ workingHours }) => {
   const [isLoading] = useState(false);
   const [showStartDate, setShowStartDate] = useState(false);
+  const [showTourCalendar, setShowTourCalendar] = useState(false);
+  const [selectedTourDates, setSelectedTourDates] = useState([]);
+  const [tourDate, setTourDate] = useState(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (event.target.closest('.box') === null) {
         setShowStartDate(false);
+        setShowTourCalendar(false);
       }
     };
 
@@ -26,9 +30,41 @@ const Contact = () => {
     };
   }, []);
 
-  const handleSubmit = () => {};
+  const handleTourDateSelect = (date) => {
+    const formattedDate = formatDate(date);
+
+    if (selectedTourDates.includes(formattedDate)) {
+      setSelectedTourDates(
+        selectedTourDates.filter((d) => d !== formattedDate)
+      );
+    } else {
+      if (selectedTourDates.length < 3) {
+        setSelectedTourDates([...selectedTourDates, formattedDate]);
+      }
+    }
+    setShowTourCalendar(false);
+  };
+
+  const handleSubmit = () => {
+    // Submit logic with selectedTourDates
+  };
+
+  const tileDisabled = ({ date }) => {
+    // Disable past dates
+    return date < new Date(new Date().setHours(0, 0, 0, 0));
+  };
+
+  const maxDate = new Date();
+  maxDate.setHours(0, 0, 0, 0);
+
+  const tileClassName = ({ date, view }) => {
+    if (view === 'month' && date < maxDate) {
+      return 'disabled-date';
+    }
+  };
+
   return (
-    <section className="border-2 py-6  border-[#BDBDBD] px-[25px] min-991:py-[25px] rounded-2xl">
+    <section className="border-2 py-4 border-[#BDBDBD] px-[25px] min-991:py-[25px] rounded-2xl">
       <div className="grid mt-5 gap-2">
         <Formik
           initialValues={contactAgentInitValues}
@@ -47,36 +83,96 @@ const Contact = () => {
             dirty,
           }) => (
             <Form onSubmit={handleSubmit}>
-              <FormInput
-                label="Enter Phone number"
-                name="phoneNo"
-                type="Phone number"
-                value={values.phoneNo}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.phoneNo && errors.phoneNo}
-                placeholder="Enter your Phone number"
-              />
-              {/* Start Date */}
-              <div className="w-full box">
-                <p className=" label-text pb-2">Desired move-in date</p>
-                <div className=" w-full relative">
+              <div className="">
+                <h2 className="text-lg text-center font-semibold  text-[#101828]">
+                  Request a tour
+                </h2>
+              </div>
+              <div className="mt-2 mb-6">
+                <h2 className="font-medium  text-[#182135]">
+                  Select Tour Dates
+                </h2>
+                <p className="text-sm text-[#6B7280]">
+                  Choose up to 3 available days for your tour
+                </p>
+
+                {/* Tour Date Picker */}
+                <div className="w-full box mt-3">
+                  <div className="w-full relative">
+                    <div
+                      className={`flex gap-4 border-2 border-[#E5E7EB] h-[46px] w-full rounded-lg cursor-pointer justify-between items-center p-3`}
+                      onClick={() => setShowTourCalendar((prev) => !prev)}
+                    >
+                      <p className="text-sm text-[#111827]">
+                        {selectedTourDates.length > 0
+                          ? `${selectedTourDates.length} date(s) selected`
+                          : 'Select tour dates'}
+                      </p>
+                      <FaCalendarAlt className="h-4 w-4 text-[#6B7280]" />
+                    </div>
+
+                    {showTourCalendar && (
+                      <div className="absolute max-w-[350px] mt-2 w-full z-30 bg-white shadow-lg rounded-lg border border-[#E5E7EB] p-2">
+                        <Calendar
+                          onChange={handleTourDateSelect}
+                          value={tourDate}
+                          tileDisabled={tileDisabled}
+                          selectRange={false}
+                          minDate={new Date()}
+                          tileClassName={tileClassName}
+                        />
+                        <div className="mt-2 text-xs text-[#6B7280]">
+                          Click dates to select (max 3)
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 mt-3 ">
+                  <p className="text-sm font-medium">Work Hours:</p>
+                  <span className=" font-semibold"> {workingHours}</span>
+                </div>
+                {/* Selected Dates Display */}
+                {selectedTourDates.length > 0 && (
+                  <div className="mt-4">
+                    <p className="text-sm text-[#6B7280] mb-2">
+                      Selected tour dates:
+                    </p>
+                    <div className="space-y-2">
+                      {selectedTourDates.map((date) => (
+                        <div
+                          key={date}
+                          className="bg-[#F3F4F6] px-3 py-2 rounded-lg text-sm flex items-center"
+                        >
+                          <FaCalendarAlt className="mr-2 text-[#6B7280]" />
+                          {date}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Move-in Date Picker */}
+              <div className="w-full box mb-6">
+                <p className="text-sm font-medium text-[#111827] pb-2">
+                  Desired move-in date
+                </p>
+                <div className="w-full relative">
                   <div
-                    className={`flex  gap-4 border-2  border-opacity-30 border-[#94A3B8] h-[46px] w-full rounded-[10px] cursor-pointer ${
+                    className={`flex gap-4 border-2 border-[#E5E7EB] h-[46px] w-full rounded-lg cursor-pointer ${
                       values.date ? 'justify-between' : 'justify-end'
-                    } items-center p-[10px]`}
+                    } items-center p-3`}
                     onClick={() => setShowStartDate((prev) => !prev)}
                   >
-                    <p className="text-xs text-[#292D32]">
-                      {values.date || 'Pick date'}
+                    <p className="text-sm text-[#111827]">
+                      {values.date || 'Select date'}
                     </p>
-                    <div>
-                      <FiCalendar className="mr-2 h-4 w-4 text-[#5B5B5B]" />
-                    </div>
+                    <FiCalendar className="h-4 w-4 text-[#6B7280]" />
                   </div>
 
                   {showStartDate && (
-                    <div className="absolute max-w-[350px] bottom-[70px] w-full z-30">
+                    <div className="absolute max-w-[350px] mt-2 w-full z-30 bg-white shadow-lg rounded-lg border border-[#E5E7EB] p-2">
                       <Calendar
                         onChange={(e) => {
                           setValues({
@@ -84,36 +180,48 @@ const Contact = () => {
                             date: formatDate(e),
                             issuedDate: formatDate(new Date()),
                           });
-                          //   setShowDueDate(false);
+                          setShowStartDate(false);
                         }}
                         value={values?.date}
-                        // tileDisabled={disableTile}
-                        // tileClassName={tileClassName}
+                        minDate={new Date()}
+                        tileDisabled={tileDisabled}
+                        tileClassName={tileClassName}
+                        className="border-0"
                       />
                     </div>
                   )}
                 </div>
               </div>
-              <div className="w-full mt-5">
+
+              {/* Additional Notes */}
+              <div className="w-full">
+                <label className="block text-sm font-medium text-[#111827] mb-2">
+                  Additional notes (optional)
+                </label>
                 <textarea
                   name="details"
                   value={values.details}
                   onChange={handleChange}
-                  className="textarea textarea-bordered border-2 w-full"
-                  placeholder="Bio"
+                  className="textarea w-full border-2 border-[#E5E7EB] rounded-lg focus:border-[#1E40AF] focus:ring-1 focus:ring-[#1E40AF]"
+                  placeholder="Any special requests or questions"
+                  rows={4}
                 ></textarea>
               </div>
+
+              {/* Submit Button */}
               <button
                 type="submit"
-                className={`py-3 w-full rounded-xl text-white mt-6 ${
-                  isValid && dirty ? 'bg-primary' : 'bg-gray-300'
+                className={`py-3 w-full rounded-lg text-white mt-6 font-medium ${
+                  isValid && dirty && selectedTourDates.length > 0
+                    ? 'bg-[#1E40AF] hover:bg-[#1E3A8A]'
+                    : 'bg-gray-300 cursor-not-allowed'
                 }`}
-                disabled={!isValid || !dirty}
+                disabled={!isValid || !dirty || selectedTourDates.length === 0}
               >
                 {isLoading ? (
                   <span className="loading loading-dots loading-xs"></span>
                 ) : (
-                  'Contact Agent'
+                  'Request Tour'
                 )}
               </button>
             </Form>
@@ -123,4 +231,5 @@ const Contact = () => {
     </section>
   );
 };
+
 export default Contact;

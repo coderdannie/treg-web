@@ -23,13 +23,18 @@ import AuthModal from '../../../modals/AuthModal';
 const SecondLayer = ({ data }) => {
   const user = JSON.parse(sessionStorage.getItem('user'));
   const [selectedDates, setSelectedDates] = useState([]);
+  const [availableWeeks, setAvailableWeeks] = useState([]);
+  useEffect(() => {
+    if (data) {
+      setAvailableWeeks(
+        JSON.parse(data?.agentId?.supportingDocument?.daysAvailable)
+      );
+    }
+  }, []);
+
+  console.log(data?.agentId?.daysAvailable);
   const maxDates = 3;
-  const availableDates = [
-    'Thursday - Nov 4',
-    'Friday - Nov 5',
-    'Saturday - Nov 6',
-    'Sunday - Nov 7',
-  ];
+
   const [isShow, setIsShow] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -156,33 +161,12 @@ const SecondLayer = ({ data }) => {
             </div>
 
             {/* Request a Tour Section */}
-            <div className="mt-4">
-              <h2 className="text-lg font-semibold  text-[#101828]">
-                Request a tour
-              </h2>
-              <p className="text-sm">
-                Start by selecting a date, you can select up to 3 dates
-              </p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {availableDates.map((date) => (
-                  <button
-                    key={date}
-                    className={`btn ${
-                      selectedDates.includes(date)
-                        ? 'btn-primary'
-                        : 'bg-[#E7F2FF] text-primary'
-                    }`}
-                    onClick={() => handleDateSelection(date)}
-                  >
-                    <FaCalendarAlt className="mr-2" /> {date}
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
         <div className=" min-991:w-[40%] w-full mt-7 ">
-          <Form />
+          <Form
+            workingHours={data?.agentId?.supportingDocument?.workingHours}
+          />
           {!isLandlordOrAgent && (
             <div className="border border-[#C8C8C8] mt-7 rounded-xl py-6 px-5">
               <p>Ready to secure this property?</p>

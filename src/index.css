@@ -188,10 +188,6 @@ body {
   height: 120px !important;
   border-radius: 8px !important;
 }
-.splide__arrow {
-  /* top: -300px !important; */
-}
-/* Responsive layout for mobile */
 
 @media (max-width: 880px) {
   .carousel-container {

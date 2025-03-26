@@ -2,27 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import { MediaPlayer } from '@vidstack/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const videos = [
-  {
-    id: 1,
-    title: 'Sample Video 1',
-    videoLink: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    thumbnail: '/assets/h3.jpeg',
-  },
-  {
-    id: 2,
-    title: 'Sample Video 2',
-    videoLink: 'https://www.w3schools.com/html/movie.mp4',
-    thumbnail: '/assets/h3.jpeg',
-  },
-  {
-    id: 3,
-    title: 'Sample Video 3',
-    videoLink: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    thumbnail: '/assets/h3.jpeg',
-  },
-];
-
 export default function VideoTour({ data }) {
   const [activeVideo, setActiveVideo] = useState(null);
   const [zoom, setZoom] = useState(1);
@@ -102,9 +81,9 @@ export default function VideoTour({ data }) {
         >
           {data?.videos?.map((video) => (
             <div
-              key={video?.propertyId}
+              key={video?.videoLink}
               className={`relative flex-shrink-0 w-40 h-24 cursor-pointer rounded-md transition-transform duration-200 border-2 ${
-                video?.propertyId === activeVideo.propertyId
+                video?.videoLink === activeVideo.videoLink
                   ? 'border-blue-500 scale-110'
                   : 'border-transparent hover:scale-105'
               }`}
