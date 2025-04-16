@@ -46,7 +46,7 @@ export const ChatProvider = ({ children }) => {
         id: currentChat?.participants?._id,
       });
     }
-  }, [singleChat, mutate, currentChat?.participants?._id]);
+  }, [singleChat]);
 
   useEffect(() => {
     if (!singleChat?.data || !currentChat?.participants?._id) return;
