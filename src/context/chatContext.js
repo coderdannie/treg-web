@@ -7,7 +7,7 @@ import React, {
   useRef,
 } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useGetSingleChat } from '../services/query/chat';
+import { useGetSingleChat, useGetSingleCharts } from '../services/query/chat';
 import isEqual from 'lodash.isequal';
 
 export const ChatContext = createContext({
@@ -29,24 +29,33 @@ export const ChatProvider = ({ children }) => {
   const [conversations, setConversations] = useState({});
   const [isInitialState, setIsInitialState] = useState(true);
   const prevMessagesRef = useRef({});
+
+  const { data: singleChat, isLoading: isChartLoading } = useGetSingleCharts(
+    currentChat?.participants?._id,
+    {
+      enabled: !!currentChat?.participants?._id,
+      refetchOnWindowFocus: true,
+    }
+  );
+
+  // useEffect(()=>{
+  //   refetch()
+  // },[])
   // const {
+  //   mutate,
   //   data: singleChat,
   //   isLoading: isChartLoading,
-  //   refetch,
-  // } = useGetSingleCharts(currentChat?.participants?._id);
-  const {
-    mutate,
-    data: singleChat,
-    isLoading: isChartLoading,
-  } = useGetSingleChat();
+  // } = useGetSingleChat({
+  //   refetchOnWindowFocus: true,
+  // });
   // Update conversations when singleChat data changes
-  useEffect(() => {
-    if (currentChat?.participants?._id) {
-      mutate({
-        id: currentChat?.participants?._id,
-      });
-    }
-  }, [currentChat?.participants?._id, mutate]);
+  // useEffect(() => {
+  //   if (currentChat?.participants?._id) {
+  //     mutate({
+  //       id: currentChat?.participants?._id,
+  //     });
+  //   }
+  // }, [currentChat?.participants?._id, mutate]);
 
   useEffect(() => {
     if (!singleChat?.data || !currentChat?.participants?._id) return;
@@ -55,8 +64,11 @@ export const ChatProvider = ({ children }) => {
     const newMessages = singleChat?.data;
     const prevMessages = prevMessagesRef.current[chatId] || [];
 
-    // Only update if messages have changed
-    if (!isEqual(prevMessages, newMessages)) {
+    // Compare just the message IDs instead of full deep equality
+    const newMessageIds = newMessages.map((m) => m.id).join(',');
+    const prevMessageIds = prevMessages.map((m) => m.id).join(',');
+
+    if (newMessageIds !== prevMessageIds) {
       prevMessagesRef.current[chatId] = newMessages;
       setConversations((prev) => ({
         ...prev,

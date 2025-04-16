@@ -22,7 +22,7 @@ const Login = () => {
 
   useEffect(() => {
     if (shouldNavigate) {
-      navigate('/');
+      navigate('/dashboard');
     }
   }, [shouldNavigate, navigate]);
 
@@ -34,7 +34,7 @@ const Login = () => {
       }
 
       setShouldNavigate(true);
-      navigate('/dashboard');
+      // navigate('/dashboard');
     },
     onError: (res) => {
       errorToast(
