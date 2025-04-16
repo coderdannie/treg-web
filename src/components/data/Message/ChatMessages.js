@@ -50,7 +50,6 @@ export const ChatMessages = () => {
     bottomRef.current?.scrollIntoView();
   }, [currentChatConversations, currentChat]);
 
-  // If no chat is selected, show a placeholder
   if (!currentChat) {
     return (
       <div className="flex items-center justify-center h-full text-gray-500">
@@ -59,7 +58,6 @@ export const ChatMessages = () => {
     );
   }
 
-  // If messages are loading, show a loading indicator
   if (isChatLoading) {
     return (
       <div className="flex items-center justify-center h-full text-gray-500">
@@ -68,7 +66,6 @@ export const ChatMessages = () => {
     );
   }
 
-  // If there are no messages, show a placeholder
   if (!currentChatConversations.length) {
     return (
       <div className="flex items-center justify-center h-full text-gray-500">

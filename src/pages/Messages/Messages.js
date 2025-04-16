@@ -17,7 +17,7 @@ export default function MessagePage() {
       setIsMobile(mobileView);
       // On mobile, start with chat view (sidebar hidden)
       if (mobileView) {
-        setShowSidebar(false);
+        setShowSidebar(true);
       } else {
         setShowSidebar(true); // Always show sidebar on desktop
       }
