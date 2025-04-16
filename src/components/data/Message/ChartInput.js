@@ -7,12 +7,12 @@ import { io } from 'socket.io-client';
 export const ChatInput = () => {
   const user = JSON.parse(sessionStorage.getItem('user'));
   const token = user?.accessToken;
-  console.log(token);
   const { currentChat, sendMessage } = useChat();
   const [message, setMessage] = useState('');
   const socketRef = useRef(null);
 
   const receiverId = currentChat?.participants?._id;
+
   useEffect(() => {
     if (!token) {
       console.log('No token available');
@@ -24,37 +24,24 @@ export const ChatInput = () => {
     socketRef.current = io('https://treg.onrender.com', {
       auth: { token: token },
       transports: ['websocket'],
-      reconnectionAttempts: 5, // Optional: attempt reconnects
+      reconnectionAttempts: 5,
     });
 
-    // Debugging handlers
+    // Connection event handlers
     socketRef.current.on('connect', () => {
       console.log('Connected with ID:', socketRef.current.id);
 
-      // First initialize the user connection
+      // Initialize the user connection
       socketRef.current.emit('initialize', { userId: user.id }, (response) => {
         console.log('Initialize response:', response);
       });
+    });
 
-      socketRef.current.on('newMessage', (newMessage) => {
-        console.log('New message received:', newMessage);
-        // Update your chat state or context with the new message
-        // This will depend on how your chat context is structured
-      });
-
-      // // Then join room if available
-      // if (currentChat?.participants?._id) {
-      //   console.log('Attempting to join room:', currentChat.participants._id);
-      //   socketRef.current.emit(
-      //     'join',
-      //     {
-      //       roomId: currentChat.participants._id,
-      //     },
-      //     (ack) => {
-      //       console.log('Join room acknowledgment:', ack);
-      //     }
-      //   );
-      // }
+    // Move newMessage event listener outside the connect handler
+    socketRef.current.on('newMessage', (newMessage) => {
+      console.log('New message received:', newMessage);
+      // Update your chat state or context with the new message
+      // This should trigger a re-render of your chat messages
     });
 
     socketRef.current.on('disconnect', (reason) => {
@@ -66,14 +53,30 @@ export const ChatInput = () => {
     });
 
     return () => {
-      if (socketRef.current?.connected) {
+      if (socketRef.current) {
         socketRef.current.disconnect();
       }
     };
-  }, [token, currentChat?.participants?._id]);
+  }, [token, user?.id]);
+
+  // If you need to join a room when the chat changes
+  useEffect(() => {
+    if (socketRef.current?.connected && currentChat?.participants?._id) {
+      console.log('Attempting to join room:', currentChat.participants._id);
+      socketRef.current.emit(
+        'join',
+        {
+          roomId: currentChat.participants._id,
+        },
+        (ack) => {
+          console.log('Join room acknowledgment:', ack);
+        }
+      );
+    }
+  }, [currentChat?.participants?._id]);
 
   const threadId = '';
-  console.log('currentC', currentChat);
+
   const handleSendMessage = (e) => {
     e.preventDefault();
 
@@ -84,12 +87,11 @@ export const ChatInput = () => {
         content: message,
       };
 
-      console.log(messageData);
+      console.log('Sending message:', messageData);
       socketRef.current.emit('sendMessage', messageData);
 
-      // Optionally add the message to the UI immediately (optimistic update)
+      // Optimistic update
       sendMessage(message);
-
       setMessage('');
     }
   };
@@ -112,7 +114,7 @@ export const ChatInput = () => {
         <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center">
           <FaAt className="text-gray-400 mr-2" />
           <button type="submit" className="primary-btn">
-            <BsSendFill height={24} width={24} className="  " />
+            <BsSendFill height={24} width={24} className="" />
           </button>
         </div>
       </div>
