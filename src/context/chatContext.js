@@ -7,7 +7,7 @@ import React, {
   useRef,
 } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useGetSingleCharts, useGetSingleChat } from '../services/query/chat';
+import { useGetSingleChat } from '../services/query/chat';
 import isEqual from 'lodash.isequal';
 
 export const ChatContext = createContext({
@@ -46,7 +46,7 @@ export const ChatProvider = ({ children }) => {
         id: currentChat?.participants?._id,
       });
     }
-  }, [singleChat, mutate,currentChat?.participants?._id]);
+  }, [currentChat?.participants?._id, mutate]);
 
   useEffect(() => {
     if (!singleChat?.data || !currentChat?.participants?._id) return;
