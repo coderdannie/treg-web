@@ -117,7 +117,7 @@ const TransactionsTable = ({
           <tr key={rowIndex}>
             <td className="whitespace-nowrap px-6 py-4">{row?._id}</td>
             <td className="whitespace-nowrap px-6 py-4">{row?.title}</td>
-            <td className="whitespace-nowrap px-6 py-4">Flat</td>
+            <td className="whitespace-nowrap px-6 py-4">{row?.type}</td>
             <td className="whitespace-nowrap px-6 py-4">
               ₦
               {Number(row.rentPrice?.$numberDecimal)?.toLocaleString(

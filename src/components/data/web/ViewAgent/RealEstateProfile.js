@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CiMail } from 'react-icons/ci';
 import { BsTelephone } from 'react-icons/bs';
 import { GoLink } from 'react-icons/go';
 import { FaStar, FaRegStar, FaStarHalfAlt } from 'react-icons/fa';
+import AuthModal from '../../../modals/AuthModal';
+import { useNavigate } from 'react-router-dom';
 
 const Skeleton = ({ className }) => (
   <div className={`animate-pulse bg-gray-200 rounded-md ${className}`}></div>
@@ -35,6 +37,10 @@ const RatingCategory = ({ name, value }) => {
 };
 
 const RealEstateProfile = ({ data, isLoading, ratings, sales }) => {
+  const user = !!sessionStorage.getItem('user');
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
   const averageRating = ratings?.length
     ? ratings.reduce((sum, rating) => {
         return (
@@ -97,7 +103,19 @@ const RealEstateProfile = ({ data, isLoading, ratings, sales }) => {
             </div>
           ) : (
             <div className="flex space-x-2 mt-4  md:mt-0 md:ml-auto">
-              <button className="btn btn-outline btn-primary flex items-center">
+              <button
+                className="btn btn-outline btn-primary flex items-center"
+                onClick={() => {
+                  if (user) {
+                    navigate('/messages', {
+                      state: { participantId: data?._id },
+                    });
+                    sessionStorage.setItem('participantId', data?._id);
+                  } else {
+                    setIsOpen(true);
+                  }
+                }}
+              >
                 <CiMail /> Message
               </button>
               <button className="primary-btn flex items-center gap-1">
@@ -362,6 +380,7 @@ const RealEstateProfile = ({ data, isLoading, ratings, sales }) => {
           )}
         </div>
       </div>
+      <AuthModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 };

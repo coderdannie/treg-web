@@ -1,4 +1,5 @@
 export const BASE_URL = process.env.REACT_APP_BASE_URL;
+export const SOCKET_BASE_URL = process.env.REACT_APP_SOCKET_BASE_URL;
 export const LOGIN = `${BASE_URL}auth/login`;
 export const SIGN_UP = `${BASE_URL}auth/register`;
 export const VERIFY_EMAIL = `${BASE_URL}auth/verify-treg-email`;
@@ -47,3 +48,8 @@ export const GET_RENTALS = 'properties/agent/rentals';
 export const GET_AGENT_RATINGS = 'public/agents';
 export const GET_AGENT_SALES = 'public/agents';
 export const GET_TENANT_COUNTS = 'properties/agent/tenants/count';
+export const SEND_ENQUIRY_REQUEST = 'users/enquiry/inquire';
+export const INITIATE_CHAT = 'chats/initiate';
+export const GET_ALL_CHATS = 'chats/all';
+export const COMPOSE_CHART = `${SOCKET_BASE_URL}socket.io/?EIO=4&transport=websocket`;
+export const GET_SINGLE_CHAT = 'messages/all';

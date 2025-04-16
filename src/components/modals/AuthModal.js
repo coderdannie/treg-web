@@ -18,7 +18,7 @@ const AuthModal = ({ setIsOpen, isOpen }) => {
             </button>
             <div className="flex mt-6 flex-col items-center">
               <MdErrorOutline className="text-[5rem] mb-4 text-[#B71C1C]" />
-              <p className="text-[#5E5E5E] max-w-[25rem] w-ful font-semibold text-center">
+              <p className="text-[#5E5E5E] max-w-[25rem] w-full font-semibold text-center">
                 Join Treg to unlock exclusive features! Sign up to list, manage,
                 and rent properties seamlessly. Don't miss out on the best tools
                 for landlords and tenants.

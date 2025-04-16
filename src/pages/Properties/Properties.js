@@ -29,7 +29,6 @@ const Properties = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
 
-  // Memoized query status
   const queryStatus = useMemo(() => {
     if (selectedStatus !== 'Status') {
       if (selectedStatus === 'Active') {

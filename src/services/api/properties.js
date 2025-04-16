@@ -176,3 +176,8 @@ export const getTenantsCountByStatus = async ({ queryKey }) => {
   const res = await axiosInstance.get(`${API.GET_TENANT_COUNTS}?status=${id}`);
   return res.data;
 };
+
+export const sendEnquiryRequest = async (body) => {
+  const res = await axiosInstance.post(API.SEND_ENQUIRY_REQUEST, body);
+  return res.data;
+};

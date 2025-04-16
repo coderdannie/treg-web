@@ -5,16 +5,37 @@ import {
   validateContactSchema,
 } from '../../../../utils/Validation';
 import { FiCalendar } from 'react-icons/fi';
-import { formatDate } from '../../../../utils/helper';
+import { formatBackendDate, formatDate } from '../../../../utils/helper';
 import Calendar from 'react-calendar';
 import { FaCalendarAlt } from 'react-icons/fa';
+import { useSendEnquiryRequest } from '../../../../services/query/properties';
+import toast from 'react-hot-toast';
+import AuthModal from '../../../modals/AuthModal';
 
-const Contact = ({ workingHours }) => {
-  const [isLoading] = useState(false);
+const Contact = ({ data }) => {
+  console.log(data);
+  const errorToast = (message) => toast.error(message, { duration: 3000 });
+  const successToast = (message) => toast.success(message, { duration: 3000 });
+
   const [showStartDate, setShowStartDate] = useState(false);
   const [showTourCalendar, setShowTourCalendar] = useState(false);
   const [selectedTourDates, setSelectedTourDates] = useState([]);
   const [tourDate, setTourDate] = useState(null);
+
+  const [isOpen, setIsOpen] = useState();
+
+  const user = !!sessionStorage.getItem('user');
+
+  const { mutate, isLoading } = useSendEnquiryRequest({
+    onSuccess: (res) => {
+      successToast(res?.message);
+    },
+    onError: (res) => {
+      errorToast(
+        res?.response?.data?.message || res?.message || 'An Error Occurred'
+      );
+    },
+  });
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -31,7 +52,7 @@ const Contact = ({ workingHours }) => {
   }, []);
 
   const handleTourDateSelect = (date) => {
-    const formattedDate = formatDate(date);
+    const formattedDate = formatBackendDate(date);
 
     if (selectedTourDates.includes(formattedDate)) {
       setSelectedTourDates(
@@ -44,9 +65,20 @@ const Contact = ({ workingHours }) => {
     }
     setShowTourCalendar(false);
   };
+  console.log(selectedTourDates);
 
-  const handleSubmit = () => {
-    // Submit logic with selectedTourDates
+  const handleSubmit = (values) => {
+    if (user) {
+      mutate({
+        message: values.details,
+        propertyId: data?.photos[0]?.propertyId,
+        tourDates: selectedTourDates,
+        moveInDate: formatBackendDate(values?.date),
+        agentId: data?.agentId?._id,
+      });
+    } else {
+      setIsOpen(true);
+    }
   };
 
   const tileDisabled = ({ date }) => {
@@ -130,7 +162,10 @@ const Contact = ({ workingHours }) => {
                 </div>
                 <div className="flex items-center gap-1 mt-3 ">
                   <p className="text-sm font-medium">Work Hours:</p>
-                  <span className=" font-semibold"> {workingHours}</span>
+                  <span className=" font-semibold">
+                    {' '}
+                    {data?.agentId?.supportingDocument?.workingHours}
+                  </span>
                 </div>
                 {/* Selected Dates Display */}
                 {selectedTourDates.length > 0 && (
@@ -213,7 +248,7 @@ const Contact = ({ workingHours }) => {
                 type="submit"
                 className={`py-3 w-full rounded-lg text-white mt-6 font-medium ${
                   isValid && dirty && selectedTourDates.length > 0
-                    ? 'bg-[#1E40AF] hover:bg-[#1E3A8A]'
+                    ? 'bg-primary hover:bg-[#1E3A8A]'
                     : 'bg-gray-300 cursor-not-allowed'
                 }`}
                 disabled={!isValid || !dirty || selectedTourDates.length === 0}
@@ -228,6 +263,7 @@ const Contact = ({ workingHours }) => {
           )}
         </Formik>
       </div>
+      <AuthModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </section>
   );
 };

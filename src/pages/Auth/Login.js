@@ -15,17 +15,6 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [shouldNavigate, setShouldNavigate] = useState(false);
 
-  // const handleGoogleLogin = () => {
-  //   // Redirect the browser to the Google OAuth URL
-  //   window.location.href = 'https://ui-thrive-backend.onrender.com/auth/google';
-  // };
-
-  // const {
-  //   data,
-  //   mutate: authGoogleMutate,
-  //   isLoading: isGoogleAuth,
-  // } = useGetAuthGoogle();
-
   const navigate = useNavigate();
   const [initialValues, setInitialValues] = useState(initValues);
 
@@ -53,28 +42,6 @@ const Login = () => {
       );
     },
   });
-
-  // Handle redirect back from Google OAuth with access token
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const accessToken = params.get('accessToken');
-
-    if (accessToken) {
-      sessionStorage.setItem('accessToken', accessToken); // or localStorage
-      navigate('/dashboard'); // Redirect to dashboard or desired route
-    }
-  }, [navigate]);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setInitialValues({
-        password: user.password || '',
-      });
-      setRememberMe(true);
-    }
-  }, []);
 
   const handleSubmit = (values = '') => {
     mutate(values);

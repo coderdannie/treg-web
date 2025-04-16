@@ -61,14 +61,6 @@ const SecondLayer = ({ data }) => {
     };
   }, [isShow]);
 
-  const handleDateSelection = (date) => {
-    if (selectedDates.includes(date)) {
-      setSelectedDates(selectedDates.filter((d) => d !== date));
-    } else if (selectedDates.length < maxDates) {
-      setSelectedDates([...selectedDates, date]);
-    }
-  };
-
   const getAmenityIcon = (amenity) => {
     switch (amenity) {
       case 'Wi-Fi':
@@ -164,9 +156,7 @@ const SecondLayer = ({ data }) => {
           </div>
         </div>
         <div className=" min-991:w-[40%] w-full mt-7 ">
-          <Form
-            workingHours={data?.agentId?.supportingDocument?.workingHours}
-          />
+          <Form data={data} />
           {!isLandlordOrAgent && (
             <div className="border border-[#C8C8C8] mt-7 rounded-xl py-6 px-5">
               <p>Ready to secure this property?</p>

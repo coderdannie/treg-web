@@ -9,7 +9,7 @@ import TenantSidebar from './AuthLayout/TenantSidebar';
 
 export const AuthLayout = ({ children }) => {
   const user = JSON.parse(sessionStorage.getItem('user'));
-
+  const location = useLocation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   //   useEffect(() => {
   //     refetch();
@@ -61,8 +61,14 @@ export const AuthLayout = ({ children }) => {
         <div className="hidden min-991:block">
           {user?.data?.userType === 'Tenant' ? <TenantSidebar /> : <Sidebar />}
         </div>
-        <div className="flex-1 max-991:pl-[20px] pl-[320px]  max-991:pt-[130px] pt-[125px] max-991:pr-[20px] pr-[48px] flex flex-col">
-          <main className="flex-1 overflow-y-auto pb-8">
+        <div
+          className={`flex-1 ${
+            location.pathname.includes('messages')
+              ? 'pl-[280px] max-991:pl-[20px] pt-[80px]'
+              : 'max-991:pl-[20px] pl-[320px] max-991:pt-[130px] pt-[110px]'
+          } max-991:pr-[20px] pr-[48px] flex flex-col`}
+        >
+          <main className="flex-1 overflow-y-auto pb-8 relative">
             {/* Outlet renders the child routes */}
             {children}
           </main>

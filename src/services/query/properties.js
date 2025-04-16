@@ -13,6 +13,7 @@ import {
   updateProperty,
   getAllTenantPropertyHistories,
   getTenantsCountByStatus,
+  sendEnquiryRequest,
 } from '../api/properties';
 
 export const useAddProperty = (options = {}) => {
@@ -195,4 +196,13 @@ export const useGetTenantCountsByStatus = (id = '', options = {}) => {
   );
 
   return { data, isLoading, refetch };
+};
+
+export const useSendEnquiryRequest = (options = {}) => {
+  const { mutate, isLoading } = useMutation(sendEnquiryRequest, {
+    mutationKey: 'sendEnquiryRequest',
+    ...options,
+  });
+
+  return { mutate, isLoading };
 };

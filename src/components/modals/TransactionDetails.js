@@ -4,8 +4,6 @@ import { IoMdCloseCircle } from 'react-icons/io';
 import { formatDateTime } from '../../utils/helper';
 
 const TransactionDetails = ({ isOpen, onClose, details }) => {
-  console.log(details);
-
   return (
     <AnimatePresence>
       {isOpen && (

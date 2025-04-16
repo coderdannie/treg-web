@@ -109,7 +109,7 @@ export const validateRegisterSchema = Yup.object().shape({
     .oneOf([Yup.ref('password')], 'Passwords do not match'),
 });
 export const validateContactSchema = Yup.object().shape({
-  phoneNo: Yup.string().required('Phone number is required'),
+  // phoneNo: Yup.string().required('Phone number is required'),
   details: Yup.string().required('Details is required'),
   date: Yup.string().required('Details is required'),
 });
