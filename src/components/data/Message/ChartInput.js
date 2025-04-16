@@ -22,7 +22,7 @@ export const ChatInput = () => {
     console.log('Initializing socket with token:', token);
 
     socketRef.current = io('https://treg.onrender.com', {
-      token: token,
+      auth: { token: token },
       transports: ['websocket'],
       reconnectionAttempts: 5, // Optional: attempt reconnects
     });
@@ -36,19 +36,19 @@ export const ChatInput = () => {
         console.log('Initialize response:', response);
       });
 
-      // Then join room if available
-      if (currentChat?.participants?._id) {
-        console.log('Attempting to join room:', currentChat.participants._id);
-        socketRef.current.emit(
-          'join',
-          {
-            roomId: currentChat.participants._id,
-          },
-          (ack) => {
-            console.log('Join room acknowledgment:', ack);
-          }
-        );
-      }
+      // // Then join room if available
+      // if (currentChat?.participants?._id) {
+      //   console.log('Attempting to join room:', currentChat.participants._id);
+      //   socketRef.current.emit(
+      //     'join',
+      //     {
+      //       roomId: currentChat.participants._id,
+      //     },
+      //     (ack) => {
+      //       console.log('Join room acknowledgment:', ack);
+      //     }
+      //   );
+      // }
     });
 
     socketRef.current.on('disconnect', (reason) => {
