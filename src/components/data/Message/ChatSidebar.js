@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useChat } from '../../../context/chatContext';
-import { FaPlus, FaSearch, FaCheck } from 'react-icons/fa';
+import { FaPlus, FaSearch, FaCheck, FaUserCircle } from 'react-icons/fa';
 import { AddNewChatModal } from '../../modals/AddNewChatModal';
 import { FaMessage } from 'react-icons/fa6';
 import { useGetAllCharts, useInitiateChat } from '../../../services/query/chat';
 import toast from 'react-hot-toast';
+import ChatSidebarSkeleton from '../../Loaders/ChatSidebarSkeleton';
 
 export const ChatSidebar = ({ onChatSelect }) => {
   const { data, isLoading: isLoadingCharts } = useGetAllCharts();
@@ -63,7 +64,12 @@ export const ChatSidebar = ({ onChatSelect }) => {
 
   // console.log('Participants:', data);
   console.log(filteredChatUsers);
-  if (filteredChatUsers === 0) {
+
+  if (isLoadingCharts || isLoading) {
+    return <ChatSidebarSkeleton />;
+  }
+
+  if (data?.length === 0) {
     return (
       <div className="w-full h-full flex flex-col items-center justify-center">
         <div className="text-center space-y-4 px-4">
@@ -112,7 +118,7 @@ export const ChatSidebar = ({ onChatSelect }) => {
             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder="Search employee name"
+              placeholder="Search user by First Name"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none"
@@ -133,7 +139,7 @@ export const ChatSidebar = ({ onChatSelect }) => {
           const lastMessage =
             conversations[user?.participants?._id] &&
             conversations[user?.participants?._id].length > 0
-              ? conversations[user.id][
+              ? conversations[user?.participants?._id][
                   conversations[user?.participants?._id].length - 1
                 ]
               : null;
@@ -155,14 +161,18 @@ export const ChatSidebar = ({ onChatSelect }) => {
               )} */}
 
               {/* User avatar placeholder */}
-              <div className="w-10 h-10 rounded-full bg-gray-300 mr-3 flex-shrink-0">
-                {/* Avatar content */}
-                <img
-                  src={user?.participants?.avatar}
-                  alt={user?.participants?.firstName}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-              </div>
+              {user?.participants?.avatar ? (
+                <div className="w-10 h-10 rounded-full bg-gray-300 mr-3 flex-shrink-0">
+                  {/* Avatar content */}
+                  <img
+                    src={user?.participants?.avatar}
+                    alt={user?.participants?.firstName}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                </div>
+              ) : (
+                <FaUserCircle className="w-10 h-10 text-gray-400 mr-3" />
+              )}
 
               <div className="flex-grow">
                 <div
@@ -192,7 +202,11 @@ export const ChatSidebar = ({ onChatSelect }) => {
                   >
                     {Math.floor(
                       (new Date().getTime() -
-                        new Date(lastMessage.timestamp).getTime()) /
+                        new Date(
+                          lastMessage.timestamp ||
+                            lastMessage.createdAt ||
+                            new Date()
+                        ).getTime()) /
                         60000
                     )}{' '}
                     m Ago

@@ -91,7 +91,7 @@ export const ChatMessages = () => {
               <div
                 key={message.id}
                 className={`flex flex-col mb-2 sm:mb-4 ${
-                  message.sender_id === currentChat?.participants?._id
+                  message.sender === currentChat?.participants?._id
                     ? 'items-start'
                     : 'items-end'
                 }`}
@@ -100,7 +100,7 @@ export const ChatMessages = () => {
                   className={`
                   max-w-[75%] sm:max-w-xs p-2 sm:p-3 rounded-lg relative
                   ${
-                    message.type === 'sent'
+                    message.sender === currentChat?.participants?._id
                       ? 'bg-primary text-white'
                       : 'bg-gray-200 text-black'
                   }
