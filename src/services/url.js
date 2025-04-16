@@ -53,3 +53,4 @@ export const INITIATE_CHAT = 'chats/initiate';
 export const GET_ALL_CHATS = 'chats/all';
 export const COMPOSE_CHART = `${SOCKET_BASE_URL}socket.io/?EIO=4&transport=websocket`;
 export const GET_SINGLE_CHAT = 'messages/all';
+export const GET_SINGLE_CHATS = (id = '') => `messages/all?receiverId=${id}`;

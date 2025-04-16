@@ -16,6 +16,11 @@ export const composeChats = async (body) => {
   return res.data;
 };
 
+export const getSingleChat = async (query) => {
+  const res = await axiosInstance.get(API.GET_SINGLE_CHATS(query.id));
+  return res.data;
+};
+
 export const getSingleChats = async ({ queryKey }) => {
   const [, id] = queryKey;
   const res = await axiosInstance.get(

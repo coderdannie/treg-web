@@ -7,7 +7,7 @@ import React, {
   useRef,
 } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useGetSingleCharts } from '../services/query/chat';
+import { useGetSingleCharts, useGetSingleChat } from '../services/query/chat';
 import isEqual from 'lodash.isequal';
 
 export const ChatContext = createContext({
@@ -29,13 +29,25 @@ export const ChatProvider = ({ children }) => {
   const [conversations, setConversations] = useState({});
   const [isInitialState, setIsInitialState] = useState(true);
   const prevMessagesRef = useRef({});
+  // const {
+  //   data: singleChat,
+  //   isLoading: isChartLoading,
+  //   refetch,
+  // } = useGetSingleCharts(currentChat?.participants?._id);
   const {
+    mutate,
     data: singleChat,
     isLoading: isChartLoading,
-    refetch,
-  } = useGetSingleCharts(currentChat?.participants?._id);
-
+  } = useGetSingleChat();
   // Update conversations when singleChat data changes
+  useEffect(() => {
+    if (currentChat?.participants?._id) {
+      mutate({
+        id: currentChat?.participants?._id,
+      });
+    }
+  }, [singleChat, mutate, currentChat?.participants?._id]);
+
   useEffect(() => {
     if (!singleChat?.data || !currentChat?.participants?._id) return;
 

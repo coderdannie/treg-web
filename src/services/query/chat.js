@@ -1,5 +1,10 @@
 import { useMutation, useQuery } from 'react-query';
-import { getAllCharts, getSingleChats, initiateChat } from '../api/chat';
+import {
+  getAllCharts,
+  getSingleChat,
+  getSingleChats,
+  initiateChat,
+} from '../api/chat';
 
 export const useInitiateChat = (options = {}) => {
   const { mutate, isLoading } = useMutation(initiateChat, {
@@ -32,4 +37,13 @@ export const useGetSingleCharts = (id = '', options = {}) => {
   );
 
   return { data, isLoading, refetch };
+};
+
+export const useGetSingleChat = (options = {}) => {
+  const { mutate, isLoading, data } = useMutation(getSingleChat, {
+    mutationKey: 'getSingleChat',
+    ...options,
+  });
+
+  return { mutate, isLoading, data };
 };

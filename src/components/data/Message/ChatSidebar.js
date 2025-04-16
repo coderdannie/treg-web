@@ -187,8 +187,8 @@ export const ChatSidebar = ({ onChatSelect }) => {
                   }`}
                 >
                   {lastMessage
-                    ? lastMessage.content.length > 30
-                      ? lastMessage.content.substring(0, 30) + '...'
+                    ? lastMessage.content.length > 24
+                      ? lastMessage.content.substring(0, 24) + '...'
                       : lastMessage.content
                     : 'No messages yet'}
                 </div>
