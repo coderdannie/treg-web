@@ -154,6 +154,39 @@ export const ChatProvider = ({ children }) => {
     [currentChat, updateMessageStatus]
   );
 
+  const addIncomingMessage = useCallback((message) => {
+    if (!message) return;
+
+    // Extract user ID from various possible sources
+    const userId = message.senderId || message.userId || message.from;
+    if (!userId) {
+      console.error('Missing user ID in message:', message);
+      return;
+    }
+
+    // Normalize the message format to match what your UI expects
+    const normalizedMessage = {
+      id: message.id || uuidv4(),
+      userId,
+      content: message.content || message.text || message.message,
+      type: 'received',
+      status: 'unread',
+      // Add both timestamp formats for compatibility
+      timestamp: message.timestamp || message.createdAt || new Date(),
+      createdAt: message.timestamp || message.createdAt || new Date(),
+      updatedAt:
+        message.updatedAt ||
+        message.timestamp ||
+        message.createdAt ||
+        new Date(),
+    };
+
+    setConversations((prev) => ({
+      ...prev,
+      [userId]: [...(prev[userId] || []), normalizedMessage],
+    }));
+  }, []);
+
   return (
     <ChatContext.Provider
       value={{
@@ -168,6 +201,7 @@ export const ChatProvider = ({ children }) => {
         sendMessage,
         setIsInitialState,
         updateMessageStatus,
+        addIncomingMessage,
       }}
     >
       {children}

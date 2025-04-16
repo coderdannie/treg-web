@@ -27,9 +27,11 @@ export const ChatMessages = () => {
     const groups = {};
 
     currentChatConversations.forEach((message) => {
-      if (!message || !message.createdAt) return;
+      // Check for either createdAt or timestamp
+      const messageTimestamp = message.createdAt || message.timestamp;
+      if (!messageTimestamp) return;
 
-      const messageDate = new Date(message.createdAt);
+      const messageDate = new Date(messageTimestamp);
       if (isNaN(messageDate.getTime())) return; // Skip invalid dates
 
       const dateKey = isToday(messageDate)
@@ -89,7 +91,9 @@ export const ChatMessages = () => {
               <div
                 key={message.id}
                 className={`flex flex-col mb-2 sm:mb-4 ${
-                  message.type === 'sent' ? 'items-end' : 'items-start'
+                  message.sender_id === currentChat?.participants?._id
+                    ? 'items-start'
+                    : 'items-end'
                 }`}
               >
                 <div
@@ -127,9 +131,29 @@ export const ChatMessages = () => {
                   )}
                 </div>
                 <span className="text-xs text-gray-500 mt-1">
-                  {isToday(message.updatedAt)
-                    ? `Today ${format(message.updatedAt, 'HH:mm')}`
-                    : format(message.updatedAt, 'p')}
+                  {isToday(
+                    new Date(
+                      message.updatedAt ||
+                        message.timestamp ||
+                        message.createdAt
+                    )
+                  )
+                    ? `Today ${format(
+                        new Date(
+                          message.updatedAt ||
+                            message.timestamp ||
+                            message.createdAt
+                        ),
+                        'HH:mm'
+                      )}`
+                    : format(
+                        new Date(
+                          message.updatedAt ||
+                            message.timestamp ||
+                            message.createdAt
+                        ),
+                        'p'
+                      )}
                 </span>
               </div>
             ))}

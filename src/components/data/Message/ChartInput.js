@@ -7,7 +7,7 @@ import { io } from 'socket.io-client';
 export const ChatInput = () => {
   const user = JSON.parse(sessionStorage.getItem('user'));
   const token = user?.accessToken;
-  const { currentChat, sendMessage } = useChat();
+  const { currentChat, sendMessage, addIncomingMessage } = useChat();
   const [message, setMessage] = useState('');
   const socketRef = useRef(null);
 
@@ -42,6 +42,7 @@ export const ChatInput = () => {
       console.log('New message received:', newMessage);
       // Update your chat state or context with the new message
       // This should trigger a re-render of your chat messages
+      addIncomingMessage(newMessage);
     });
 
     socketRef.current.on('disconnect', (reason) => {
@@ -57,7 +58,7 @@ export const ChatInput = () => {
         socketRef.current.disconnect();
       }
     };
-  }, [token, user?.id]);
+  }, [token, user?.id, addIncomingMessage]);
 
   // If you need to join a room when the chat changes
   useEffect(() => {
