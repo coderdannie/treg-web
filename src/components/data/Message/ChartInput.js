@@ -36,6 +36,12 @@ export const ChatInput = () => {
         console.log('Initialize response:', response);
       });
 
+      socketRef.current.on('newMessage', (newMessage) => {
+        console.log('New message received:', newMessage);
+        // Update your chat state or context with the new message
+        // This will depend on how your chat context is structured
+      });
+
       // // Then join room if available
       // if (currentChat?.participants?._id) {
       //   console.log('Attempting to join room:', currentChat.participants._id);
@@ -79,7 +85,7 @@ export const ChatInput = () => {
       };
 
       console.log(messageData);
-      socketRef.current.emit('newMessage', messageData);
+      socketRef.current.emit('sendMessage', messageData);
 
       // Optionally add the message to the UI immediately (optimistic update)
       sendMessage(message);
