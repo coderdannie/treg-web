@@ -31,7 +31,7 @@ export const PRIVATE_PATHS = {
   PROPERTY_UPLOADS: '/property-uploads',
   VIEW_PROPERTY_DETAILS: '/my-properties/view-details/:id',
   TRANSACTIONS: '/transactions',
-  MESSAGES: '/messages',
+  MESSAGES: '/messages/:tenantId',
 
   INSURANCE_DETAILS: '/insurance-details',
   TENANT_MGT: '/tenant-mgt',

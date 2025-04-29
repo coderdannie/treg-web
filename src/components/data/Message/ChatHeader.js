@@ -3,10 +3,15 @@ import { FaUserCircle, FaArrowLeft } from 'react-icons/fa';
 import { useChat } from '../../../context/chatContext';
 
 export const ChatHeader = ({ onBackClick }) => {
-  const { currentChat } = useChat();
+  const { currentChat, onlineUsers } = useChat();
 
-  console.log('dkdkd', currentChat);
   if (!currentChat) return null;
+
+  // Get the online status from the context
+  const userId = currentChat?.participants?._id;
+  const isOnline = onlineUsers[userId];
+  const statusText = isOnline ? 'Online' : 'Offline';
+  const statusColor = isOnline ? 'bg-green-500' : 'bg-gray-400';
 
   return (
     <div className="bg-white border-b p-4 flex items-center w-full">
@@ -19,20 +24,24 @@ export const ChatHeader = ({ onBackClick }) => {
           <FaArrowLeft />
         </button>
       )}
+
       <div className="flex items-center">
-        {/* User avatar placeholder */}
-        {currentChat?.participants?.avatar ? (
-          <div className="w-10 h-10 rounded-full bg-gray-300 mr-3 flex-shrink-0">
-            {/* Avatar content */}
+        {/* User avatar with online status indicator */}
+        <div className="relative">
+          {currentChat?.participants?.avatar ? (
             <img
               src={currentChat?.participants?.avatar}
               alt={currentChat?.participants?.firstName}
-              className="w-10 h-10 rounded-full object-cover"
+              className="w-10 h-10 rounded-full object-cover mr-3"
             />
-          </div>
-        ) : (
-          <FaUserCircle className="w-10 h-10 text-gray-400 mr-3" />
-        )}
+          ) : (
+            <FaUserCircle className="w-10 h-10 text-gray-400 mr-3" />
+          )}
+          {/* Online status dot */}
+          <div
+            className={`absolute bottom-0 right-3 w-3 h-3 ${statusColor} rounded-full border-2 border-white`}
+          ></div>
+        </div>
 
         <div>
           <div className="font-semibold">
@@ -40,13 +49,12 @@ export const ChatHeader = ({ onBackClick }) => {
             {currentChat?.participants?.firstName}
           </div>
           <div className="flex items-center">
-            <div
-              className={`w-2 h-2 ${
-                currentChat.isOnline ? 'bg-green-500' : 'bg-red-500'
-              } rounded-full mr-2`}
-            ></div>
-            <span className="text-sm text-gray-500">
-              {currentChat.isOnline ? 'Online' : 'Offline'}
+            <span
+              className={`text-sm ${
+                isOnline ? 'text-green-600' : 'text-gray-500'
+              }`}
+            >
+              {statusText}
             </span>
           </div>
         </div>

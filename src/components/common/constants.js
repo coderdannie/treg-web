@@ -206,7 +206,7 @@ export const sidebarData = [
     icon: <MessageIcon fill="#616161" />,
     sec: <MessageIcon fill="#1140E7" />,
     hover: <MessageIcon fill="#1140E7" />,
-    path: '/messages',
+    path: '/messages/1',
   },
   {
     title: 'Tenancy Agreements',
@@ -265,7 +265,7 @@ export const tenantSidebarData = [
     icon: <MessageIcon fill="#616161" />,
     sec: <MessageIcon fill="#1140E7" />,
     hover: <MessageIcon fill="#1140E7" />,
-    path: '/messages',
+    path: '/messages/1',
   },
   {
     title: 'Tenancy Agreements',
