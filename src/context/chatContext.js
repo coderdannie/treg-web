@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useGetSingleChat, useGetSingleCharts } from '../services/query/chat';
-import isEqual from 'lodash.isequal';
+import { io } from 'socket.io-client';
 
 export const ChatContext = createContext({
   conversations: {},
@@ -29,6 +29,15 @@ export const ChatProvider = ({ children }) => {
   const [conversations, setConversations] = useState({});
   const [isInitialState, setIsInitialState] = useState(true);
   const prevMessagesRef = useRef({});
+  const [message, setMessage] = useState('');
+  const [onlineUsers, setOnlineUsers] = useState({});
+
+  const user = JSON.parse(sessionStorage.getItem('user'));
+  const token = user?.accessToken;
+
+  const socketRef = useRef(null);
+
+  const receiverId = currentChat?.participants?._id;
 
   const { data: singleChat, isLoading: isChartLoading } = useGetSingleCharts(
     currentChat?.participants?._id,
@@ -37,25 +46,6 @@ export const ChatProvider = ({ children }) => {
       refetchOnWindowFocus: true,
     }
   );
-
-  // useEffect(()=>{
-  //   refetch()
-  // },[])
-  // const {
-  //   mutate,
-  //   data: singleChat,
-  //   isLoading: isChartLoading,
-  // } = useGetSingleChat({
-  //   refetchOnWindowFocus: true,
-  // });
-  // Update conversations when singleChat data changes
-  // useEffect(() => {
-  //   if (currentChat?.participants?._id) {
-  //     mutate({
-  //       id: currentChat?.participants?._id,
-  //     });
-  //   }
-  // }, [currentChat?.participants?._id, mutate]);
 
   useEffect(() => {
     if (!singleChat?.data || !currentChat?.participants?._id) return;
@@ -182,11 +172,14 @@ export const ChatProvider = ({ children }) => {
     if (!message) return;
 
     // Extract user ID from various possible sources
-    const userId = message.senderId || message.userId || message.from;
+    const userId =
+      message.senderId || message.userId || message.from || uuidv4();
     if (!userId) {
       console.error('Missing user ID in message:', message);
       return;
     }
+
+    console.log('message', message);
 
     // Normalize the message format to match what your UI expects
     const normalizedMessage = {
@@ -211,6 +204,106 @@ export const ChatProvider = ({ children }) => {
     }));
   }, []);
 
+  useEffect(() => {
+    if (!token) return;
+
+    socketRef.current = io('https://treg.onrender.com', {
+      auth: { token: token },
+      transports: ['websocket'],
+      reconnectionAttempts: 5,
+    });
+
+    // Connection event handlers
+    socketRef.current.on('connect', () => {
+      console.log('Connected with ID:', socketRef.current.id);
+
+      // Initialize the user connection
+      socketRef.current.emit('initialize', { userId: user.id }, (response) => {
+        console.log('Initialize response:', response);
+        // Update current user's online status
+        setOnlineUsers((prev) => ({
+          ...prev,
+          [user.id]: true,
+        }));
+      });
+    });
+
+    // New message event
+    socketRef.current.on('newMessage', (newMessage) => {
+      console.log('New message received:', newMessage);
+      addIncomingMessage(newMessage);
+    });
+
+    // User status change event
+    socketRef.current.on('userStatusChange', ({ userId, isOnline }) => {
+      console.log(`User ${userId} is now ${isOnline ? 'online' : 'offline'}`);
+      setOnlineUsers((prev) => ({
+        ...prev,
+        [userId]: isOnline,
+      }));
+
+      // Update chat list with online status
+      setChatList((prev) =>
+        prev.map((chat) => {
+          if (chat.participants?._id === userId) {
+            return { ...chat, isOnline };
+          }
+          return chat;
+        })
+      );
+
+      // Update current chat if it's the active user
+      if (currentChat?.participants?._id === userId) {
+        setCurrentChat((prev) => ({ ...prev, isOnline }));
+      }
+    });
+
+    socketRef.current.on('disconnect', (reason) => {
+      console.log('Disconnected. Reason:', reason);
+      // Mark current user as offline
+      setOnlineUsers((prev) => ({
+        ...prev,
+        [user.id]: false,
+      }));
+    });
+
+    socketRef.current.on('connect_error', (err) => {
+      console.error('Connection error:', err.message);
+    });
+
+    return () => {
+      if (socketRef.current) {
+        // Mark current user as offline when disconnecting
+        setOnlineUsers((prev) => ({
+          ...prev,
+          [user.id]: false,
+        }));
+        socketRef.current.disconnect();
+      }
+    };
+  }, [token, user?.id, addIncomingMessage]);
+
+  const threadId = '';
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+
+    if (message.trim() && socketRef.current) {
+      const messageData = {
+        receiverId,
+        threadId,
+        content: message,
+      };
+
+      console.log('Sending message:', messageData);
+      socketRef.current.emit('sendMessage', messageData);
+
+      // Optimistic update
+      sendMessage(message);
+      setMessage('');
+    }
+  };
+
   return (
     <ChatContext.Provider
       value={{
@@ -226,6 +319,10 @@ export const ChatProvider = ({ children }) => {
         setIsInitialState,
         updateMessageStatus,
         addIncomingMessage,
+        message,
+        setMessage,
+        handleSendMessage,
+        onlineUsers,
       }}
     >
       {children}
