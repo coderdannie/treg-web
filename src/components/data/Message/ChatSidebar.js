@@ -50,7 +50,7 @@ export const ChatSidebar = ({ onChatSelect }) => {
   const id = sessionStorage.getItem('participantId');
 
   useEffect(() => {
-    if (tenantId) {
+    if (tenantId && !tenantId.includes('1')) {
       mutate({ participantId: tenantId });
     } else if (id) {
       mutate({ participantId: id });
