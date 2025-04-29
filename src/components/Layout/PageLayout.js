@@ -56,7 +56,9 @@ export const AuthLayout = ({ children }) => {
     >
       {' '}
       {/* <Header /> */}
-      <Header setDrawerOpen={setIsDrawerOpen} />
+      {!location.pathname.includes('messages') && (
+        <Header setDrawerOpen={setIsDrawerOpen} />
+      )}
       <div className=" min-h-screen overflow-x-hidden ">
         <div className="hidden min-991:block">
           {user?.data?.userType === 'Tenant' ? <TenantSidebar /> : <Sidebar />}
