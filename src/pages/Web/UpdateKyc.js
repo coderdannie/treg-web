@@ -65,7 +65,9 @@ const UpdateKyc = () => {
   const [selectedDays, setSelectedDays] = useState(['Monday']);
   const [workingHours, setWorkingHours] = useState('8am - 4pm daily');
   const [file, setFile] = useState(null);
+  const [agreementFile, setAgreementFile] = useState(null);
   const [err, setErr] = useState('');
+
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -97,8 +99,19 @@ const UpdateKyc = () => {
   const onDrop = (acceptedFiles) => {
     setFile(acceptedFiles[0]);
   };
+  const onDropAgreement = (acceptedFiles) => {
+    setAgreementFile(acceptedFiles[0]);
+  };
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
+    accept: 'image/*',
+  });
+
+  const {
+    getRootProps: getAgreementRootProps,
+    getInputProps: getAgreementInputProps,
+  } = useDropzone({
+    onDrop: onDropAgreement,
     accept: 'image/*',
   });
   const toggleDay = (day) => {
@@ -189,6 +202,7 @@ const UpdateKyc = () => {
       avatar: file,
       daysAvailable: JSON.stringify(selectedDays),
       workingHours: workingHours,
+      tenancyAgreement: agreementFile,
     });
   };
   return (
@@ -212,13 +226,7 @@ const UpdateKyc = () => {
           <div className="flex justify-end">
             <IoCloseSharp
               onClick={() => {
-                if (step === 2) {
-                  setStep(1);
-                } else if (step === 3) {
-                  setStep(2);
-                } else {
-                  navigate(-1);
-                }
+                navigate(-1);
               }}
               className="cursor-pointer text-2xl"
             />
@@ -524,14 +532,14 @@ const UpdateKyc = () => {
                           )}
                         </button>
                       </div>
-                    ) : (
-                      <div className="p-2 md:p-4 max-w-lg mx-auto">
+                    ) : step === 3 ? (
+                      <div>
                         <label className="block text-gray-700 font-semibold mb-2">
-                          Upload profile picture <i>(required, file upload)</i>
+                          Upload profile picture <i>(required)</i>
                         </label>
                         <div
                           {...getRootProps()}
-                          className="border-dashed border-2 border-gray-300 p-6 rounded-lg text-center cursor-pointer"
+                          className="border-dashed border-2 border-gray-300 p-6 rounded-lg text-center cursor-pointer mb-4"
                         >
                           <input {...getInputProps()} />
                           {file ? (
@@ -543,6 +551,25 @@ const UpdateKyc = () => {
                             </p>
                           )}
                         </div>
+
+                        <label className="block text-gray-700 font-semibold mb-2">
+                          Upload Tenancy Agreement <i>(optional)</i>
+                        </label>
+                        <div
+                          {...getAgreementRootProps()}
+                          className="border-dashed border-2 border-gray-300 p-6 rounded-lg text-center cursor-pointer mb-4"
+                        >
+                          <input {...getAgreementInputProps()} />
+                          {agreementFile ? (
+                            <p>{agreementFile.name}</p>
+                          ) : (
+                            <p>
+                              Drag and drop a document or{' '}
+                              <span className="text-blue-600">browse</span>
+                            </p>
+                          )}
+                        </div>
+
                         <h3 className="mt-6 text-lg font-semibold">
                           Availability Details
                         </h3>
@@ -611,7 +638,7 @@ const UpdateKyc = () => {
                           )}
                         </button>
                       </div>
-                    )}
+                    ) : null}
                   </Form>
                 )}
               </Formik>

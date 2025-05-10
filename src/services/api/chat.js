@@ -11,11 +11,6 @@ export const getAllCharts = async () => {
   return res.data;
 };
 
-export const composeChats = async (body) => {
-  const res = await axiosInstance.post(API.COMPOSE_CHART, body);
-  return res.data;
-};
-
 export const getSingleChat = async (query) => {
   const res = await axiosInstance.get(API.GET_SINGLE_CHATS(query.id));
   return res.data;
